@@ -1,8 +1,8 @@
 extends Control
 
 @export_file("*.tscn") var start_game_scene: String = "res://level_selection.tscn"
-@export_file("*.tscn") var hero_cards_scene: String = ""
-@export_file("*.tscn") var achievement_scene: String = ""
+@export_file("*.tscn") var hero_cards_scene: String = "res://hero_cards.tscn"
+@export_file("*.tscn") var achievement_scene: String = "res://achievements.tscn"
 
 @export var hover_scale: float = 1.05
 @export var press_scale: float = 0.95

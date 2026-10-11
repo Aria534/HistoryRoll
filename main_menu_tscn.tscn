@@ -27,6 +27,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_60y3q")
+hero_cards_scene = "res://hero_cards.tscn"
+achievement_scene = "res://achievements.tscn"
 
 [node name="LiveBackground" type="AnimatedSprite2D" parent="." unique_id=899736171]
 position = Vector2(512, 768)
