@@ -1,4 +1,26 @@
-[gd_scene format=3 uid="uid://dqnvxi15q2xue"]
+[gd_scene load_steps=5 format=3 uid="uid://dqnvxi15q2xue"]
+
+[ext_resource type="Script" path="res://level_selection.gd" id="1_level"]
+[ext_resource type="Texture2D" path="res://assets/background/HistoryRoll_ Fantasy Boardgame Adventure Final.png" id="2_background"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_panel"]
+bg_color = Color(0.082, 0.153, 0.235, 0.92)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.957, 0.706, 0.227, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_status"]
+bg_color = Color(0.98, 0.91, 0.64, 0.96)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
 
 [node name="LevelSelection" type="Control" unique_id=945677673]
 layout_mode = 3
@@ -7,10 +29,110 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_level")
 
-[node name="Label" type="Label" parent="." unique_id=341014005]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Level Selection
-"
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_background")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.018, 0.047, 0.082, 0.58)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_top = 72.0
+offset_right = -48.0
+offset_bottom = -72.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContentPanel" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_panel")
+
+[node name="ContentMargin" type="MarginContainer" parent="MarginContainer/ContentPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 42
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 42
+theme_override_constants/margin_bottom = 40
+
+[node name="Content" type="VBoxContainer" parent="MarginContainer/ContentPanel/ContentMargin"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/ContentPanel/ContentMargin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.31, 1)
+theme_override_font_sizes/font_size = 50
+text = "CHOOSE YOUR LEVEL"
+horizontal_alignment = 1
+
+[node name="InstructionLabel" type="Label" parent="MarginContainer/ContentPanel/ContentMargin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94, 0.96, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "Select an unlocked journey, then press Play."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="LevelList" type="VBoxContainer" parent="MarginContainer/ContentPanel/ContentMargin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 600)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="SelectionPanel" type="PanelContainer" parent="MarginContainer/ContentPanel/ContentMargin/Content"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_status")
+
+[node name="SelectionLabel" type="Label" parent="MarginContainer/ContentPanel/ContentMargin/Content/SelectionPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.16, 0.23, 1)
+theme_override_font_sizes/font_size = 28
+text = "Select a level"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="NavigationButtons" type="HBoxContainer" parent="MarginContainer/ContentPanel/ContentMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="BackButton" type="Button" parent="MarginContainer/ContentPanel/ContentMargin/Content/NavigationButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 96)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Back"
+
+[node name="PlayButton" type="Button" parent="MarginContainer/ContentPanel/ContentMargin/Content/NavigationButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 96)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+disabled = true
+text = "Play"

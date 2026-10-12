@@ -1,0 +1,181 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://story_mode.gd" id="1_story"]
+[ext_resource type="Texture2D" path="res://assets/background/HistoryRoll_ Fantasy Boardgame Adventure Final.png" id="2_background"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_panel"]
+bg_color = Color(0.082, 0.153, 0.235, 0.94)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.957, 0.706, 0.227, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_portrait"]
+bg_color = Color(0.15, 0.22, 0.31, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.82, 0.69, 0.38, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="StoryMode" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_story")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_background")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.018, 0.047, 0.082, 0.62)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 44.0
+offset_top = 54.0
+offset_right = -44.0
+offset_bottom = -54.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StoryPanel" type="PanelContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_panel")
+
+[node name="ContentMargin" type="MarginContainer" parent="MarginContainer/StoryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 38
+theme_override_constants/margin_top = 34
+theme_override_constants/margin_right = 38
+theme_override_constants/margin_bottom = 34
+
+[node name="Content" type="VBoxContainer" parent="MarginContainer/StoryPanel/ContentMargin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="LevelLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.31, 1)
+theme_override_font_sizes/font_size = 34
+text = "LEVEL 1 STORY"
+horizontal_alignment = 1
+
+[node name="HeroNameLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.98, 1, 1)
+theme_override_font_sizes/font_size = 42
+text = "Hero to be confirmed"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PortraitFrame" type="PanelContainer" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+custom_minimum_size = Vector2(0, 390)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_portrait")
+
+[node name="Portrait" type="TextureRect" parent="MarginContainer/StoryPanel/ContentMargin/Content/PortraitFrame"]
+unique_name_in_owner = true
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PortraitPlaceholderLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content/PortraitFrame"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.82, 0.87, 1)
+theme_override_font_sizes/font_size = 28
+text = "PORTRAIT PLACEHOLDER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StoryText" type="RichTextLabel" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 430)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.95, 0.96, 0.98, 1)
+theme_override_font_sizes/normal_font_size = 28
+bbcode_enabled = false
+fit_content = false
+scroll_active = true
+
+[node name="PanelCounterLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.31, 1)
+theme_override_font_sizes/font_size = 24
+text = "1 / 1"
+horizontal_alignment = 1
+
+[node name="StoryNavigation" type="HBoxContainer" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="PreviousButton" type="Button" parent="MarginContainer/StoryPanel/ContentMargin/Content/StoryNavigation"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 82)
+layout_mode = 2
+theme_override_font_sizes/font_size = 27
+text = "Previous"
+
+[node name="NextButton" type="Button" parent="MarginContainer/StoryPanel/ContentMargin/Content/StoryNavigation"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 82)
+layout_mode = 2
+theme_override_font_sizes/font_size = 27
+text = "Next"
+
+[node name="DestinationNavigation" type="HBoxContainer" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="BackButton" type="Button" parent="MarginContainer/StoryPanel/ContentMargin/Content/DestinationNavigation"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 92)
+layout_mode = 2
+theme_override_font_sizes/font_size = 29
+text = "Back"
+
+[node name="ContinueButton" type="Button" parent="MarginContainer/StoryPanel/ContentMargin/Content/DestinationNavigation"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(350, 92)
+layout_mode = 2
+theme_override_font_sizes/font_size = 29
+disabled = true
+text = "Continue"
