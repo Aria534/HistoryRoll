@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bc8jfg3gpo72p"
-path="res://.godot/imported/startgamebutton2.png-5567434c289a8c1de8bc48e528faecbe.ctex"
+uid="uid://bis73hgier538"
+path="res://.godot/imported/herocard.png-5b3a76e6818f1026cbb4e48250b97c24.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/buttons/startgamebutton2.png"
-dest_files=["res://.godot/imported/startgamebutton2.png-5567434c289a8c1de8bc48e528faecbe.ctex"]
+source_file="res://assets/buttons/herocard.png"
+dest_files=["res://.godot/imported/herocard.png-5b3a76e6818f1026cbb4e48250b97c24.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bykwwyxx54lsp"
-path="res://.godot/imported/HistoryRoll_ Fantasy Boardgame Adventure Final.png-9aeb90d6e423e056edb08551131aad60.ctex"
+uid="uid://dlax1x85v7lib"
+path="res://.godot/imported/start.png-e4657edef172ef70b304c15f391717bd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/background/HistoryRoll_ Fantasy Boardgame Adventure Final.png"
-dest_files=["res://.godot/imported/HistoryRoll_ Fantasy Boardgame Adventure Final.png-9aeb90d6e423e056edb08551131aad60.ctex"]
+source_file="res://assets/buttons/start.png"
+dest_files=["res://.godot/imported/start.png-e4657edef172ef70b304c15f391717bd.ctex"]
 
 [params]
 

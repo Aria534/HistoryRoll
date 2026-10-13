@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://olpqdguxb53"
-path="res://.godot/imported/herocards.png-74fc80ac9318e575e3178566cdbc4e1d.ctex"
+uid="uid://e1anjyss4b13"
+path="res://.godot/imported/HistoryRoll Fantasy Gameboard Sunset.png-4276e01ea2e270f87c03e4eac97cba18.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/buttons/herocards.png"
-dest_files=["res://.godot/imported/herocards.png-74fc80ac9318e575e3178566cdbc4e1d.ctex"]
+source_file="res://assets/background/HistoryRoll Fantasy Gameboard Sunset.png"
+dest_files=["res://.godot/imported/HistoryRoll Fantasy Gameboard Sunset.png-4276e01ea2e270f87c03e4eac97cba18.ctex"]
 
 [params]
 

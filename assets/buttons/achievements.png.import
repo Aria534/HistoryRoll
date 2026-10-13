@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4i1siw1idb2w"
-path="res://.godot/imported/Quit Gamebutton.png-d65af576d423426814f5028cb41f23dc.ctex"
+uid="uid://djcrg8uhcau2i"
+path="res://.godot/imported/achievements.png-b80ef1a31e5e5dfd979cdf0406b8fb59.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/buttons/Quit Gamebutton.png"
-dest_files=["res://.godot/imported/Quit Gamebutton.png-d65af576d423426814f5028cb41f23dc.ctex"]
+source_file="res://assets/buttons/achievements.png"
+dest_files=["res://.godot/imported/achievements.png-b80ef1a31e5e5dfd979cdf0406b8fb59.ctex"]
 
 [params]
 
