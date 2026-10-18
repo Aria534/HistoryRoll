@@ -2,6 +2,7 @@ extends Node
 
 signal progress_changed
 
+const LevelCatalog = preload("res://level_catalog.gd")
 const DEFAULT_SAVE_PATH: String = "user://historyroll_progress.json"
 const SAVE_VERSION: int = 1
 
@@ -16,7 +17,11 @@ func _ready() -> void:
 
 
 func is_level_unlocked(level_id: int) -> bool:
-	return level_id >= 1 and level_id <= highest_unlocked_level
+	return (
+		level_id >= 1
+		and LevelCatalog.has_level(level_id)
+		and level_id <= highest_unlocked_level
+	)
 
 
 func is_level_completed(level_id: int) -> bool:
@@ -38,7 +43,9 @@ func mark_level_completed(level_id: int) -> bool:
 		completed_levels.append(level_id)
 		completed_levels.sort()
 
-	highest_unlocked_level = max(highest_unlocked_level, level_id + 1)
+	var next_level_id: int = LevelCatalog.get_next_level_id(level_id)
+	if next_level_id > 0:
+		highest_unlocked_level = max(highest_unlocked_level, next_level_id)
 	save_progress()
 	progress_changed.emit()
 	return true
@@ -80,16 +87,22 @@ func load_progress() -> void:
 	var data: Dictionary = json.data
 	var saved_highest: Variant = data.get("highest_unlocked_level", 1)
 	if saved_highest is int or saved_highest is float:
-		highest_unlocked_level = max(1, int(saved_highest))
+		highest_unlocked_level = clampi(
+			int(saved_highest),
+			1,
+			max(1, LevelCatalog.get_highest_level_id())
+		)
 
 	var saved_completed: Variant = data.get("completed_levels", [])
 	if saved_completed is Array:
 		for value: Variant in saved_completed:
 			if value is int or value is float:
 				var level_id := int(value)
-				if level_id >= 1 and not completed_levels.has(level_id):
+				if LevelCatalog.has_level(level_id) and not completed_levels.has(level_id):
 					completed_levels.append(level_id)
-					highest_unlocked_level = max(highest_unlocked_level, level_id + 1)
+					var next_level_id: int = LevelCatalog.get_next_level_id(level_id)
+					if next_level_id > 0:
+						highest_unlocked_level = max(highest_unlocked_level, next_level_id)
 		completed_levels.sort()
 
 	selected_level = 1

@@ -1,21 +1,58 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://gameplay_placeholder.gd" id="1_gameplay"]
 [ext_resource type="Texture2D" uid="uid://e1anjyss4b13" path="res://assets/background/HistoryRoll Fantasy Gameboard Sunset.png" id="2_background"]
+[ext_resource type="Script" path="res://board_view.gd" id="3_board"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_panel"]
-bg_color = Color(0.082, 0.153, 0.235, 0.94)
+[sub_resource type="StyleBoxFlat" id="StyleBox_main"]
+bg_color = Color(0.055, 0.102, 0.153, 0.94)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.88, 0.68, 0.29, 1)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_quiz"]
+bg_color = Color(0.94, 0.9, 0.76, 0.97)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.42, 0.31, 0.18, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_token"]
+bg_color = Color(0.94, 0.28, 0.22, 1)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
-border_color = Color(0.957, 0.706, 0.227, 1)
+border_color = Color(1, 0.94, 0.65, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_results"]
+bg_color = Color(0.06, 0.13, 0.2, 0.98)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 0.78, 0.25, 1)
 corner_radius_top_left = 28
 corner_radius_top_right = 28
 corner_radius_bottom_right = 28
 corner_radius_bottom_left = 28
 
-[node name="GameplayPlaceholder" type="Control"]
+[node name="Gameplay" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -44,60 +81,256 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.018, 0.047, 0.082, 0.68)
+color = Color(0.016, 0.039, 0.066, 0.66)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 26.0
+offset_top = 24.0
+offset_right = -26.0
+offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(820, 700)
+[node name="Content" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBox_panel")
+theme_override_constants/separation = 12
 
-[node name="Margin" type="MarginContainer" parent="CenterContainer/Panel"]
+[node name="Header" type="HBoxContainer" parent="MarginContainer/Content"]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LevelLabel" type="Label" parent="MarginContainer/Content/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 30
+text = "LEVEL 1 — TEST CONTENT"
+vertical_alignment = 1
+
+[node name="BackButton" type="Button" parent="MarginContainer/Content/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(230, 72)
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Back to Story"
+
+[node name="BoardPanel" type="PanelContainer" parent="MarginContainer/Content"]
+custom_minimum_size = Vector2(0, 650)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_main")
+
+[node name="BoardMargin" type="MarginContainer" parent="MarginContainer/Content/BoardPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="BoardView" type="Control" parent="MarginContainer/Content/BoardPanel/BoardMargin"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("3_board")
+
+[node name="PlayerToken" type="Panel" parent="MarginContainer/Content/BoardPanel/BoardMargin/BoardView"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 46)
+layout_mode = 0
+offset_right = 46.0
+offset_bottom = 46.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_token")
+
+[node name="StatusRow" type="HBoxContainer" parent="MarginContainer/Content"]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+
+[node name="PositionLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.96, 0.97, 1, 1)
+theme_override_font_sizes/font_size = 23
+text = "Position: Start / 30"
+
+[node name="StateLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
+theme_override_font_sizes/font_size = 23
+text = "Loading"
+horizontal_alignment = 2
+
+[node name="QuizPanel" type="PanelContainer" parent="MarginContainer/Content"]
+custom_minimum_size = Vector2(0, 540)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_quiz")
+
+[node name="QuizMargin" type="MarginContainer" parent="MarginContainer/Content/QuizPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 16
+
+[node name="QuizContent" type="VBoxContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="FixtureNotice" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.52, 0.2, 0.16, 1)
+theme_override_font_sizes/font_size = 19
+text = "DEVELOPMENT TEST QUESTIONS — NOT FINAL APPROVED CONTENT"
+horizontal_alignment = 1
+
+[node name="QuestionLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 82)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.12, 0.16, 0.17, 1)
+theme_override_font_sizes/font_size = 25
+text = "Question"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Answers" type="GridContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="AnswerButton0" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 78)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 21
+text = "Answer 1"
+autowrap_mode = 2
+
+[node name="AnswerButton1" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 78)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 21
+text = "Answer 2"
+autowrap_mode = 2
+
+[node name="AnswerButton2" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 78)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 21
+text = "Answer 3"
+autowrap_mode = 2
+
+[node name="AnswerButton3" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 78)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 21
+text = "Answer 4"
+autowrap_mode = 2
+
+[node name="FeedbackLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.22, 0.19, 1)
+theme_override_font_sizes/font_size = 20
+text = "Choose one answer."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="TurnControls" type="HBoxContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="DiceTitle" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.18, 0.22, 0.19, 1)
+theme_override_font_sizes/font_size = 22
+text = "DIE:"
+vertical_alignment = 1
+
+[node name="DiceLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.52, 0.2, 0.16, 1)
+theme_override_font_sizes/font_size = 42
+text = "—"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RollButton" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 76)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+disabled = true
+text = "Roll Die"
+
+[node name="NextTurnButton" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(300, 76)
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Next Question"
+
+[node name="ResultsPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 122.0
+offset_top = 478.0
+offset_right = 902.0
+offset_bottom = 1058.0
+theme_override_styles/panel = SubResource("StyleBox_results")
+
+[node name="ResultsMargin" type="MarginContainer" parent="ResultsPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 48
 theme_override_constants/margin_top = 48
 theme_override_constants/margin_right = 48
 theme_override_constants/margin_bottom = 48
 
-[node name="Content" type="VBoxContainer" parent="CenterContainer/Panel/Margin"]
+[node name="ResultsContent" type="VBoxContainer" parent="ResultsPanel/ResultsMargin"]
 layout_mode = 2
-theme_override_constants/separation = 34
+theme_override_constants/separation = 38
 alignment = 1
 
-[node name="LevelLabel" type="Label" parent="CenterContainer/Panel/Margin/Content"]
+[node name="ResultsLabel" type="Label" parent="ResultsPanel/ResultsMargin/ResultsContent"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.82, 0.31, 1)
-theme_override_font_sizes/font_size = 46
-text = "LEVEL 1"
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 0.88, 0.5, 1)
+theme_override_font_sizes/font_size = 38
+text = "LEVEL COMPLETE!"
 horizontal_alignment = 1
-
-[node name="TitleLabel" type="Label" parent="CenterContainer/Panel/Margin/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.98, 1, 1)
-theme_override_font_sizes/font_size = 42
-text = "GAMEPLAY PLACEHOLDER"
-horizontal_alignment = 1
-
-[node name="DescriptionLabel" type="Label" parent="CenterContainer/Panel/Margin/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.93, 0.97, 1)
-theme_override_font_sizes/font_size = 28
-text = "The Snakes and Ladders gameplay system belongs to Phase 3 and has not been implemented yet.\n\nEntering this screen does not complete or unlock a level."
-horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="BackButton" type="Button" parent="CenterContainer/Panel/Margin/Content"]
+[node name="ReturnButton" type="Button" parent="ResultsPanel/ResultsMargin/ResultsContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 96)
+custom_minimum_size = Vector2(480, 96)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 30
-text = "Back to Story"
+theme_override_font_sizes/font_size = 28
+text = "Return to Level Selection"

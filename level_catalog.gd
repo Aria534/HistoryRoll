@@ -11,6 +11,14 @@ const LEVELS: Array = [
 			"PLACEHOLDER — HISTORICAL CONTRIBUTIONS\n\nVerified information about this hero's contributions will appear here.",
 		],
 		"gameplay_scene": "res://gameplay_placeholder.tscn",
+		"question_fixture_set": "level_1_test",
+		"board": {
+			"columns": 5,
+			"rows": 6,
+			"exact_finish": true,
+			"snakes": {27: 11, 21: 9, 17: 4},
+			"ladders": {3: 14, 8: 19, 12: 26},
+		},
 	},
 ]
 
@@ -24,3 +32,19 @@ static func get_level(level_id: int) -> Dictionary:
 		if int(level.get("id", 0)) == level_id:
 			return level.duplicate(true)
 	return {}
+
+
+static func has_level(level_id: int) -> bool:
+	return not get_level(level_id).is_empty()
+
+
+static func get_next_level_id(level_id: int) -> int:
+	var next_level_id := level_id + 1
+	return next_level_id if has_level(next_level_id) else 0
+
+
+static func get_highest_level_id() -> int:
+	var highest_level_id := 0
+	for level: Dictionary in LEVELS:
+		highest_level_id = max(highest_level_id, int(level.get("id", 0)))
+	return highest_level_id
