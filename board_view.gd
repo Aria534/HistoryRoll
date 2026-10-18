@@ -5,9 +5,9 @@ const BoardRules = preload("res://board_rules.gd")
 @onready var player_token: Control = %PlayerToken
 
 var board_config: Dictionary = {}
-var columns: int = 5
-var rows: int = 6
-var displayed_position: int = 0
+var columns: int = 10
+var rows: int = 10
+var displayed_position: int = 1
 
 
 func _ready() -> void:
@@ -21,8 +21,8 @@ func configure(config: Dictionary) -> PackedStringArray:
 	if not errors.is_empty():
 		return errors
 	board_config = config.duplicate(true)
-	columns = int(board_config.get("columns", 5))
-	rows = int(board_config.get("rows", 6))
+	columns = int(board_config.get("columns", 10))
+	rows = int(board_config.get("rows", 10))
 	queue_redraw()
 	call_deferred("set_player_position_immediate", displayed_position)
 	return errors
@@ -53,8 +53,6 @@ func get_tile_center(tile: int) -> Vector2:
 
 func _get_token_top_left(tile: int) -> Vector2:
 	var center := get_tile_center(max(tile, 1))
-	if tile <= 0:
-		center.y += size.y / rows * 0.28
 	return center - player_token.size / 2.0
 
 

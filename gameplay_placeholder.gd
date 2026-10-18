@@ -24,6 +24,7 @@ const QuizFixtures = preload("res://quiz_test_fixtures.gd")
 @export var dice_animation_interval: float = 0.06
 @export var movement_step_duration: float = 0.14
 @export var tile_effect_duration: float = 0.55
+@export var enable_test_dice_controls: bool = false
 
 @onready var board_view: Control = %BoardView
 @onready var level_label: Label = %LevelLabel
@@ -45,15 +46,16 @@ var level_id: int = 1
 var level_data: Dictionary = {}
 var board_config: Dictionary = {}
 var tile_count: int = 0
-var player_position: int = 0
+var player_position: int = 1
 var current_question: Dictionary = {}
 var completion_recorded: bool = false
 var progress_manager: Node
-var dice_roller = DiceRoller.new()
+var dice_roller
 var quiz_session = QuizSession.new()
 
 
 func _ready() -> void:
+	dice_roller = DiceRoller.new(0, enable_test_dice_controls and OS.is_debug_build())
 	if progress_manager == null:
 		progress_manager = get_node("/root/ProgressManager")
 	answer_buttons = [%AnswerButton0, %AnswerButton1, %AnswerButton2, %AnswerButton3]
@@ -67,6 +69,9 @@ func _ready() -> void:
 
 
 func set_controlled_dice_results(results: Array[int]) -> void:
+	if not enable_test_dice_controls or not OS.is_debug_build():
+		push_warning("Controlled dice results are available only in debug test configurations.")
+		return
 	dice_roller.set_controlled_results(results)
 
 
@@ -91,7 +96,7 @@ func _initialize_gameplay() -> void:
 		return
 
 	level_label.text = "LEVEL %d — TEST CONTENT" % level_id
-	player_position = 0
+	player_position = 1
 	completion_recorded = false
 	results_panel.hide()
 	board_view.set_player_position_immediate(player_position)
@@ -245,7 +250,7 @@ func _set_state(new_state: GameplayState) -> void:
 
 
 func _update_position_label() -> void:
-	position_label.text = "Position: %s / %d" % ["Start" if player_position == 0 else str(player_position), tile_count]
+	position_label.text = "Position: %d / %d" % [player_position, tile_count]
 
 
 func _show_fatal_error(message: String) -> void:
