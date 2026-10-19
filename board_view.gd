@@ -47,8 +47,15 @@ func get_tile_center(tile: int) -> Vector2:
 	var cell := BoardRules.tile_to_visual_cell(tile, columns, rows)
 	if cell.x < 0:
 		cell = BoardRules.tile_to_visual_cell(1, columns, rows)
-	var cell_size := Vector2(size.x / columns, size.y / rows)
-	return Vector2((cell.x + 0.5) * cell_size.x, (cell.y + 0.5) * cell_size.y)
+	var board_rect := get_board_rect()
+	var cell_size := Vector2(board_rect.size.x / columns, board_rect.size.y / rows)
+	return board_rect.position + Vector2((cell.x + 0.5) * cell_size.x, (cell.y + 0.5) * cell_size.y)
+
+
+func get_board_rect() -> Rect2:
+	var available_side: float = minf(size.x, size.y)
+	var board_size := Vector2(available_side, available_side)
+	return Rect2((size - board_size) / 2.0, board_size)
 
 
 func _get_token_top_left(tile: int) -> Vector2:
@@ -64,24 +71,14 @@ func _on_resized() -> void:
 func _draw() -> void:
 	if columns < 1 or rows < 1:
 		return
-	var cell_size := Vector2(size.x / columns, size.y / rows)
+	var board_rect := get_board_rect()
+	var cell_size := Vector2(board_rect.size.x / columns, board_rect.size.y / rows)
 	var tile_count := columns * rows
 	for tile: int in range(1, tile_count + 1):
 		var cell := BoardRules.tile_to_visual_cell(tile, columns, rows)
-		var tile_rect := Rect2(Vector2(cell.x, cell.y) * cell_size, cell_size)
-		var color := Color("#dbe9d1") if (cell.x + cell.y) % 2 == 0 else Color("#f2dfb4")
-		draw_rect(tile_rect, color, true)
-		draw_rect(tile_rect, Color("#4d5d53"), false, 2.0)
-		var baseline := tile_rect.position + Vector2(0.0, cell_size.y * 0.62)
-		draw_string(
-			ThemeDB.fallback_font,
-			baseline,
-			str(tile),
-			HORIZONTAL_ALIGNMENT_CENTER,
-			cell_size.x,
-			clampi(int(min(cell_size.x, cell_size.y) * 0.28), 18, 30),
-			Color("#24352c")
-		)
+		var tile_rect := Rect2(board_rect.position + Vector2(cell.x, cell.y) * cell_size, cell_size)
+		draw_rect(tile_rect.grow(-1.0), _get_tile_color(tile, cell), true)
+		draw_rect(tile_rect, Color("#59685f"), false, 2.0)
 
 	for raw_start: Variant in board_config.get("ladders", {}):
 		var start := int(raw_start)
@@ -92,17 +89,91 @@ func _draw() -> void:
 		var destination := int(board_config["snakes"][raw_start])
 		_draw_snake(get_tile_center(start), get_tile_center(destination))
 
+	for tile: int in range(1, tile_count + 1):
+		var cell := BoardRules.tile_to_visual_cell(tile, columns, rows)
+		var tile_rect := Rect2(board_rect.position + Vector2(cell.x, cell.y) * cell_size, cell_size)
+		_draw_tile_content(tile, tile_rect)
+
+
+func _get_tile_color(tile: int, cell: Vector2i) -> Color:
+	if BoardRules.is_question_tile(board_config, tile):
+		return Color("#c9dce3")
+	var special_type := BoardRules.get_special_tile_type(board_config, tile)
+	match special_type:
+		"bonus":
+			return Color("#f0dfaa")
+		"shield":
+			return Color("#c9d9e7")
+	if _mapping_has(board_config.get("snakes", {}), tile):
+		return Color("#e2c4bd")
+	if _mapping_has(board_config.get("ladders", {}), tile):
+		return Color("#ead7a4")
+	return Color("#d8e1cf") if (cell.x + cell.y) % 2 == 0 else Color("#eee2c7")
+
+
+func _draw_tile_content(tile: int, tile_rect: Rect2) -> void:
+	var minimum_side: float = minf(tile_rect.size.x, tile_rect.size.y)
+	var number_size := clampi(int(minimum_side * 0.24), 14, 24)
+	var number_position := tile_rect.position + Vector2(5.0, number_size + 3.0)
+	draw_string(ThemeDB.fallback_font, number_position, str(tile), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x - 8.0, number_size, Color("#26362f"))
+
+	if BoardRules.is_question_tile(board_config, tile):
+		var icon_size := clampi(int(minimum_side * 0.42), 22, 34)
+		var icon_position := tile_rect.position + Vector2(0.0, tile_rect.size.y * 0.72)
+		draw_string(ThemeDB.fallback_font, icon_position, "?", HORIZONTAL_ALIGNMENT_CENTER, tile_rect.size.x, icon_size, Color("#315a70"))
+	else:
+		var special_type := BoardRules.get_special_tile_type(board_config, tile)
+		if not special_type.is_empty():
+			_draw_special_icon(special_type, tile_rect, minimum_side)
+
+	var marker := "START" if tile == 1 else ("FINISH" if tile == columns * rows else "")
+	if not marker.is_empty():
+		var marker_size := clampi(int(minimum_side * 0.14), 9, 13)
+		var marker_position := tile_rect.position + Vector2(2.0, tile_rect.size.y - 5.0)
+		draw_string(ThemeDB.fallback_font, marker_position, marker, HORIZONTAL_ALIGNMENT_CENTER, tile_rect.size.x - 4.0, marker_size, Color("#6a4025"))
+
+
+func _draw_special_icon(tile_type: String, tile_rect: Rect2, minimum_side: float) -> void:
+	var center := tile_rect.get_center() + Vector2(0.0, minimum_side * 0.08)
+	var radius := minimum_side * 0.22
+	match tile_type:
+		"bonus":
+			draw_colored_polygon(_make_star(center, radius, radius * 0.45), Color("#c58b24"))
+		"shield":
+			var shield_points := PackedVector2Array([
+				center + Vector2(-radius * 0.75, -radius * 0.7),
+				center + Vector2(radius * 0.75, -radius * 0.7),
+				center + Vector2(radius * 0.62, radius * 0.35),
+				center + Vector2(0.0, radius),
+				center + Vector2(-radius * 0.62, radius * 0.35),
+			])
+			draw_colored_polygon(shield_points, Color("#4c78a3"))
+			draw_polyline(shield_points + PackedVector2Array([shield_points[0]]), Color("#315574"), 2.0, true)
+
+
+func _make_star(center: Vector2, outer_radius: float, inner_radius: float) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for point_index: int in range(10):
+		var radius := outer_radius if point_index % 2 == 0 else inner_radius
+		var angle := -PI / 2.0 + point_index * TAU / 10.0
+		points.append(center + Vector2(cos(angle), sin(angle)) * radius)
+	return points
+
+
+func _mapping_has(mapping: Dictionary, tile: int) -> bool:
+	return mapping.has(tile) or mapping.has(str(tile))
+
 
 func _draw_ladder(start: Vector2, destination: Vector2) -> void:
 	var direction := destination - start
 	if direction.length() <= 0.0:
 		return
-	var perpendicular := direction.normalized().orthogonal() * 8.0
-	draw_line(start - perpendicular, destination - perpendicular, Color("#8b5a2b"), 6.0, true)
-	draw_line(start + perpendicular, destination + perpendicular, Color("#8b5a2b"), 6.0, true)
+	var perpendicular := direction.normalized().orthogonal() * 7.0
+	draw_line(start - perpendicular, destination - perpendicular, Color("#7a532f"), 5.0, true)
+	draw_line(start + perpendicular, destination + perpendicular, Color("#7a532f"), 5.0, true)
 	for step: int in range(1, 7):
 		var point := start.lerp(destination, step / 7.0)
-		draw_line(point - perpendicular, point + perpendicular, Color("#d8ad63"), 4.0, true)
+		draw_line(point - perpendicular, point + perpendicular, Color("#c99e5c"), 3.0, true)
 
 
 func _draw_snake(start: Vector2, destination: Vector2) -> void:
@@ -116,7 +187,7 @@ func _draw_snake(start: Vector2, destination: Vector2) -> void:
 		if step > 0 and step < 8:
 			point += perpendicular * (1.0 if step % 2 == 0 else -1.0)
 		points.append(point)
-	draw_polyline(points, Color("#9b3d46"), 9.0, true)
-	draw_circle(start, 14.0, Color("#c95b62"))
+	draw_polyline(points, Color("#8f4650"), 7.0, true)
+	draw_circle(start, 12.0, Color("#b95760"))
 	draw_circle(start + Vector2(-5, -3), 2.5, Color.WHITE)
 	draw_circle(start + Vector2(5, -3), 2.5, Color.WHITE)

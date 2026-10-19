@@ -2,6 +2,7 @@ extends Control
 
 const MAIN_MENU_SCENE: String = "res://main_menu_tscn.tscn"
 const STORY_MODE_SCENE: String = "res://story_mode.tscn"
+const CHARACTER_UNLOCK_SCENE: String = "res://character_unlock.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
 
 @export var hover_scale: float = 1.03
@@ -32,21 +33,19 @@ func _refresh_levels() -> void:
 	for child: Node in level_list.get_children():
 		child.queue_free()
 	level_buttons.clear()
-
 	for level: Dictionary in LevelCatalog.get_levels():
 		var level_id := int(level.get("id", 0))
 		var button := Button.new()
 		button.name = "Level%dButton" % level_id
-		button.custom_minimum_size = Vector2(0, 126)
+		button.custom_minimum_size = Vector2(0, 92)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.add_theme_font_size_override("font_size", 30)
+		button.add_theme_font_size_override("font_size", 25)
 		button.disabled = not ProgressManager.is_level_unlocked(level_id)
 		button.text = _get_level_button_text(level, button.disabled)
 		button.pressed.connect(_on_level_pressed.bind(level_id))
 		level_list.add_child(button)
 		level_buttons[level_id] = button
 		_setup_animated_button(button)
-
 	var preferred_level: int = ProgressManager.selected_level
 	if level_buttons.has(preferred_level) and ProgressManager.is_level_unlocked(preferred_level):
 		_select_level(preferred_level)
@@ -58,10 +57,15 @@ func _refresh_levels() -> void:
 
 func _get_level_button_text(level: Dictionary, locked: bool) -> String:
 	var title := str(level.get("title", "Level"))
+	var level_id := int(level.get("id", 0))
 	if locked:
-		return "🔒  %s\nLOCKED" % title.to_upper()
-	if ProgressManager.is_level_completed(int(level.get("id", 0))):
+		return "%s\nLOCKED" % title.to_upper()
+	if ProgressManager.is_level_completed(level_id):
 		return "%s\nCOMPLETED" % title.to_upper()
+	if ProgressManager.has_pending_progression(level_id):
+		return "%s\nCONTINUE PROGRESSION" % title.to_upper()
+	if not bool(level.get("implemented", false)):
+		return "%s\nUNLOCKED — CONTENT COMING SOON" % title.to_upper()
 	return "%s\nAVAILABLE" % title.to_upper()
 
 
@@ -75,10 +79,16 @@ func _on_level_pressed(level_id: int) -> void:
 func _select_level(level_id: int) -> void:
 	if not ProgressManager.select_level(level_id):
 		return
-
 	selected_level_id = level_id
-	play_button.disabled = false
-	selection_label.text = "Selected: Level %d" % level_id
+	var pending := ProgressManager.has_pending_progression(level_id)
+	var playable := LevelCatalog.is_level_playable(level_id)
+	play_button.disabled = not pending and not playable
+	play_button.text = "Continue" if pending else "Play"
+	selection_label.text = (
+		"Selected: Level %d" % level_id
+		if playable or pending
+		else "Level %d is unlocked, but its gameplay content is still pending." % level_id
+	)
 	for key: Variant in level_buttons:
 		var button: Button = level_buttons[key]
 		button.modulate = Color(1.0, 0.88, 0.42) if int(key) == level_id else Color.WHITE
@@ -88,10 +98,26 @@ func _on_play_pressed() -> void:
 	if selected_level_id < 1 or not ProgressManager.is_level_unlocked(selected_level_id):
 		selection_label.text = "Select an unlocked level first."
 		return
+	if ProgressManager.has_pending_progression(selected_level_id):
+		match ProgressManager.progression_stage:
+			ProgressManager.STAGE_RESULTS:
+				if ProgressManager.begin_post_level_story(selected_level_id):
+					get_tree().change_scene_to_file(STORY_MODE_SCENE)
+			ProgressManager.STAGE_POST_STORY:
+				ProgressManager.story_context = "post_completion"
+				get_tree().change_scene_to_file(STORY_MODE_SCENE)
+			ProgressManager.STAGE_CHARACTER_UNLOCK, ProgressManager.STAGE_LEVEL_UNLOCK:
+				get_tree().change_scene_to_file(CHARACTER_UNLOCK_SCENE)
+		return
+	if not LevelCatalog.is_level_playable(selected_level_id):
+		selection_label.text = "Level %d is unlocked, but its gameplay content is not implemented yet." % selected_level_id
+		play_button.disabled = true
+		return
 	if not ResourceLoader.exists(STORY_MODE_SCENE):
 		push_error("Story Mode scene is missing: %s" % STORY_MODE_SCENE)
 		return
-	get_tree().change_scene_to_file(STORY_MODE_SCENE)
+	if ProgressManager.start_level_introduction(selected_level_id):
+		get_tree().change_scene_to_file(STORY_MODE_SCENE)
 
 
 func _on_back_pressed() -> void:
