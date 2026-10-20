@@ -7,14 +7,7 @@ const LEVELS: Array = [
 		"description": "A development journey introducing Filipino heroes and their contributions.",
 		"hero_name": "Hero to be confirmed",
 		"portrait_path": "",
-		"introduction_panels": [
-			"PLACEHOLDER — LEVEL INTRODUCTION\n\nApproved educational introduction content has not been added yet.",
-			"PLACEHOLDER — LEARNING GOAL\n\nRoll first, then answer questions only when you land on a marked tile.",
-		],
-		"post_story_panels": [
-			"PLACEHOLDER — POST-LEVEL STORY\n\nThis required chapter is separate from the pre-game introduction.",
-			"PLACEHOLDER — HISTORICAL CONTRIBUTIONS\n\nApproved historical narrative and artwork will replace this development content.",
-		],
+		"story_text": "DEVELOPMENT PLACEHOLDER — APPROVED STORY CONTENT PENDING\n\nThis single post-level story screen will present the featured Filipino hero's historical background, important contributions, and significance in Philippine history. Final educational text and artwork have not yet been approved and will replace this clearly labeled placeholder.",
 		"character_reward": {
 			"id": "level_1_hero_placeholder",
 			"name": "Level 1 Hero (Placeholder)",

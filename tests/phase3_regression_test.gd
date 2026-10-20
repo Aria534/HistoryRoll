@@ -318,7 +318,8 @@ func _test_navigation_wiring() -> void:
 	get_root().add_child(story_mode)
 	await process_frame
 	_check(story_mode.get_node("MarginContainer/StoryPanel/ContentMargin/Content/DestinationNavigation/ContinueButton").pressed.get_connections().size() > 0, "Story Mode Continue button remains connected")
-	_check(story_mode.get_node("MarginContainer/StoryPanel/ContentMargin/Content/DestinationNavigation/BackButton").pressed.get_connections().size() > 0, "Story Mode Back button remains connected")
+	_check(not story_mode.has_node("MarginContainer/StoryPanel/ContentMargin/Content/StoryNavigation"), "Story Mode Previous and Next controls are removed")
+	_check(not story_mode.has_node("MarginContainer/StoryPanel/ContentMargin/Content/PanelCounterLabel"), "Story Mode page counter is removed")
 	story_mode.queue_free()
 	await process_frame
 

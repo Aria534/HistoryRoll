@@ -1,11 +1,12 @@
 [gd_scene format=3 uid="uid://couyhgwqwj2h4"]
 
 [ext_resource type="Script" uid="uid://daxgpngbxt8fq" path="res://main_menu_tscn.gd" id="1_60y3q"]
-[ext_resource type="Texture2D" uid="uid://e1anjyss4b13" path="res://assets/background/HistoryRoll Fantasy Gameboard Sunset.png" id="2_obwwd"]
+[ext_resource type="Texture2D" uid="uid://deovlo6tn8pem" path="res://assets/background/Pastel Tropical Snakes and Ladders at Sunset.png" id="2_obwwd"]
 [ext_resource type="Texture2D" uid="uid://dlax1x85v7lib" path="res://assets/buttons/start.png" id="4_obwwd"]
 [ext_resource type="Texture2D" uid="uid://bis73hgier538" path="res://assets/buttons/herocard.png" id="5_pur26"]
 [ext_resource type="Texture2D" uid="uid://djcrg8uhcau2i" path="res://assets/buttons/achievements.png" id="6_txe8c"]
 [ext_resource type="Texture2D" uid="uid://dxlbhl21pnarl" path="res://assets/buttons/quit.png" id="7_axwo0"]
+[ext_resource type="Texture2D" uid="uid://dsnussugx7uw" path="res://assets/background/Soft Golden Historyroll Emblem.png" id="8_pur26"]
 [ext_resource type="Script" uid="uid://uupsexotbnxm" path="res://live_background.gd" id="37_aefuk"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_7ixyk"]
@@ -48,19 +49,19 @@ stretch_mode = 5
 [node name="HeroCardsButton" type="TextureButton" parent="." unique_id=1501236565]
 layout_mode = 0
 offset_left = 306.0
-offset_top = 578.0
+offset_top = 545.0
 offset_right = 726.0
-offset_bottom = 977.0
+offset_bottom = 944.0
 texture_normal = ExtResource("5_pur26")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="AchievementButton" type="TextureButton" parent="." unique_id=1174385454]
 layout_mode = 0
-offset_left = 310.0
-offset_top = 837.0
-offset_right = 738.0
-offset_bottom = 1143.0
+offset_left = 307.0
+offset_top = 773.0
+offset_right = 735.0
+offset_bottom = 1079.0
 texture_normal = ExtResource("6_txe8c")
 ignore_texture_size = true
 stretch_mode = 5
@@ -68,9 +69,20 @@ stretch_mode = 5
 [node name="QuitButton" type="TextureButton" parent="." unique_id=189569183]
 layout_mode = 0
 offset_left = 179.0
-offset_top = 1118.0
+offset_top = 1039.0
 offset_right = 866.0
-offset_bottom = 1267.0
+offset_bottom = 1188.0
 texture_normal = ExtResource("7_axwo0")
 ignore_texture_size = true
+stretch_mode = 5
+
+[node name="HistoryRollLogo" type="TextureRect" parent="." unique_id=1226321796]
+layout_mode = 1
+offset_left = 68.0
+offset_top = -79.0
+offset_right = 938.0
+offset_bottom = 329.0
+mouse_filter = 2
+texture = ExtResource("8_pur26")
+expand_mode = 1
 stretch_mode = 5

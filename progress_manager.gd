@@ -22,7 +22,6 @@ var selected_hero: String = DEFAULT_HERO_ID
 var best_scores: Dictionary = {}
 var last_level_stats: Dictionary = {}
 var selected_level: int = 1
-var story_context: String = "introduction"
 var pending_progression_level: int = 0
 var progression_stage: String = ""
 
@@ -58,13 +57,6 @@ func select_level(level_id: int) -> bool:
 	return true
 
 
-func start_level_introduction(level_id: int) -> bool:
-	if not select_level(level_id) or not LevelCatalog.is_level_playable(level_id):
-		return false
-	story_context = "introduction"
-	return true
-
-
 func record_board_completion(level_id: int, final_score: int, statistics: Dictionary) -> bool:
 	if not is_level_unlocked(level_id) or not LevelCatalog.is_level_playable(level_id):
 		return false
@@ -89,19 +81,28 @@ func mark_level_completed(level_id: int) -> bool:
 
 
 func begin_post_level_story(level_id: int) -> bool:
-	if not is_board_completed(level_id) or is_level_completed(level_id):
+	if (
+		not is_board_completed(level_id)
+		or is_level_completed(level_id)
+		or progression_stage != STAGE_RESULTS
+		or pending_progression_level != level_id
+	):
 		return false
 	pending_progression_level = level_id
 	progression_stage = STAGE_POST_STORY
 	selected_level = level_id
-	story_context = "post_completion"
 	save_progress()
 	progress_changed.emit()
 	return true
 
 
 func mark_story_completed(level_id: int) -> bool:
-	if not is_board_completed(level_id) or is_level_completed(level_id):
+	if (
+		not is_board_completed(level_id)
+		or is_level_completed(level_id)
+		or progression_stage != STAGE_POST_STORY
+		or pending_progression_level != level_id
+	):
 		return false
 	_add_unique_int(completed_story_chapters, level_id)
 	pending_progression_level = level_id
@@ -112,7 +113,11 @@ func mark_story_completed(level_id: int) -> bool:
 
 
 func claim_character_reward(level_id: int) -> bool:
-	if not is_story_completed(level_id):
+	if (
+		not is_story_completed(level_id)
+		or progression_stage != STAGE_CHARACTER_UNLOCK
+		or pending_progression_level != level_id
+	):
 		return false
 	var reward := LevelCatalog.get_character_reward(level_id)
 	var character_id := str(reward.get("id", ""))
@@ -129,7 +134,12 @@ func claim_character_reward(level_id: int) -> bool:
 
 
 func confirm_character_unlock(level_id: int) -> bool:
-	if not claimed_character_rewards.has(level_id) or not is_story_completed(level_id):
+	if (
+		not claimed_character_rewards.has(level_id)
+		or not is_story_completed(level_id)
+		or progression_stage != STAGE_CHARACTER_UNLOCK
+		or pending_progression_level != level_id
+	):
 		return false
 	_add_unique_int(completed_levels, level_id)
 	var next_level_id := LevelCatalog.get_next_level_id(level_id)
@@ -147,7 +157,6 @@ func finish_progression(level_id: int) -> bool:
 		return false
 	pending_progression_level = 0
 	progression_stage = ""
-	story_context = "introduction"
 	save_progress()
 	progress_changed.emit()
 	return true
@@ -291,6 +300,5 @@ func _reset_to_defaults() -> void:
 	best_scores.clear()
 	last_level_stats.clear()
 	selected_level = 1
-	story_context = "introduction"
 	pending_progression_level = 0
 	progression_stage = ""

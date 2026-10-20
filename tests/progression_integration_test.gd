@@ -2,6 +2,7 @@ extends SceneTree
 
 const CharacterUnlockScene = preload("res://character_unlock.tscn")
 const LevelCatalog = preload("res://level_catalog.gd")
+const LevelSelectionScene = preload("res://level_selection.tscn")
 const ProgressManagerScript = preload("res://progress_manager.gd")
 const StoryModeScene = preload("res://story_mode.tscn")
 
@@ -36,9 +37,19 @@ func _test_required_progression_sequence() -> void:
 	progress.save_path = _test_path
 	_check(progress.is_level_unlocked(1), "Level 1 starts unlocked")
 	_check(not progress.is_level_unlocked(2), "Level 2 starts locked")
-	_check(progress.start_level_introduction(1), "Level 1 introduction can be started")
-	_check(progress.story_context == "introduction", "pre-game story is identified as an introduction")
-	_check(not progress.is_story_completed(1), "viewing the introduction does not complete the post-level story")
+	var requested_scenes: Array[String] = []
+	var level_selection = LevelSelectionScene.instantiate()
+	level_selection.progress_manager = progress
+	level_selection.scene_change_handler = func(path: String): requested_scenes.append(path)
+	get_root().add_child(level_selection)
+	await process_frame
+	level_selection._select_level(1)
+	_check(level_selection.selected_level_id == 1, "unlocked Level 1 can be selected")
+	level_selection.play_button.pressed.emit()
+	_check(requested_scenes == ["res://gameplay_placeholder.tscn"], "Press Play requests gameplay directly")
+	level_selection.queue_free()
+	await process_frame
+	_check(not progress.is_story_completed(1), "selecting Level 1 does not complete or open Story Mode")
 
 	var final_statistics := {
 		"correct_answers": 3,
@@ -58,23 +69,42 @@ func _test_required_progression_sequence() -> void:
 	_check(progress.progression_stage == progress.STAGE_RESULTS, "results stage follows board completion")
 	_check(int(progress.best_scores.get("1", 0)) == 450, "best score is stored")
 
-	_check(progress.begin_post_level_story(1), "Continue from results starts the mandatory post-level story")
+	requested_scenes.clear()
+	var resume_selection = LevelSelectionScene.instantiate()
+	resume_selection.progress_manager = progress
+	resume_selection.scene_change_handler = func(path: String): requested_scenes.append(path)
+	get_root().add_child(resume_selection)
+	await process_frame
+	resume_selection.play_button.pressed.emit()
+	_check(requested_scenes == ["res://story_mode.tscn"], "unfinished results progression resumes mandatory Story Mode")
+	resume_selection.queue_free()
+	await process_frame
 	_check(progress.progression_stage == progress.STAGE_POST_STORY, "post-level story stage is recorded")
 	_check(not progress.is_story_completed(1), "opening mandatory Story Mode does not complete it")
 	_check(not progress.is_level_unlocked(2), "Level 2 remains locked while Story Mode is open")
 
 	var story = StoryModeScene.instantiate()
 	story.progress_manager = progress
+	requested_scenes.clear()
+	story.scene_change_handler = func(path: String): requested_scenes.append(path)
 	get_root().add_child(story)
 	await process_frame
-	_check(story.is_post_completion_story, "Story Mode loads the post-completion chapter in progression context")
-	_check(story.back_button.disabled, "mandatory Story Mode cannot be skipped with Back")
-	_check(story.continue_button.disabled, "Story completion is blocked before the final panel")
+	_check(story.story_available, "Story Mode loads only in a valid post-completion context")
+	_check(not story.continue_button.disabled, "single-screen Story Continue is immediately available")
+	_check(not story.has_node("MarginContainer/StoryPanel/ContentMargin/Content/PanelCounterLabel"), "Story Mode has no page counter")
+	_check(not story.has_node("MarginContainer/StoryPanel/ContentMargin/Content/StoryNavigation"), "Story Mode has no Previous or Next controls")
+	_check(not story.has_node("MarginContainer/StoryPanel/ContentMargin/Content/DestinationNavigation/BackButton"), "mandatory Story Mode has no Back control")
+	_check(story.story_text.text == str(LevelCatalog.get_level(1).get("story_text", "")), "Story Mode displays one catalog story")
 	_check(not progress.is_story_completed(1), "instantiating Story Mode does not mark story completion")
+	story.continue_button.pressed.emit()
+	_check(progress.is_story_completed(1), "Story Continue records story completion")
+	_check(requested_scenes == ["res://character_unlock.tscn"], "Story Continue requests Character Unlock")
+	var completed_story_count: int = progress.completed_story_chapters.size()
+	_check(not story.complete_story(), "repeated Story Continue is rejected after the stage advances")
+	_check(progress.completed_story_chapters.size() == completed_story_count, "repeated Story Continue cannot duplicate completion")
 	story.queue_free()
 	await process_frame
 
-	_check(progress.mark_story_completed(1), "finishing all story sections records story completion")
 	_check(progress.is_story_completed(1), "story completion is stored separately")
 	_check(progress.progression_stage == progress.STAGE_CHARACTER_UNLOCK, "story completion advances to Character Unlock")
 	_check(not progress.is_level_unlocked(2), "Level 2 remains locked before Character Unlock Continue")

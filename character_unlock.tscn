@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://character_unlock.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/background/HistoryRoll Fantasy Gameboard Sunset.png" id="2_background"]
+[ext_resource type="Texture2D" uid="uid://d0tbtxkqj58wb" path="res://assets/background/Pastel Castle Overlook by the Sea.png" id="2_background"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_panel"]
 bg_color = Color(0.082, 0.153, 0.235, 0.95)

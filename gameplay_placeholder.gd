@@ -381,7 +381,7 @@ func _on_next_turn_pressed() -> void:
 func _on_back_pressed() -> void:
 	if state != GameplayState.READY_TO_ROLL:
 		return
-	get_tree().change_scene_to_file(STORY_MODE_SCENE)
+	get_tree().change_scene_to_file(LEVEL_SELECTION_SCENE)
 
 
 func _on_return_pressed() -> void:
