@@ -31,7 +31,6 @@ func _load_post_level_story() -> void:
 		level_id > 0
 		and progress_manager.progression_stage == progress_manager.STAGE_POST_STORY
 		and progress_manager.is_board_completed(level_id)
-		and not progress_manager.is_story_completed(level_id)
 	)
 	if not story_available:
 		_show_unavailable_story()
@@ -40,7 +39,7 @@ func _load_post_level_story() -> void:
 	if level_data.is_empty():
 		_show_unavailable_story()
 		return
-	level_label.text = "LEVEL %d — HERO STORY" % level_id
+	level_label.text = "LEVEL %d — %s" % [level_id, str(level_data.get("educational_theme", "HERO STORY")).to_upper()]
 	hero_name_label.text = str(level_data.get("hero_name", "Hero to be confirmed"))
 	story_text.text = str(level_data.get(
 		"story_text",

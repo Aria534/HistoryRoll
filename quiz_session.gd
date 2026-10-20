@@ -63,6 +63,8 @@ func _is_valid_question(question: Dictionary) -> bool:
 	return (
 		not str(question.get("question_id", "")).is_empty()
 		and int(question.get("level", 0)) >= 1
+		and not str(question.get("hero_id", "")).is_empty()
+		and ["regular", "bonus"].has(str(question.get("question_type", "")))
 		and not str(question.get("question_text", "")).is_empty()
 		and choices is Array
 		and choices.size() == 4

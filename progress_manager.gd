@@ -66,9 +66,8 @@ func record_board_completion(level_id: int, final_score: int, statistics: Dictio
 	last_level_stats = statistics.duplicate(true)
 	last_level_stats["level_id"] = level_id
 	last_level_stats["final_score"] = maxi(0, final_score)
-	if not is_level_completed(level_id):
-		pending_progression_level = level_id
-		progression_stage = STAGE_RESULTS
+	pending_progression_level = level_id
+	progression_stage = STAGE_RESULTS
 	save_progress()
 	progress_changed.emit()
 	return true
@@ -83,7 +82,6 @@ func mark_level_completed(level_id: int) -> bool:
 func begin_post_level_story(level_id: int) -> bool:
 	if (
 		not is_board_completed(level_id)
-		or is_level_completed(level_id)
 		or progression_stage != STAGE_RESULTS
 		or pending_progression_level != level_id
 	):
@@ -99,14 +97,20 @@ func begin_post_level_story(level_id: int) -> bool:
 func mark_story_completed(level_id: int) -> bool:
 	if (
 		not is_board_completed(level_id)
-		or is_level_completed(level_id)
 		or progression_stage != STAGE_POST_STORY
 		or pending_progression_level != level_id
 	):
 		return false
 	_add_unique_int(completed_story_chapters, level_id)
 	pending_progression_level = level_id
-	progression_stage = STAGE_CHARACTER_UNLOCK
+	if LevelCatalog.get_character_reward(level_id).is_empty():
+		_add_unique_int(completed_levels, level_id)
+		var next_level_id := LevelCatalog.get_next_level_id(level_id)
+		if next_level_id > 0:
+			highest_unlocked_level = maxi(highest_unlocked_level, next_level_id)
+		progression_stage = STAGE_LEVEL_UNLOCK
+	else:
+		progression_stage = STAGE_CHARACTER_UNLOCK
 	save_progress()
 	progress_changed.emit()
 	return true

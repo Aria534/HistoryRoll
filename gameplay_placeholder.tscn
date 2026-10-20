@@ -110,7 +110,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
 theme_override_font_sizes/font_size = 30
-text = "LEVEL 1 — TEST CONTENT"
+text = "LEVEL 1 — FILIPINO HEROES"
 vertical_alignment = 1
 
 [node name="BackButton" type="Button" parent="MarginContainer/Content/Header"]
@@ -209,7 +209,7 @@ visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.52, 0.2, 0.16, 1)
 theme_override_font_sizes/font_size = 19
-text = "DEVELOPMENT TEST QUESTIONS — NOT FINAL APPROVED CONTENT"
+text = "SOURCE-REVIEWED FILIPINO HISTORY QUESTION"
 horizontal_alignment = 1
 
 [node name="QuestionLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
@@ -355,4 +355,4 @@ custom_minimum_size = Vector2(480, 96)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
-text = "Return to Level Selection"
+text = "CONTINUE TO STORY MODE"

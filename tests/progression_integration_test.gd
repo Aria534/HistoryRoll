@@ -68,6 +68,12 @@ func _test_required_progression_sequence() -> void:
 	_check(not progress.is_level_unlocked(2), "board completion does not unlock Level 2")
 	_check(progress.progression_stage == progress.STAGE_RESULTS, "results stage follows board completion")
 	_check(int(progress.best_scores.get("1", 0)) == 450, "best score is stored")
+	var results_reloaded = ProgressManagerScript.new()
+	results_reloaded.save_path = _test_path
+	results_reloaded.load_progress()
+	_check(results_reloaded.progression_stage == results_reloaded.STAGE_RESULTS, "Results stage survives restart")
+	_check(results_reloaded.pending_progression_level == 1, "pending post-game level survives restart")
+	results_reloaded.free()
 
 	requested_scenes.clear()
 	var resume_selection = LevelSelectionScene.instantiate()
@@ -112,6 +118,8 @@ func _test_required_progression_sequence() -> void:
 	var reward_id := str(LevelCatalog.get_character_reward(1).get("id", ""))
 	var reward_screen = CharacterUnlockScene.instantiate()
 	reward_screen.progress_manager = progress
+	requested_scenes.clear()
+	reward_screen.scene_change_handler = func(path: String): requested_scenes.append(path)
 	get_root().add_child(reward_screen)
 	await process_frame
 	_check(progress.is_character_unlocked(reward_id), "Character Unlock adds the reward hero to the collection")
@@ -127,11 +135,12 @@ func _test_required_progression_sequence() -> void:
 	_check(progress.is_level_completed(1), "full Level 1 progression is marked complete")
 	_check(progress.is_level_unlocked(2), "Level 2 unlocks only after Character Unlock Continue")
 	_check(reward_screen.title_label.text.contains("LEVEL 2 UNLOCKED"), "Level 2 unlock confirmation is displayed")
+	reward_screen.continue_button.pressed.emit()
+	_check(requested_scenes == ["res://level_selection.tscn"], "unlock confirmation Continue requests Level Selection")
+	_check(not progress.has_pending_progression(), "unlock confirmation Continue clears pending progression")
 	reward_screen.queue_free()
 	await process_frame
 
-	_check(progress.finish_progression(1), "unlock confirmation can finish the progression sequence")
-	_check(not progress.has_pending_progression(), "finished progression has no pending reward stage")
 	_check(progress.select_hero(reward_id), "unlocked reward hero can be selected")
 	_check(not progress.select_hero("locked_test_hero"), "locked heroes cannot be selected")
 
@@ -144,6 +153,16 @@ func _test_required_progression_sequence() -> void:
 	_check(reloaded.is_level_unlocked(2), "Level 2 unlock survives restart")
 	_check(reloaded.selected_hero == reward_id, "selected hero survives restart")
 	_check(int(reloaded.best_scores.get("1", 0)) == 450, "best score survives restart")
+
+	var character_count_after_first_completion: int = reloaded.unlocked_characters.size()
+	_check(reloaded.record_board_completion(1, 400, final_statistics), "replaying a completed board creates a fresh Results stage")
+	_check(reloaded.progression_stage == reloaded.STAGE_RESULTS, "completed-level replay waits at Results")
+	_check(reloaded.begin_post_level_story(1), "completed-level replay can continue to Story Mode")
+	_check(reloaded.mark_story_completed(1), "completed story can be revisited without duplicating its record")
+	_check(reloaded.claim_character_reward(1), "previously claimed reward remains idempotent during replay")
+	_check(reloaded.unlocked_characters.size() == character_count_after_first_completion, "replay does not duplicate the unlocked character")
+	_check(reloaded.confirm_character_unlock(1), "replay can finish the protected post-game sequence")
+	_check(reloaded.finish_progression(1), "replay clears its pending progression state")
 	progress.free()
 	reloaded.free()
 

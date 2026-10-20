@@ -14,6 +14,7 @@ var progress_manager: Node
 var level_id: int = 0
 var reward: Dictionary = {}
 var has_error: bool = false
+var scene_change_handler: Callable
 
 
 func _ready() -> void:
@@ -25,6 +26,9 @@ func _ready() -> void:
 		_show_error("No pending character reward was found.")
 		return
 	reward = LevelCatalog.get_character_reward(level_id)
+	if reward.is_empty() and progress_manager.progression_stage == progress_manager.STAGE_LEVEL_UNLOCK:
+		_show_level_unlock()
+		return
 	if reward.is_empty():
 		_show_error("The character reward for Level %d is not configured." % level_id)
 		return
@@ -56,13 +60,17 @@ func _show_character_unlock() -> void:
 func _show_level_unlock() -> void:
 	var next_level_id := LevelCatalog.get_next_level_id(level_id)
 	title_label.text = "LEVEL %d UNLOCKED!" % next_level_id if next_level_id > 0 else "JOURNEY COMPLETE!"
-	hero_name_label.text = str(reward.get("name", "Hero Placeholder")) + " joined your collection."
+	hero_name_label.text = (
+		str(reward.get("name", "Hero")) + " joined your collection."
+		if not reward.is_empty()
+		else "You completed the final Filipino hero challenge."
+	)
 	description_label.text = (
 		"Level %d is now shown as unlocked in Level Selection. Its gameplay content is still pending."
 		% next_level_id if next_level_id > 0 else "All configured progression rewards are complete."
 	)
 	continue_button.text = "Return to Level Selection"
-	_set_portrait(str(reward.get("portrait_path", "")))
+	_set_portrait(str(reward.get("portrait_path", "")) if not reward.is_empty() else "")
 
 
 func _set_portrait(path: String) -> void:
@@ -77,7 +85,7 @@ func _set_portrait(path: String) -> void:
 func _on_continue_pressed() -> void:
 	continue_button.disabled = true
 	if has_error:
-		get_tree().change_scene_to_file(LEVEL_SELECTION_SCENE)
+		_change_scene(LEVEL_SELECTION_SCENE)
 		return
 	if progress_manager.progression_stage == progress_manager.STAGE_CHARACTER_UNLOCK:
 		if progress_manager.confirm_character_unlock(level_id):
@@ -86,7 +94,14 @@ func _on_continue_pressed() -> void:
 		return
 	if progress_manager.progression_stage == progress_manager.STAGE_LEVEL_UNLOCK:
 		progress_manager.finish_progression(level_id)
-		get_tree().change_scene_to_file(LEVEL_SELECTION_SCENE)
+		_change_scene(LEVEL_SELECTION_SCENE)
+
+
+func _change_scene(path: String) -> void:
+	if scene_change_handler.is_valid():
+		scene_change_handler.call(path)
+	else:
+		get_tree().change_scene_to_file(path)
 
 
 func _show_error(message: String) -> void:

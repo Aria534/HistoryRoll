@@ -17,7 +17,7 @@ const LevelCatalog = preload("res://level_catalog.gd")
 const BoardRules = preload("res://board_rules.gd")
 const DiceRoller = preload("res://dice_roller.gd")
 const QuizSession = preload("res://quiz_session.gd")
-const QuizFixtures = preload("res://quiz_test_fixtures.gd")
+const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 
 @export var shuffle_questions: bool = true
 @export var dice_animation_steps: int = 8
@@ -72,9 +72,12 @@ var shields_consumed: int = 0
 var current_question: Dictionary = {}
 var current_question_type: String = "regular"
 var completion_recorded: bool = false
+var fatal_error_active: bool = false
 var landing_effect_resolved: bool = false
 var resolved_tiles_this_turn: Dictionary = {}
 var progress_manager: Node
+var scene_change_handler: Callable
+var results_transition_started: bool = false
 var dice_roller
 var quiz_session = QuizSession.new()
 var bonus_quiz_session = QuizSession.new()
@@ -121,14 +124,14 @@ func _initialize_gameplay() -> void:
 	maximum_shield_charges = maxi(0, int(level_data.get("maximum_shield_charges", 0)))
 	maximum_effect_depth = maxi(1, int(level_data.get("maximum_effect_depth", 12)))
 	resolve_destination_effects = bool(level_data.get("resolve_destination_effects", true))
-	if not quiz_session.configure(QuizFixtures.get_questions_for_level(level_id, "regular"), shuffle_questions):
-		_show_fatal_error("No valid regular quiz fixtures are configured for this level.")
+	if not quiz_session.configure(QuizQuestionBank.get_questions_for_level(level_id, "regular"), shuffle_questions):
+		_show_fatal_error("No valid regular questions are configured for this level.")
 		return
-	if not bonus_quiz_session.configure(QuizFixtures.get_questions_for_level(level_id, "bonus"), shuffle_questions):
-		_show_fatal_error("No valid bonus quiz fixtures are configured for this level.")
+	if not bonus_quiz_session.configure(QuizQuestionBank.get_questions_for_level(level_id, "bonus"), shuffle_questions):
+		_show_fatal_error("No valid bonus questions are configured for this level.")
 		return
 
-	level_label.text = "%s — TEST CONTENT" % str(level_data.get("title", "LEVEL %d" % level_id)).to_upper()
+	level_label.text = str(level_data.get("title", "LEVEL %d" % level_id)).to_upper()
 	player_position = 1
 	score = 0
 	shield_charges = 0
@@ -142,6 +145,8 @@ func _initialize_gameplay() -> void:
 	shields_collected = 0
 	shields_consumed = 0
 	completion_recorded = false
+	fatal_error_active = false
+	results_transition_started = false
 	landing_effect_resolved = false
 	resolved_tiles_this_turn.clear()
 	results_panel.hide()
@@ -162,7 +167,7 @@ func _begin_question(question_type: String) -> void:
 		_show_fatal_error("The quiz could not provide a %s question." % question_type)
 		return
 	question_label.text = str(current_question.get("question_text", ""))
-	fixture_notice.show()
+	fixture_notice.hide()
 	question_label.show()
 	answer_buttons[0].get_parent().show()
 	var choices: Array = current_question.get("choices", [])
@@ -342,7 +347,6 @@ func _prepare_for_roll(message: String) -> void:
 
 func _complete_level() -> void:
 	_set_state(GameplayState.LEVEL_COMPLETE)
-	var requires_progression: bool = not bool(progress_manager.is_level_completed(level_id))
 	if not completion_recorded:
 		completion_recorded = true
 		progress_manager.record_board_completion(level_id, score, get_gameplay_statistics())
@@ -353,7 +357,8 @@ func _complete_level() -> void:
 		level_id, score, correct_answers, incorrect_answers, bonus_score_increase,
 		snake_penalties, shields_collected, shields_consumed,
 	]
-	return_button.text = "Continue to Story" if requires_progression else "Return to Level Selection"
+	return_button.text = "CONTINUE TO STORY MODE"
+	return_button.disabled = false
 	results_panel.show()
 
 
@@ -385,12 +390,26 @@ func _on_back_pressed() -> void:
 
 
 func _on_return_pressed() -> void:
-	if state != GameplayState.LEVEL_COMPLETE:
+	if state != GameplayState.LEVEL_COMPLETE or results_transition_started:
 		return
-	if progress_manager.is_level_completed(level_id):
-		get_tree().change_scene_to_file(LEVEL_SELECTION_SCENE)
-	elif progress_manager.begin_post_level_story(level_id):
-		get_tree().change_scene_to_file(STORY_MODE_SCENE)
+	results_transition_started = true
+	return_button.disabled = true
+	if fatal_error_active:
+		_change_scene(LEVEL_SELECTION_SCENE)
+		return
+	if progress_manager.is_board_completed(level_id) and progress_manager.begin_post_level_story(level_id):
+		_change_scene(STORY_MODE_SCENE)
+		return
+	results_transition_started = false
+	return_button.disabled = false
+	results_label.text += "\n\nUnable to start Story Mode. Return to Level Selection and resume this level's pending progress."
+
+
+func _change_scene(path: String) -> void:
+	if scene_change_handler.is_valid():
+		scene_change_handler.call(path)
+	else:
+		get_tree().change_scene_to_file(path)
 
 
 func _set_state(new_state: GameplayState) -> void:
@@ -415,9 +434,10 @@ func _set_quiz_panel_height(quiz_active: bool) -> void:
 
 
 func _show_fatal_error(message: String) -> void:
+	fatal_error_active = true
 	feedback_label.text = message
 	question_label.text = "Gameplay cannot start."
 	_set_state(GameplayState.LEVEL_COMPLETE)
-	return_button.text = "Return to Level Selection"
+	return_button.text = "BACK TO LEVEL SELECTION"
 	results_label.text = message
 	results_panel.show()

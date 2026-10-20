@@ -16,11 +16,16 @@ var _failed: int = 0
 class MockProgressManager:
 	extends Node
 
+	const STAGE_RESULTS: String = "results"
+	const STAGE_POST_STORY: String = "post_story"
+
 	var selected_level: int = 1
 	var completion_calls: int = 0
 	var recorded_score: int = -1
 	var recorded_statistics: Dictionary = {}
 	var fully_completed: bool = false
+	var pending_progression_level: int = 0
+	var progression_stage: String = ""
 
 	func is_level_completed(_level_id: int) -> bool:
 		return fully_completed
@@ -29,9 +34,17 @@ class MockProgressManager:
 		completion_calls += 1
 		recorded_score = final_score
 		recorded_statistics = statistics.duplicate(true)
+		pending_progression_level = _level_id
+		progression_stage = STAGE_RESULTS
 		return true
 
-	func begin_post_level_story(_level_id: int) -> bool:
+	func is_board_completed(level_id: int) -> bool:
+		return completion_calls > 0 and pending_progression_level == level_id
+
+	func begin_post_level_story(level_id: int) -> bool:
+		if progression_stage != STAGE_RESULTS or pending_progression_level != level_id:
+			return false
+		progression_stage = STAGE_POST_STORY
 		return true
 
 
@@ -277,6 +290,13 @@ func _test_gameplay_flow() -> void:
 	_check(progress.completion_calls == 1, "completion is recorded exactly once")
 	_check(gameplay.results_label.text.contains("Final score: 50"), "completion screen includes the final score")
 	_check(progress.recorded_statistics.get("correct_answers", 0) == 1, "completion records gameplay statistics")
+	_check(gameplay.return_button.text == "CONTINUE TO STORY MODE", "results button identifies the required Story Mode destination")
+	var requested_scenes: Array[String] = []
+	gameplay.scene_change_handler = func(path: String): requested_scenes.append(path)
+	gameplay.return_button.pressed.emit()
+	_check(requested_scenes == ["res://story_mode.tscn"], "Results Continue requests Story Mode through the actual button signal")
+	gameplay.return_button.pressed.emit()
+	_check(requested_scenes.size() == 1, "Results Continue cannot trigger duplicate scene transitions")
 	gameplay.roll_button.pressed.emit()
 	await process_frame
 	_check(progress.completion_calls == 1, "input after completion cannot duplicate the reward")
