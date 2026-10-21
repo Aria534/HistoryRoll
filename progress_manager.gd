@@ -24,6 +24,7 @@ var last_level_stats: Dictionary = {}
 var selected_level: int = 1
 var pending_progression_level: int = 0
 var progression_stage: String = ""
+var game_completed: bool = false
 
 
 func _ready() -> void:
@@ -159,6 +160,8 @@ func confirm_character_unlock(level_id: int) -> bool:
 func finish_progression(level_id: int) -> bool:
 	if progression_stage != STAGE_LEVEL_UNLOCK or pending_progression_level != level_id:
 		return false
+	if LevelCatalog.get_next_level_id(level_id) == 0 and is_level_completed(level_id):
+		game_completed = true
 	pending_progression_level = 0
 	progression_stage = ""
 	save_progress()
@@ -197,6 +200,7 @@ func save_progress() -> bool:
 		"last_level_stats": last_level_stats,
 		"pending_progression_level": pending_progression_level,
 		"progression_stage": progression_stage,
+		"game_completed": game_completed,
 	}
 	file.store_string(JSON.stringify(data))
 	return true
@@ -248,6 +252,7 @@ func _load_version_two(data: Dictionary) -> void:
 		last_level_stats = (data.get("last_level_stats", {}) as Dictionary).duplicate(true)
 	pending_progression_level = int(data.get("pending_progression_level", 0))
 	progression_stage = str(data.get("progression_stage", ""))
+	game_completed = bool(data.get("game_completed", completed_levels.has(LevelCatalog.get_highest_level_id())))
 	var valid_stages: PackedStringArray = [STAGE_RESULTS, STAGE_POST_STORY, STAGE_CHARACTER_UNLOCK, STAGE_LEVEL_UNLOCK]
 	if not LevelCatalog.has_level(pending_progression_level) or not valid_stages.has(progression_stage):
 		pending_progression_level = 0
@@ -274,6 +279,7 @@ func _migrate_version_one(data: Dictionary) -> void:
 		var next_level_id := LevelCatalog.get_next_level_id(level_id)
 		if next_level_id > 0:
 			highest_unlocked_level = maxi(highest_unlocked_level, next_level_id)
+	game_completed = completed_levels.has(LevelCatalog.get_highest_level_id())
 
 
 func _load_level_array(source: Variant, destination: Array[int]) -> void:
@@ -306,3 +312,4 @@ func _reset_to_defaults() -> void:
 	selected_level = 1
 	pending_progression_level = 0
 	progression_stage = ""
+	game_completed = false

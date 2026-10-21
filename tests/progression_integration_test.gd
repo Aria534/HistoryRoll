@@ -191,7 +191,8 @@ func _test_legacy_save_migration() -> void:
 func _test_catalog_and_scene_coverage() -> void:
 	_check(LevelCatalog.get_levels().size() == 6, "Level Selection catalog exposes Levels 1 through 6")
 	_check(LevelCatalog.is_level_playable(1), "Level 1 gameplay is marked implemented")
-	_check(not LevelCatalog.is_level_playable(2), "Level 2 gameplay is honestly marked pending")
+	for level_id: int in range(2, 7):
+		_check(LevelCatalog.is_level_playable(level_id), "Level %d gameplay is marked implemented" % level_id)
 	_check(ResourceLoader.exists("res://character_unlock.tscn"), "Character Unlock scene exists")
 	_check(ResourceLoader.exists("res://hero_cards.tscn"), "Hero Collection scene exists")
 	_check(LevelCatalog.get_all_characters().size() >= 2, "Hero Collection includes default and reward characters")

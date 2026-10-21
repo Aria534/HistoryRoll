@@ -59,15 +59,16 @@ func _show_character_unlock() -> void:
 
 func _show_level_unlock() -> void:
 	var next_level_id := LevelCatalog.get_next_level_id(level_id)
-	title_label.text = "LEVEL %d UNLOCKED!" % next_level_id if next_level_id > 0 else "JOURNEY COMPLETE!"
+	title_label.text = "LEVEL %d UNLOCKED!" % next_level_id if next_level_id > 0 else "CONGRATULATIONS!"
 	hero_name_label.text = (
 		str(reward.get("name", "Hero")) + " joined your collection."
 		if not reward.is_empty()
-		else "You completed the final Filipino hero challenge."
+		else "YOU COMPLETED HISTORYROLL!"
 	)
 	description_label.text = (
-		"Level %d is now shown as unlocked in Level Selection. Its gameplay content is still pending."
-		% next_level_id if next_level_id > 0 else "All configured progression rewards are complete."
+		"Level %d is now unlocked and ready to play." % next_level_id
+		if next_level_id > 0
+		else "You completed all six levels and explored the contributions of important Filipino heroes."
 	)
 	continue_button.text = "Return to Level Selection"
 	_set_portrait(str(reward.get("portrait_path", "")) if not reward.is_empty() else "")
