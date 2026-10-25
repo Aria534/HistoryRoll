@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bcwnxrld72rmv"]
+
+[node name="AnimatedPlants" type="Node2D" unique_id=707212807]
+
+[node name="PlantTopLeft" type="Sprite2D" parent="." unique_id=730450088]
+
+[node name="PlantTopRight" type="Sprite2D" parent="." unique_id=154678646]
+
+[node name="PlantBottomLeft" type="Sprite2D" parent="." unique_id=713653785]
+
+[node name="PlantBottomRight" type="Sprite2D" parent="." unique_id=1928189178]

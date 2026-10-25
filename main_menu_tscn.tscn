@@ -1,19 +1,25 @@
 [gd_scene format=3 uid="uid://couyhgwqwj2h4"]
 
 [ext_resource type="Script" uid="uid://daxgpngbxt8fq" path="res://main_menu_tscn.gd" id="1_60y3q"]
-[ext_resource type="Texture2D" uid="uid://deovlo6tn8pem" path="res://assets/background/Pastel Tropical Snakes and Ladders at Sunset.png" id="2_obwwd"]
+[ext_resource type="Texture2D" uid="uid://cwalcnt8aa2f6" path="res://assets/background/main_menu_foliage/main_menu_static.png" id="2_pur26"]
 [ext_resource type="Texture2D" uid="uid://dlax1x85v7lib" path="res://assets/buttons/start.png" id="4_obwwd"]
 [ext_resource type="Texture2D" uid="uid://bis73hgier538" path="res://assets/buttons/herocard.png" id="5_pur26"]
 [ext_resource type="Texture2D" uid="uid://djcrg8uhcau2i" path="res://assets/buttons/achievements.png" id="6_txe8c"]
 [ext_resource type="Texture2D" uid="uid://dxlbhl21pnarl" path="res://assets/buttons/quit.png" id="7_axwo0"]
-[ext_resource type="Texture2D" uid="uid://dsnussugx7uw" path="res://assets/background/Soft Golden Historyroll Emblem.png" id="8_pur26"]
 [ext_resource type="Script" uid="uid://uupsexotbnxm" path="res://live_background.gd" id="37_aefuk"]
+[ext_resource type="Script" uid="uid://brobs23vcesah" path="res://plant_sway.gd" id="38_plants"]
+[ext_resource type="Texture2D" uid="uid://bdmjic0dmtheg" path="res://assets/background/main_menu_foliage/plant_top_left.png" id="39_top_left"]
+[ext_resource type="Texture2D" uid="uid://c62s8g2qwshga" path="res://assets/background/main_menu_foliage/plant_top_right.png" id="40_top_right"]
+[ext_resource type="Texture2D" uid="uid://8e8v2jbi2wdw" path="res://assets/background/main_menu_foliage/plant_left.png" id="41_left"]
+[ext_resource type="Texture2D" uid="uid://dlwj3bw0qy38a" path="res://assets/background/main_menu_foliage/plant_right.png" id="42_right"]
+[ext_resource type="Texture2D" uid="uid://bjcpr1d1q7fep" path="res://assets/background/main_menu_foliage/plant_bottom_left.png" id="43_bottom_left"]
+[ext_resource type="Texture2D" uid="uid://3hocwd3vv8rk" path="res://assets/background/main_menu_foliage/plant_bottom_right.png" id="44_bottom_right"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_7ixyk"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_obwwd")
+"texture": ExtResource("2_pur26")
 }],
 "loop": 1,
 "name": &"default",
@@ -35,12 +41,45 @@ sprite_frames = SubResource("SpriteFrames_7ixyk")
 script = ExtResource("37_aefuk")
 metadata/_edit_lock_ = true
 
+[node name="AnimatedPlants" type="Node2D" parent="." unique_id=2085318141]
+script = ExtResource("38_plants")
+
+[node name="PlantTopLeft" type="Sprite2D" parent="AnimatedPlants" unique_id=1777470700]
+position = Vector2(80, -15)
+texture = ExtResource("39_top_left")
+offset = Vector2(107.5, 122.5)
+
+[node name="PlantTopRight" type="Sprite2D" parent="AnimatedPlants" unique_id=1679151937]
+position = Vector2(865, -10)
+texture = ExtResource("40_top_right")
+offset = Vector2(-179.5, 122.5)
+
+[node name="PlantLeft" type="Sprite2D" parent="AnimatedPlants" unique_id=1025138817]
+position = Vector2(70, 960)
+texture = ExtResource("41_left")
+offset = Vector2(47.5, -375)
+
+[node name="PlantRight" type="Sprite2D" parent="AnimatedPlants" unique_id=1816947970]
+position = Vector2(890, 975)
+texture = ExtResource("42_right")
+offset = Vector2(-74.5, -380)
+
+[node name="PlantBottomLeft" type="Sprite2D" parent="AnimatedPlants" unique_id=103961522]
+position = Vector2(130, 1660)
+texture = ExtResource("43_bottom_left")
+offset = Vector2(80, -411.5)
+
+[node name="PlantBottomRight" type="Sprite2D" parent="AnimatedPlants" unique_id=429633255]
+position = Vector2(850, 1660)
+texture = ExtResource("44_bottom_right")
+offset = Vector2(-97, -414)
+
 [node name="StartButton" type="TextureButton" parent="." unique_id=1768276902]
 layout_mode = 0
-offset_left = 306.0
-offset_top = 398.0
-offset_right = 737.0
-offset_bottom = 739.0
+offset_left = 302.0
+offset_top = 538.0
+offset_right = 733.0
+offset_bottom = 831.0
 mouse_force_pass_scroll_events = false
 texture_normal = ExtResource("4_obwwd")
 ignore_texture_size = true
@@ -48,10 +87,10 @@ stretch_mode = 5
 
 [node name="HeroCardsButton" type="TextureButton" parent="." unique_id=1501236565]
 layout_mode = 0
-offset_left = 306.0
-offset_top = 545.0
-offset_right = 726.0
-offset_bottom = 944.0
+offset_left = 302.0
+offset_top = 674.0
+offset_right = 722.0
+offset_bottom = 1073.0
 texture_normal = ExtResource("5_pur26")
 ignore_texture_size = true
 stretch_mode = 5
@@ -59,30 +98,19 @@ stretch_mode = 5
 [node name="AchievementButton" type="TextureButton" parent="." unique_id=1174385454]
 layout_mode = 0
 offset_left = 307.0
-offset_top = 773.0
+offset_top = 901.0
 offset_right = 735.0
-offset_bottom = 1079.0
+offset_bottom = 1207.0
 texture_normal = ExtResource("6_txe8c")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="QuitButton" type="TextureButton" parent="." unique_id=189569183]
 layout_mode = 0
-offset_left = 179.0
-offset_top = 1039.0
-offset_right = 866.0
-offset_bottom = 1188.0
+offset_left = 183.0
+offset_top = 1171.0
+offset_right = 870.0
+offset_bottom = 1320.0
 texture_normal = ExtResource("7_axwo0")
 ignore_texture_size = true
-stretch_mode = 5
-
-[node name="HistoryRollLogo" type="TextureRect" parent="." unique_id=1226321796]
-layout_mode = 1
-offset_left = 68.0
-offset_top = -79.0
-offset_right = 938.0
-offset_bottom = 329.0
-mouse_filter = 2
-texture = ExtResource("8_pur26")
-expand_mode = 1
 stretch_mode = 5
