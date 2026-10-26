@@ -24,13 +24,33 @@ var scene_change_handler: Callable
 
 func _ready() -> void:
 	if progress_manager == null:
-		progress_manager = get_node("/root/ProgressManager")
+		progress_manager = get_node_or_null("/root/ProgressManager")
+	if not _validate_required_nodes():
+		return
 	back_button.pressed.connect(_on_back_pressed)
 	play_button.pressed.connect(_on_play_pressed)
 	_setup_animated_button(back_button)
 	_setup_animated_button(play_button)
 	progress_manager.progress_changed.connect(_refresh_levels)
 	_refresh_levels()
+
+
+func _validate_required_nodes() -> bool:
+	var missing_nodes: Array[String] = []
+	if level_list == null:
+		missing_nodes.append("LevelList")
+	if selection_label == null:
+		missing_nodes.append("SelectionLabel")
+	if back_button == null:
+		missing_nodes.append("BackButton")
+	if play_button == null:
+		missing_nodes.append("PlayButton")
+	if progress_manager == null:
+		missing_nodes.append("/root/ProgressManager")
+	if not missing_nodes.is_empty():
+		push_error("Level Selection is missing required nodes: %s" % ", ".join(missing_nodes))
+		return false
+	return true
 
 
 func _refresh_levels() -> void:
@@ -101,6 +121,7 @@ func _select_level(level_id: int) -> void:
 func _on_play_pressed() -> void:
 	if selected_level_id < 1 or not progress_manager.is_level_unlocked(selected_level_id):
 		selection_label.text = "Select an unlocked level first."
+		play_button.disabled = true
 		return
 	if progress_manager.has_pending_progression(selected_level_id):
 		match progress_manager.progression_stage:

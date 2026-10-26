@@ -54,7 +54,10 @@ func is_character_unlocked(character_id: String) -> bool:
 func select_level(level_id: int) -> bool:
 	if not is_level_unlocked(level_id):
 		return false
+	var selection_changed := selected_level != level_id
 	selected_level = level_id
+	if selection_changed:
+		save_progress()
 	return true
 
 
@@ -198,6 +201,7 @@ func save_progress() -> bool:
 		"selected_hero": selected_hero,
 		"best_scores": best_scores,
 		"last_level_stats": last_level_stats,
+		"selected_level": selected_level,
 		"pending_progression_level": pending_progression_level,
 		"progression_stage": progression_stage,
 		"game_completed": game_completed,
@@ -227,7 +231,6 @@ func load_progress() -> void:
 		save_progress()
 	else:
 		_load_version_two(data)
-	selected_level = 1
 	progress_changed.emit()
 
 
@@ -250,6 +253,9 @@ func _load_version_two(data: Dictionary) -> void:
 		best_scores = (data.get("best_scores", {}) as Dictionary).duplicate(true)
 	if data.get("last_level_stats", {}) is Dictionary:
 		last_level_stats = (data.get("last_level_stats", {}) as Dictionary).duplicate(true)
+	selected_level = clampi(int(data.get("selected_level", 1)), 1, highest_unlocked_level)
+	if not LevelCatalog.has_level(selected_level):
+		selected_level = 1
 	pending_progression_level = int(data.get("pending_progression_level", 0))
 	progression_stage = str(data.get("progression_stage", ""))
 	game_completed = bool(data.get("game_completed", completed_levels.has(LevelCatalog.get_highest_level_id())))

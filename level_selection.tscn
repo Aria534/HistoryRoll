@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dqnvxi15q2xue"]
 
 [ext_resource type="Script" uid="uid://bi0rgtrdac8qr" path="res://level_selection.gd" id="1_level"]
-[ext_resource type="Texture2D" uid="uid://d0tbtxkqj58wb" path="res://assets/background/Pastel Castle Overlook by the Sea.png" id="2_au0oc"]
+[ext_resource type="Texture2D" uid="uid://dii48lafhmts6" path="res://assets/background/Dreamy Philippine Bay Boardwalk.png" id="2_au0oc"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_au0oc"]
 
@@ -102,7 +102,7 @@ custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.12, 0.16, 0.23, 1)
 theme_override_font_sizes/font_size = 28
-text = "Select a level"
+text = "Select an unlocked level"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
