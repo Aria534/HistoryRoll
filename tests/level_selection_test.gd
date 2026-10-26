@@ -26,6 +26,12 @@ func _run() -> void:
 func _test_fresh_level_selection() -> void:
 	var progress = ProgressManagerScript.new()
 	progress.save_path = _save_path
+	_check(progress.highest_unlocked_level == 1, "fresh progress starts with only Level 1 unlocked")
+	_check(progress.completed_levels.is_empty(), "fresh progress has no completed levels")
+	_check(progress.board_completed_levels.is_empty(), "fresh progress has no completed boards")
+	_check(progress.completed_story_chapters.is_empty(), "fresh progress has no completed stories")
+	_check(progress.claimed_character_rewards.is_empty(), "fresh progress has no claimed rewards")
+	_check(progress.selected_level == 1, "fresh progress selects Level 1")
 	var requested_scenes: Array[String] = []
 	var screen = LevelSelectionScene.instantiate()
 	screen.progress_manager = progress
@@ -47,6 +53,7 @@ func _test_fresh_level_selection() -> void:
 	_check(not screen.level_buttons[1].disabled, "Level 1 is unlocked by default")
 	_check(not screen.level_buttons[1].get_node("LockIndicator").visible, "unlocked Level 1 has no visible padlock")
 	var expected_glyph_size := Vector2(54.0, 54.0)
+	var visible_lock_count := 0
 	_check(screen.LOCK_GOLD.is_equal_approx(Color("#FFD43B")), "padlock fill uses the required bright gold color")
 	_check(screen.LOCK_OUTLINE.is_equal_approx(Color("#5C3900")), "padlock uses the required dark-brown outline")
 	for level_id: int in range(2, 7):
@@ -59,6 +66,8 @@ func _test_fresh_level_selection() -> void:
 		var lock_indicator: CenterContainer = lock_nodes[0]
 		var padlock_glyph := lock_indicator.get_node("PadlockGlyph") as Control
 		_check(lock_indicator.visible, "Level %d displays its lock indicator" % level_id)
+		if lock_indicator.visible:
+			visible_lock_count += 1
 		_check(lock_indicator.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Level %d lock does not intercept input" % level_id)
 		_check(padlock_glyph != null, "Level %d lock contains its gold padlock glyph" % level_id)
 		if padlock_glyph == null:
@@ -66,6 +75,7 @@ func _test_fresh_level_selection() -> void:
 		_check(padlock_glyph.size.is_equal_approx(expected_glyph_size), "Level %d lock uses consistent dimensions" % level_id)
 		_check(is_equal_approx(padlock_glyph.size.y / level_button.size.y, 0.4), "Level %d lock occupies 40 percent of the button height" % level_id)
 		_check((padlock_glyph.position + padlock_glyph.size * 0.5).distance_to(level_button.size * 0.5) <= 0.75, "Level %d lock is centered inside its button" % level_id)
+	_check(visible_lock_count == 5, "fresh-player Level Selection displays exactly five visible padlocks")
 	_check(screen.selected_level_id == 1, "saved default Level 1 selection is restored")
 	_check(selection_label.text == "Selected: Level 1", "selected-level message updates without a null error")
 	_check(not selection_label.get_parent().visible, "selected-level status panel is hidden without removing its label")
@@ -101,6 +111,10 @@ func _test_saved_selection_and_pending_progression() -> void:
 	var progress = ProgressManagerScript.new()
 	progress.save_path = _save_path
 	progress.highest_unlocked_level = 3
+	progress.completed_levels.assign([1, 2])
+	progress.board_completed_levels.assign([1, 2])
+	progress.completed_story_chapters.assign([1, 2])
+	progress.claimed_character_rewards.assign([1, 2])
 	_check(progress.select_level(2), "an unlocked Level 2 selection can be saved")
 	progress.save_progress()
 	var reloaded = ProgressManagerScript.new()
@@ -116,6 +130,7 @@ func _test_saved_selection_and_pending_progression() -> void:
 	screen.scene_change_handler = func(path: String): requested_scenes.append(path)
 	get_root().add_child(screen)
 	await process_frame
+	var returning_lock_count := 0
 	for level_id: int in range(1, 4):
 		_check(not screen.level_buttons[level_id].disabled, "returning-player Level %d remains unlocked" % level_id)
 		_check(not screen.level_buttons[level_id].get_node("LockIndicator").visible, "returning-player Level %d hides its padlock" % level_id)
@@ -123,6 +138,9 @@ func _test_saved_selection_and_pending_progression() -> void:
 	for level_id: int in range(4, 7):
 		_check(screen.level_buttons[level_id].disabled, "returning-player Level %d remains locked" % level_id)
 		_check(screen.level_buttons[level_id].get_node("LockIndicator").visible, "returning-player Level %d keeps its padlock" % level_id)
+		if screen.level_buttons[level_id].get_node("LockIndicator").visible:
+			returning_lock_count += 1
+	_check(returning_lock_count == 3, "returning-player Level Selection displays exactly three visible padlocks")
 	_check(screen.play_button.tooltip_text == "Continue Level 1 progression", "pending progression gives Play a Continue description")
 	screen.play_button.pressed.emit()
 	_check(requested_scenes == ["res://story_mode.tscn"], "pending results progression resumes Story Mode")
@@ -176,10 +194,33 @@ func _test_unlock_visual_refresh() -> void:
 	_check(reloaded.is_level_unlocked(2), "Level 2 unlock persists after save reload")
 	_check(not reopened.level_buttons[2].disabled, "reopened Level 2 remains enabled")
 	_check(not reopened.level_buttons[2].get_node("LockIndicator").visible, "reopened Level 2 has no leftover padlock")
+	_check(reloaded.finish_progression(1), "Level 1 unlock confirmation is finalized before Level 2")
+	_check(reloaded.record_board_completion(2, 200, {}), "Level 2 board completion is recorded for sequential unlock testing")
+	_check(reloaded.begin_post_level_story(2), "Level 2 post-game progression begins")
+	_check(reloaded.mark_story_completed(2), "Level 2 story completion is recorded")
+	_check(reloaded.claim_character_reward(2), "Level 2 character reward is claimed")
+	_check(reloaded.confirm_character_unlock(2), "Level 2 confirmation legitimately unlocks Level 3")
+	await process_frame
+	await process_frame
+	var level_three: TextureButton = reopened.level_buttons[3]
+	_check(reloaded.is_level_unlocked(3), "ProgressManager reports Level 3 unlocked")
+	_check(not level_three.disabled, "Level 3 becomes enabled without reopening the screen")
+	_check(not level_three.get_node("LockIndicator").visible, "Level 3 padlock disappears after unlocking")
+	_check(level_three.self_modulate.is_equal_approx(Color.WHITE), "Level 3 returns to its original full-color appearance")
+	reopened._select_level(3)
+	_check(reopened.selected_level_id == 3, "newly unlocked Level 3 can be selected")
+	_check(not reopened.play_button.disabled, "PLAY enables for newly unlocked Level 3")
 
 	reopened.queue_free()
 	await process_frame
 	reloaded.free()
+
+	var final_reload = ProgressManagerScript.new()
+	final_reload.save_path = _save_path
+	final_reload.load_progress()
+	_check(final_reload.is_level_unlocked(3), "Level 3 unlock persists after save reload")
+	_check(final_reload.completed_levels.has(2), "Level 2 completion persists after save reload")
+	final_reload.free()
 
 
 func _cleanup() -> void:

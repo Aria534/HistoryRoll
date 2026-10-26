@@ -46,6 +46,7 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 
 	var previous_rect := Rect2()
 	var expected_glyph_size := Vector2(54.0, 54.0)
+	var visible_lock_count := 0
 	for level_id: int in range(1, 7):
 		var button: TextureButton = screen.level_buttons[level_id]
 		var button_rect := button.get_global_rect()
@@ -57,12 +58,15 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 			var padlock_glyph := lock_indicator.get_node("PadlockGlyph") as Control
 			var lock_rect := padlock_glyph.get_global_rect()
 			_check(lock_indicator.visible, "%s Level %d padlock is visible" % [size_label, level_id])
+			if lock_indicator.visible:
+				visible_lock_count += 1
 			_check(padlock_glyph.size.is_equal_approx(expected_glyph_size), "%s Level %d padlock has consistent dimensions" % [size_label, level_id])
 			_check(lock_rect.get_center().distance_to(button_rect.get_center()) <= 0.75, "%s Level %d padlock is centered" % [size_label, level_id])
 			_check(_rect_contains(button_rect, lock_rect), "%s Level %d padlock stays inside its button" % [size_label, level_id])
 		if level_id > 1:
 			_check(not previous_rect.intersects(button_rect), "%s Levels %d and %d do not overlap" % [size_label, level_id - 1, level_id])
 		previous_rect = button_rect
+	_check(visible_lock_count == 5, "%s fresh-player capture has exactly five visible padlocks" % size_label)
 	_check(previous_rect.end.y <= screen.play_button.get_global_rect().position.y, "%s PLAY is below the level list" % size_label)
 
 	var image := viewport.get_texture().get_image()
@@ -82,6 +86,10 @@ func _test_returning_player_capture() -> void:
 	var saved_progress = ProgressManagerScript.new()
 	saved_progress.save_path = SAVE_PATH
 	saved_progress.highest_unlocked_level = 3
+	saved_progress.completed_levels.assign([1, 2])
+	saved_progress.board_completed_levels.assign([1, 2])
+	saved_progress.completed_story_chapters.assign([1, 2])
+	saved_progress.claimed_character_rewards.assign([1, 2])
 	saved_progress.selected_level = 3
 	_check(saved_progress.save_progress(), "returning-player visual fixture is saved separately")
 	saved_progress.free()
@@ -103,9 +111,13 @@ func _test_returning_player_capture() -> void:
 		_check(not screen.level_buttons[level_id].disabled, "returning-player capture keeps Level %d enabled" % level_id)
 		_check(not screen.level_buttons[level_id].get_node("LockIndicator").visible, "returning-player capture removes Level %d padlock" % level_id)
 		_check(screen.level_buttons[level_id].self_modulate.is_equal_approx(Color.WHITE), "returning-player capture restores Level %d colors" % level_id)
+	var returning_lock_count := 0
 	for level_id: int in range(4, 7):
 		_check(screen.level_buttons[level_id].disabled, "returning-player capture keeps Level %d disabled" % level_id)
 		_check(screen.level_buttons[level_id].get_node("LockIndicator").visible, "returning-player capture keeps Level %d padlock" % level_id)
+		if screen.level_buttons[level_id].get_node("LockIndicator").visible:
+			returning_lock_count += 1
+	_check(returning_lock_count == 3, "returning-player capture has exactly three visible padlocks")
 
 	var image := viewport.get_texture().get_image()
 	var capture_path := ProjectSettings.globalize_path("user://level_selection_returning_1024x1536.png")
