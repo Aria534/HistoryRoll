@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bi0rgtrdac8qr" path="res://level_selection.gd" id="1_level"]
 [ext_resource type="Texture2D" uid="uid://dii48lafhmts6" path="res://assets/background/Dreamy Philippine Bay Boardwalk.png" id="2_au0oc"]
+[ext_resource type="Texture2D" uid="uid://c7fu7k73cehj2" path="res://assets/level selection buttons/play_button.png" id="3_play"]
+[ext_resource type="Texture2D" uid="uid://d1tcvblpy3cg5" path="res://assets/level selection buttons/back_arrow.png" id="4_back"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_au0oc"]
 
@@ -43,15 +45,26 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(1, 1, 1, 0)
 
+[node name="BackButton" type="TextureButton" parent="."]
+unique_name_in_owner = true
+offset_left = 22.0
+offset_top = 22.0
+offset_right = 132.0
+offset_bottom = 98.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_back")
+ignore_texture_size = true
+stretch_mode = 5
+
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=518127093]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 48.0
-offset_top = 72.0
+offset_top = 112.0
 offset_right = -48.0
-offset_bottom = -72.0
+offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -68,31 +81,31 @@ theme_override_constants/margin_bottom = 0
 
 [node name="Content" type="VBoxContainer" parent="MarginContainer/ContentPanel/ContentMargin" unique_id=401582270]
 layout_mode = 2
-theme_override_constants/separation = 26
+theme_override_constants/separation = 10
 
 [node name="TitleLabel" type="Label" parent="MarginContainer/ContentPanel/ContentMargin/Content" unique_id=350812019]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.31, 1)
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 44
 text = "CHOOSE YOUR LEVEL"
 horizontal_alignment = 1
 
 [node name="InstructionLabel" type="Label" parent="MarginContainer/ContentPanel/ContentMargin/Content" unique_id=35053098]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.94, 0.96, 1, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 22
 text = "Select an unlocked journey, then press Play."
 horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="LevelList" type="VBoxContainer" parent="MarginContainer/ContentPanel/ContentMargin/Content" unique_id=949235806]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 600)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 20
+theme_override_constants/separation = 8
 
 [node name="SelectionPanel" type="PanelContainer" parent="MarginContainer/ContentPanel/ContentMargin/Content" unique_id=1822609302]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_status")
 
@@ -112,17 +125,12 @@ layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 1
 
-[node name="BackButton" type="Button" parent="MarginContainer/ContentPanel/ContentMargin/Content/NavigationButtons" unique_id=1082653958]
+[node name="PlayButton" type="TextureButton" parent="MarginContainer/ContentPanel/ContentMargin/Content/NavigationButtons" unique_id=2033993048]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 96)
+custom_minimum_size = Vector2(330, 100)
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "Back"
-
-[node name="PlayButton" type="Button" parent="MarginContainer/ContentPanel/ContentMargin/Content/NavigationButtons" unique_id=2033993048]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(360, 96)
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
 disabled = true
-text = "Play"
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("3_play")
+ignore_texture_size = true
+stretch_mode = 5

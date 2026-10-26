@@ -321,7 +321,7 @@ func _test_navigation_wiring() -> void:
 	await process_frame
 	_check(main_menu.get_node("StartButton").pressed.get_connections().size() > 0, "Main Menu Start button remains connected")
 	_check(main_menu.get_node("HeroCardsButton").pressed.get_connections().size() > 0, "Main Menu Hero Cards button remains connected")
-	_check(main_menu.get_node("AchievementButton").pressed.get_connections().size() > 0, "Main Menu Achievements button remains connected")
+	_check(main_menu.get_node("SettingsButton").pressed.get_connections().size() > 0, "Main Menu Settings button remains connected")
 	_check(main_menu.get_node("QuitButton").pressed.get_connections().size() > 0, "Main Menu Quit button remains connected")
 	main_menu.queue_free()
 	await process_frame
@@ -330,7 +330,7 @@ func _test_navigation_wiring() -> void:
 	get_root().add_child(level_selection)
 	await process_frame
 	_check(level_selection.get_node("MarginContainer/ContentPanel/ContentMargin/Content/NavigationButtons/PlayButton").pressed.get_connections().size() > 0, "Level Selection Play button remains connected")
-	_check(level_selection.get_node("MarginContainer/ContentPanel/ContentMargin/Content/NavigationButtons/BackButton").pressed.get_connections().size() > 0, "Level Selection Back button remains connected")
+	_check(level_selection.get_node("BackButton").pressed.get_connections().size() > 0, "Level Selection Back button remains connected")
 	level_selection.queue_free()
 	await process_frame
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djcrg8uhcau2i"
-path="res://.godot/imported/achievements.png-b80ef1a31e5e5dfd979cdf0406b8fb59.ctex"
+uid="uid://bosljc24wp1dn"
+path="res://.godot/imported/Level6.png-b839070b644faa3dc2a138f21cada8df.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/buttons/achievements.png"
-dest_files=["res://.godot/imported/achievements.png-b80ef1a31e5e5dfd979cdf0406b8fb59.ctex"]
+source_file="res://assets/level selection buttons/Level6.png"
+dest_files=["res://.godot/imported/Level6.png-b839070b644faa3dc2a138f21cada8df.ctex"]
 
 [params]
 

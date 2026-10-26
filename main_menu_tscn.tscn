@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://cwalcnt8aa2f6" path="res://assets/background/main_menu_foliage/main_menu_static.png" id="2_pur26"]
 [ext_resource type="Texture2D" uid="uid://dlax1x85v7lib" path="res://assets/buttons/start.png" id="4_obwwd"]
 [ext_resource type="Texture2D" uid="uid://bis73hgier538" path="res://assets/buttons/herocard.png" id="5_pur26"]
-[ext_resource type="Texture2D" uid="uid://djcrg8uhcau2i" path="res://assets/buttons/achievements.png" id="6_txe8c"]
 [ext_resource type="Texture2D" uid="uid://dxlbhl21pnarl" path="res://assets/buttons/quit.png" id="7_axwo0"]
+[ext_resource type="Texture2D" uid="uid://daegcgwkdjxt2" path="res://assets/buttons/Settings.png" id="13_ndcec"]
 [ext_resource type="Script" uid="uid://uupsexotbnxm" path="res://live_background.gd" id="37_aefuk"]
 [ext_resource type="Script" uid="uid://brobs23vcesah" path="res://plant_sway.gd" id="38_plants"]
 [ext_resource type="Texture2D" uid="uid://bdmjic0dmtheg" path="res://assets/background/main_menu_foliage/plant_top_left.png" id="39_top_left"]
@@ -95,13 +95,13 @@ texture_normal = ExtResource("5_pur26")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="AchievementButton" type="TextureButton" parent="." unique_id=1174385454]
+[node name="SettingsButton" type="TextureButton" parent="." unique_id=1174385454]
 layout_mode = 0
 offset_left = 307.0
 offset_top = 901.0
 offset_right = 735.0
 offset_bottom = 1207.0
-texture_normal = ExtResource("6_txe8c")
+texture_normal = ExtResource("13_ndcec")
 ignore_texture_size = true
 stretch_mode = 5
 

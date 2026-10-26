@@ -11,7 +11,11 @@ func _init() -> void:
 
 
 func _run() -> void:
+	var requested_scenes: Array[String] = []
+	var quit_state := {"requested": false}
 	var menu := MainMenuScene.instantiate()
+	menu.scene_change_handler = func(path: String): requested_scenes.append(path)
+	menu.quit_handler = func(): quit_state["requested"] = true
 	get_root().add_child(menu)
 	await process_frame
 
@@ -37,7 +41,7 @@ func _run() -> void:
 			starting_rotations[plant_name] = plant.rotation
 
 	var button_names: Array[String] = [
-		"StartButton", "HeroCardsButton", "AchievementButton", "QuitButton",
+		"StartButton", "HeroCardsButton", "SettingsButton", "QuitButton",
 	]
 	for button_name: String in button_names:
 		var button := menu.get_node_or_null(button_name) as TextureButton
@@ -45,6 +49,26 @@ func _run() -> void:
 		if button != null:
 			_check(not button.disabled, "%s remains enabled" % button_name)
 			_check(button.pressed.get_connections().size() == 1, "%s keeps one navigation callback" % button_name)
+
+	_check(menu._validate_required_buttons(), "all required Main Menu TextureButtons resolve")
+	_check(ResourceLoader.exists("res://settings.tscn"), "Settings scene exists")
+	menu.start_button.pressed.emit()
+	_check(requested_scenes == ["res://level_selection.tscn"], "Start opens Level Selection")
+	menu._scene_transition_pending = false
+	menu._set_buttons_disabled(false)
+	requested_scenes.clear()
+	menu.hero_cards_button.pressed.emit()
+	_check(requested_scenes == ["res://hero_cards.tscn"], "Hero Cards opens the existing Hero Cards scene")
+	menu._scene_transition_pending = false
+	menu._set_buttons_disabled(false)
+	requested_scenes.clear()
+	menu.settings_button.pressed.emit()
+	menu.settings_button.pressed.emit()
+	_check(requested_scenes == ["res://settings.tscn"], "Settings opens its scene exactly once during repeated input")
+	menu._scene_transition_pending = false
+	menu._set_buttons_disabled(false)
+	menu.quit_button.pressed.emit()
+	_check(bool(quit_state["requested"]), "Quit requests application exit")
 
 	var background_position := background.position
 	var background_scale := background.scale
