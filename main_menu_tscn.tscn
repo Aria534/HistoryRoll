@@ -77,9 +77,9 @@ offset = Vector2(-97, -414)
 [node name="StartButton" type="TextureButton" parent="." unique_id=1768276902]
 layout_mode = 0
 offset_left = 302.0
-offset_top = 538.0
+offset_top = 512.0
 offset_right = 733.0
-offset_bottom = 831.0
+offset_bottom = 805.0
 mouse_force_pass_scroll_events = false
 texture_normal = ExtResource("4_obwwd")
 ignore_texture_size = true
@@ -87,10 +87,10 @@ stretch_mode = 5
 
 [node name="HeroCardsButton" type="TextureButton" parent="." unique_id=1501236565]
 layout_mode = 0
-offset_left = 302.0
-offset_top = 674.0
-offset_right = 722.0
-offset_bottom = 1073.0
+offset_left = 287.0
+offset_top = 663.0
+offset_right = 707.0
+offset_bottom = 1062.0
 texture_normal = ExtResource("5_pur26")
 ignore_texture_size = true
 stretch_mode = 5

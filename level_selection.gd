@@ -4,27 +4,18 @@ const MAIN_MENU_SCENE: String = "res://main_menu_tscn.tscn"
 const STORY_MODE_SCENE: String = "res://story_mode.tscn"
 const CHARACTER_UNLOCK_SCENE: String = "res://character_unlock.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
-const LEVEL_BUTTON_TEXTURES: Array[Texture2D] = [
-	preload("res://assets/level selection buttons/Level1.png"),
-	preload("res://assets/level selection buttons/Level2.png"),
-	preload("res://assets/level selection buttons/Level3.png"),
-	preload("res://assets/level selection buttons/Level4.png"),
-	preload("res://assets/level selection buttons/Level5.png"),
-	preload("res://assets/level selection buttons/Level6.png"),
-]
 
-const LEVEL_BUTTON_SIZE := Vector2(405.0, 135.0)
-const LOCK_ICON_SIZE := Vector2(54.0, 54.0)
 const LOCK_GOLD := Color("#FFD43B")
 const LOCK_OUTLINE := Color("#5C3900")
-const LOCKED_MODULATE := Color(0.68, 0.70, 0.76, 0.92)
+const LOCKED_MODULATE := Color(0.62, 0.64, 0.68, 0.95)
 const SELECTED_SCALE := 1.025
 
 @export var hover_scale: float = 1.03
 @export var press_scale: float = 0.97
 @export var animation_time: float = 0.12
 
-@onready var level_list: VBoxContainer = %LevelList
+@onready var level_buttons_area: Control = %LevelButtonsArea
+@onready var title_banner: TextureRect = %TitleBanner
 @onready var selection_label: Label = %SelectionLabel
 @onready var back_button: TextureButton = %BackButton
 @onready var play_button: TextureButton = %PlayButton
@@ -41,26 +32,47 @@ var scene_transition_pending := false
 func _ready() -> void:
 	if progress_manager == null:
 		progress_manager = get_node_or_null("/root/ProgressManager")
+	_cache_level_buttons()
 	if not _validate_required_nodes():
 		return
-	back_button.pressed.connect(_on_back_pressed)
-	play_button.pressed.connect(_on_play_pressed)
+	_connect_button_once(back_button, _on_back_pressed)
+	_connect_button_once(play_button, _on_play_pressed)
 	_setup_animated_button(back_button)
 	_setup_animated_button(play_button)
-	progress_manager.progress_changed.connect(_refresh_levels)
+	if not progress_manager.progress_changed.is_connected(_refresh_levels):
+		progress_manager.progress_changed.connect(_refresh_levels)
+	for level_id: int in range(1, 7):
+		var button: TextureButton = level_buttons[level_id]
+		_connect_button_once(button, _on_level_pressed.bind(level_id))
+		_setup_animated_button(button)
 	_refresh_levels()
+
+
+func _cache_level_buttons() -> void:
+	level_buttons.clear()
+	if level_buttons_area == null:
+		return
+	for level_id: int in range(1, 7):
+		var button := level_buttons_area.get_node_or_null("Level%dButton" % level_id) as TextureButton
+		if button != null:
+			level_buttons[level_id] = button
 
 
 func _validate_required_nodes() -> bool:
 	var missing_nodes: Array[String] = []
-	if level_list == null:
-		missing_nodes.append("LevelList")
+	if level_buttons_area == null:
+		missing_nodes.append("LevelButtonsArea")
+	if title_banner == null:
+		missing_nodes.append("TitleBanner")
 	if selection_label == null:
 		missing_nodes.append("SelectionLabel")
 	if back_button == null:
 		missing_nodes.append("BackButton")
 	if play_button == null:
 		missing_nodes.append("PlayButton")
+	for level_id: int in range(1, 7):
+		if not level_buttons.has(level_id):
+			missing_nodes.append("Level%dButton" % level_id)
 	if progress_manager == null:
 		missing_nodes.append("/root/ProgressManager")
 	if not missing_nodes.is_empty():
@@ -70,29 +82,21 @@ func _validate_required_nodes() -> bool:
 
 
 func _refresh_levels() -> void:
-	for child: Node in level_list.get_children():
-		level_list.remove_child(child)
-		child.queue_free()
-	level_buttons.clear()
 	for level: Dictionary in LevelCatalog.get_levels():
 		var level_id := int(level.get("id", 0))
-		if level_id < 1 or level_id > LEVEL_BUTTON_TEXTURES.size():
-			push_error("No custom Level Selection texture is configured for Level %d." % level_id)
+		if not level_buttons.has(level_id):
 			continue
-		var button := TextureButton.new()
-		button.name = "Level%dButton" % level_id
-		button.custom_minimum_size = LEVEL_BUTTON_SIZE
-		button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		button.ignore_texture_size = true
-		button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		button.texture_normal = LEVEL_BUTTON_TEXTURES[level_id - 1]
-		button.disabled = not progress_manager.is_level_unlocked(level_id)
-		button.tooltip_text = _get_level_button_tooltip(level, button.disabled)
-		button.pressed.connect(_on_level_pressed.bind(level_id))
-		level_list.add_child(button)
-		_add_lock_indicator(button, button.disabled)
-		level_buttons[level_id] = button
-		_setup_animated_button(button)
+		var button: TextureButton = level_buttons[level_id]
+		var locked: bool = not progress_manager.is_level_unlocked(level_id)
+		button.disabled = locked
+		button.tooltip_text = _get_level_button_tooltip(level, locked)
+		var lock_overlay := button.get_node_or_null("LockOverlay") as Control
+		if lock_overlay == null:
+			push_error("Level%dButton is missing its permanent LockOverlay." % level_id)
+		else:
+			lock_overlay.visible = locked
+		button.self_modulate = LOCKED_MODULATE if locked else Color.WHITE
+
 	var preferred_level: int = progress_manager.selected_level
 	if level_buttons.has(preferred_level) and progress_manager.is_level_unlocked(preferred_level):
 		_select_level(preferred_level)
@@ -104,10 +108,10 @@ func _refresh_levels() -> void:
 
 
 func _get_level_button_tooltip(level: Dictionary, locked: bool) -> String:
-	var title := str(level.get("title", "Level"))
 	var level_id := int(level.get("id", 0))
 	if locked:
-		return "%s\nLOCKED" % title.to_upper()
+		return "LEVEL %d\nLOCKED" % level_id
+	var title := str(level.get("title", "Level %d" % level_id))
 	if progress_manager.is_level_completed(level_id):
 		return "%s\nCOMPLETED" % title.to_upper()
 	if progress_manager.has_pending_progression(level_id):
@@ -117,46 +121,9 @@ func _get_level_button_tooltip(level: Dictionary, locked: bool) -> String:
 	return "%s\nAVAILABLE" % title.to_upper()
 
 
-func _add_lock_indicator(button: TextureButton, locked: bool) -> void:
-	var lock_indicator := CenterContainer.new()
-	lock_indicator.name = "LockIndicator"
-	button.add_child(lock_indicator)
-	lock_indicator.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	lock_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var padlock_glyph := Control.new()
-	padlock_glyph.name = "PadlockGlyph"
-	padlock_glyph.custom_minimum_size = LOCK_ICON_SIZE
-	padlock_glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	padlock_glyph.draw.connect(_draw_padlock.bind(padlock_glyph))
-	lock_indicator.add_child(padlock_glyph)
-	lock_indicator.visible = locked
-	button.self_modulate = LOCKED_MODULATE if locked else Color.WHITE
-
-
-func _draw_padlock(icon: Control) -> void:
-	# Draw the shackle first so the rounded body cleanly overlaps its lower edge.
-	var center := Vector2(27.0, 23.0)
-	icon.draw_arc(center, 13.0, PI, TAU, 24, LOCK_OUTLINE, 9.0, true)
-	icon.draw_arc(center, 13.0, PI, TAU, 24, LOCK_GOLD, 5.0, true)
-
-	var outline_box := StyleBoxFlat.new()
-	outline_box.bg_color = LOCK_OUTLINE
-	outline_box.corner_radius_top_left = 7
-	outline_box.corner_radius_top_right = 7
-	outline_box.corner_radius_bottom_left = 7
-	outline_box.corner_radius_bottom_right = 7
-	icon.draw_style_box(outline_box, Rect2(4.0, 21.0, 46.0, 32.0))
-
-	var gold_box := StyleBoxFlat.new()
-	gold_box.bg_color = LOCK_GOLD
-	gold_box.corner_radius_top_left = 5
-	gold_box.corner_radius_top_right = 5
-	gold_box.corner_radius_bottom_left = 5
-	gold_box.corner_radius_bottom_right = 5
-	icon.draw_style_box(gold_box, Rect2(8.0, 25.0, 38.0, 24.0))
-
-	icon.draw_circle(Vector2(27.0, 35.0), 3.5, LOCK_OUTLINE, true)
-	icon.draw_rect(Rect2(25.0, 35.0, 4.0, 9.0), LOCK_OUTLINE, true)
+func _connect_button_once(button: BaseButton, callback: Callable) -> void:
+	if not button.pressed.is_connected(callback):
+		button.pressed.connect(callback)
 
 
 func _on_level_pressed(level_id: int) -> void:
@@ -181,10 +148,7 @@ func _select_level(level_id: int) -> void:
 	)
 	for key: Variant in level_buttons:
 		var button: TextureButton = level_buttons[key]
-		if button.disabled:
-			button.self_modulate = LOCKED_MODULATE
-		else:
-			button.self_modulate = Color.WHITE
+		button.self_modulate = LOCKED_MODULATE if button.disabled else Color.WHITE
 		button.scale = Vector2.ONE * _get_rest_scale(button)
 
 

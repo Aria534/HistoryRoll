@@ -329,7 +329,7 @@ func _test_navigation_wiring() -> void:
 	var level_selection = load("res://level_selection.tscn").instantiate()
 	get_root().add_child(level_selection)
 	await process_frame
-	_check(level_selection.get_node("MarginContainer/ContentPanel/ContentMargin/Content/NavigationButtons/PlayButton").pressed.get_connections().size() > 0, "Level Selection Play button remains connected")
+	_check(level_selection.get_node("PlayButton").pressed.get_connections().size() > 0, "Level Selection Play button remains connected")
 	_check(level_selection.get_node("BackButton").pressed.get_connections().size() > 0, "Level Selection Back button remains connected")
 	level_selection.queue_free()
 	await process_frame

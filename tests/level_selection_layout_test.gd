@@ -40,28 +40,30 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 	var size_label := "%dx%d" % [viewport_size.x, viewport_size.y]
 	_check(screen.size.round() == Vector2(viewport_size), "%s root fills the viewport" % size_label)
 	_check(screen.level_buttons.size() == 6, "%s shows all six level controls" % size_label)
+	_check(screen.level_buttons_area.get_child_count() == 6, "%s does not create duplicate runtime buttons" % size_label)
 	_check(not screen.selection_label.get_parent().visible, "%s keeps the status panel hidden" % size_label)
+	_check(_rect_is_inside(screen.title_banner.get_global_rect(), viewport_size), "%s title banner stays on-screen" % size_label)
+	_check(not screen.title_banner.get_global_rect().intersects(screen.back_button.get_global_rect()), "%s title does not overlap Back Arrow" % size_label)
 	_check(_rect_is_inside(screen.back_button.get_global_rect(), viewport_size), "%s Back Arrow stays on-screen" % size_label)
 	_check(_rect_is_inside(screen.play_button.get_global_rect(), viewport_size), "%s PLAY stays on-screen" % size_label)
 
 	var previous_rect := Rect2()
-	var expected_glyph_size := Vector2(54.0, 54.0)
 	var visible_lock_count := 0
 	for level_id: int in range(1, 7):
 		var button: TextureButton = screen.level_buttons[level_id]
 		var button_rect := button.get_global_rect()
 		_check(_rect_is_inside(button_rect, viewport_size), "%s Level %d stays on-screen" % [size_label, level_id])
-		var lock_indicator := button.get_node("LockIndicator") as CenterContainer
+		var lock_indicator := button.get_node("LockOverlay") as Control
 		if level_id == 1:
 			_check(not lock_indicator.visible, "%s unlocked Level 1 has no visible padlock" % size_label)
 		else:
-			var padlock_glyph := lock_indicator.get_node("PadlockGlyph") as Control
-			var lock_rect := padlock_glyph.get_global_rect()
+			var local_lock_rect: Rect2 = lock_indicator.get_padlock_rect()
+			var lock_rect := Rect2(lock_indicator.global_position + local_lock_rect.position, local_lock_rect.size)
 			_check(lock_indicator.visible, "%s Level %d padlock is visible" % [size_label, level_id])
 			if lock_indicator.visible:
 				visible_lock_count += 1
-			_check(padlock_glyph.size.is_equal_approx(expected_glyph_size), "%s Level %d padlock has consistent dimensions" % [size_label, level_id])
-			_check(lock_rect.get_center().distance_to(button_rect.get_center()) <= 0.75, "%s Level %d padlock is centered" % [size_label, level_id])
+			_check(is_equal_approx(local_lock_rect.size.y / button.size.y, 0.5), "%s Level %d padlock scales to 50 percent height" % [size_label, level_id])
+			_check(lock_rect.get_center().distance_to(button_rect.get_center()) <= 1.0, "%s Level %d padlock is centered" % [size_label, level_id])
 			_check(_rect_contains(button_rect, lock_rect), "%s Level %d padlock stays inside its button" % [size_label, level_id])
 		if level_id > 1:
 			_check(not previous_rect.intersects(button_rect), "%s Levels %d and %d do not overlap" % [size_label, level_id - 1, level_id])
@@ -109,13 +111,13 @@ func _test_returning_player_capture() -> void:
 
 	for level_id: int in range(1, 4):
 		_check(not screen.level_buttons[level_id].disabled, "returning-player capture keeps Level %d enabled" % level_id)
-		_check(not screen.level_buttons[level_id].get_node("LockIndicator").visible, "returning-player capture removes Level %d padlock" % level_id)
+		_check(not screen.level_buttons[level_id].get_node("LockOverlay").visible, "returning-player capture removes Level %d padlock" % level_id)
 		_check(screen.level_buttons[level_id].self_modulate.is_equal_approx(Color.WHITE), "returning-player capture restores Level %d colors" % level_id)
 	var returning_lock_count := 0
 	for level_id: int in range(4, 7):
 		_check(screen.level_buttons[level_id].disabled, "returning-player capture keeps Level %d disabled" % level_id)
-		_check(screen.level_buttons[level_id].get_node("LockIndicator").visible, "returning-player capture keeps Level %d padlock" % level_id)
-		if screen.level_buttons[level_id].get_node("LockIndicator").visible:
+		_check(screen.level_buttons[level_id].get_node("LockOverlay").visible, "returning-player capture keeps Level %d padlock" % level_id)
+		if screen.level_buttons[level_id].get_node("LockOverlay").visible:
 			returning_lock_count += 1
 	_check(returning_lock_count == 3, "returning-player capture has exactly three visible padlocks")
 
