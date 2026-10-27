@@ -1,13 +1,16 @@
 @tool
 extends Control
 
+const LOCKED_TEXT_FONT: Font = preload("res://assets/fonts/TitanOne-Regular.ttf")
 const LOCK_GOLD := Color("#FFD43B")
 const LOCK_OUTLINE := Color("#5C3900")
-const COVER_BLUE := Color("#214F78")
-const COVER_BLUE_DARK := Color("#082B51")
-const COVER_HIGHLIGHT := Color("#4B7897")
-const TEXT_COLOR := Color("#D6D8D8")
-const TEXT_OUTLINE := Color("#0B2B59")
+const COVER_BLUE := Color("#0A86F4")
+const COVER_BLUE_DARK := Color("#052E93")
+const COVER_HIGHLIGHT := Color("#72E8FF")
+const COVER_LOWLIGHT := Color("#064FCB")
+const TEXT_COLOR := Color.WHITE
+const TEXT_OUTLINE := Color("#071D64")
+const TEXT_SHADOW := Color("#03103C")
 const LOCK_HEIGHT_RATIO := 0.50
 const HERO_SURNAMES: PackedStringArray = [
 	"LAPU-LAPU",
@@ -36,15 +39,15 @@ func get_padlock_rect() -> Rect2:
 
 
 func get_concealment_rect() -> Rect2:
-	return Rect2(size.x * 0.055, size.y * 0.16, size.x * 0.89, size.y * 0.68)
+	return Rect2(size.x * 0.07, size.y * 0.235, size.x * 0.86, size.y * 0.53)
 
 
 func get_left_text_rect() -> Rect2:
-	return Rect2(size.x * 0.08, size.y * 0.22, size.x * 0.325, size.y * 0.56)
+	return Rect2(size.x * 0.08, size.y * 0.25, size.x * 0.325, size.y * 0.50)
 
 
 func get_right_text_rect() -> Rect2:
-	return Rect2(size.x * 0.595, size.y * 0.22, size.x * 0.325, size.y * 0.56)
+	return Rect2(size.x * 0.595, size.y * 0.25, size.x * 0.325, size.y * 0.50)
 
 
 func get_hero_surname() -> String:
@@ -78,14 +81,19 @@ func _draw_name_concealment() -> void:
 		maxf(1.0, size.y * 0.018),
 		true
 	)
+	var lowlight_y := cover_rect.end.y - float(border_width) - 2.0
+	draw_line(
+		Vector2(cover_rect.position.x + cover_rect.size.y * 0.34, lowlight_y),
+		Vector2(cover_rect.end.x - cover_rect.size.y * 0.34, lowlight_y),
+		COVER_LOWLIGHT,
+		maxf(1.0, size.y * 0.022),
+		true
+	)
 
 
 func _draw_locked_text() -> void:
-	var font := FontVariation.new()
-	font.base_font = ThemeDB.fallback_font
-	font.variation_embolden = 1.2
-	_draw_fitted_text(font, "LEVEL %d -" % level_number, get_left_text_rect())
-	_draw_fitted_text(font, get_hero_surname(), get_right_text_rect())
+	_draw_fitted_text(LOCKED_TEXT_FONT, "LEVEL %d -" % level_number, get_left_text_rect())
+	_draw_fitted_text(LOCKED_TEXT_FONT, get_hero_surname(), get_right_text_rect())
 
 
 func _draw_fitted_text(font: Font, text: String, rect: Rect2) -> void:
@@ -94,7 +102,9 @@ func _draw_fitted_text(font: Font, text: String, rect: Rect2) -> void:
 		font_size -= 1
 	var baseline_y := rect.get_center().y + (font.get_ascent(font_size) - font.get_descent(font_size)) * 0.5
 	var baseline := Vector2(rect.position.x, baseline_y)
-	var outline_size := maxi(2, roundi(size.y * 0.028))
+	var outline_size := maxi(3, roundi(size.y * 0.035))
+	var shadow_offset := Vector2(0.0, maxf(2.0, size.y * 0.03))
+	draw_string_outline(font, baseline + shadow_offset, text, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, font_size, outline_size, TEXT_SHADOW)
 	draw_string_outline(font, baseline, text, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, font_size, outline_size, TEXT_OUTLINE)
 	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, font_size, TEXT_COLOR)
 

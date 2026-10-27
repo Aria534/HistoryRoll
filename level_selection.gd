@@ -7,7 +7,7 @@ const LevelCatalog = preload("res://level_catalog.gd")
 
 const LOCK_GOLD := Color("#FFD43B")
 const LOCK_OUTLINE := Color("#5C3900")
-const LOCKED_MODULATE := Color(0.62, 0.64, 0.68, 0.95)
+const LOCKED_MODULATE := Color.WHITE
 const SELECTED_SCALE := 1.025
 
 @export var hover_scale: float = 1.03
