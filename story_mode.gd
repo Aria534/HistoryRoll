@@ -1,7 +1,6 @@
 extends Control
 
-const LEVEL_SELECTION_SCENE: String = "res://level_selection.tscn"
-const CHARACTER_UNLOCK_SCENE: String = "res://character_unlock.tscn"
+const HERO_CARDS_SCENE: String = "res://hero_cards.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
 
 @onready var level_label: Label = %LevelLabel
@@ -22,19 +21,12 @@ func _ready() -> void:
 	if progress_manager == null:
 		progress_manager = get_node("/root/ProgressManager")
 	continue_button.pressed.connect(_on_continue_pressed)
-	_load_post_level_story()
+	_load_hero_story()
 
 
-func _load_post_level_story() -> void:
-	level_id = int(progress_manager.pending_progression_level)
-	story_available = (
-		level_id > 0
-		and progress_manager.progression_stage == progress_manager.STAGE_POST_STORY
-		and progress_manager.is_board_completed(level_id)
-	)
-	if not story_available:
-		_show_unavailable_story()
-		return
+func _load_hero_story() -> void:
+	level_id = int(progress_manager.selected_story_level)
+	story_available = LevelCatalog.has_level(level_id)
 	level_data = LevelCatalog.get_level(level_id)
 	if level_data.is_empty():
 		_show_unavailable_story()
@@ -46,7 +38,7 @@ func _load_post_level_story() -> void:
 		"DEVELOPMENT PLACEHOLDER — Approved educational story content has not been added yet."
 	))
 	_set_portrait(str(level_data.get("portrait_path", "")))
-	continue_button.text = "Continue"
+	continue_button.text = "Back to Hero Cards"
 	continue_button.disabled = false
 
 
@@ -63,32 +55,21 @@ func _show_unavailable_story() -> void:
 	story_available = false
 	level_label.text = "STORY UNAVAILABLE"
 	hero_name_label.text = ""
-	story_text.text = "Complete the level board and view its results before opening Story Mode."
+	story_text.text = "Choose a Filipino hero from Hero Cards to open their story."
 	portrait.texture = null
 	portrait.hide()
 	portrait_placeholder_label.hide()
-	continue_button.text = "Return to Level Selection"
+	continue_button.text = "Back to Hero Cards"
 	continue_button.disabled = false
 
 
 func _on_continue_pressed() -> void:
 	continue_button.disabled = true
-	if not story_available:
-		_change_scene(LEVEL_SELECTION_SCENE)
-		return
-	if complete_story():
-		_change_scene(CHARACTER_UNLOCK_SCENE)
-	else:
-		story_text.text = "Unable to record story completion. Please return to Level Selection and resume your progress."
-		continue_button.text = "Return to Level Selection"
-		story_available = false
-		continue_button.disabled = false
+	_change_scene(HERO_CARDS_SCENE)
 
 
 func complete_story() -> bool:
-	if not story_available:
-		return false
-	return bool(progress_manager.mark_story_completed(level_id))
+	return story_available
 
 
 func _change_scene(path: String) -> void:

@@ -4,7 +4,7 @@ signal progress_changed
 
 const LevelCatalog = preload("res://level_catalog.gd")
 const DEFAULT_SAVE_PATH: String = "user://historyroll_progress.json"
-const SAVE_VERSION: int = 2
+const SAVE_VERSION: int = 3
 const DEFAULT_HERO_ID: String = "historyroll_explorer"
 const STAGE_RESULTS: String = "results"
 const STAGE_POST_STORY: String = "post_story"
@@ -22,6 +22,7 @@ var selected_hero: String = DEFAULT_HERO_ID
 var best_scores: Dictionary = {}
 var last_level_stats: Dictionary = {}
 var selected_level: int = 1
+var selected_story_level: int = 1
 var pending_progression_level: int = 0
 var progression_stage: String = ""
 var game_completed: bool = false
@@ -70,8 +71,19 @@ func record_board_completion(level_id: int, final_score: int, statistics: Dictio
 	last_level_stats = statistics.duplicate(true)
 	last_level_stats["level_id"] = level_id
 	last_level_stats["final_score"] = maxi(0, final_score)
-	pending_progression_level = level_id
-	progression_stage = STAGE_RESULTS
+	_add_unique_int(completed_levels, level_id)
+	var reward := LevelCatalog.get_character_reward(level_id)
+	var character_id := str(reward.get("id", ""))
+	if not character_id.is_empty() and not unlocked_characters.has(character_id):
+		unlocked_characters.append(character_id)
+	_add_unique_int(claimed_character_rewards, level_id)
+	var next_level_id := LevelCatalog.get_next_level_id(level_id)
+	if next_level_id > 0:
+		highest_unlocked_level = maxi(highest_unlocked_level, next_level_id)
+	else:
+		game_completed = true
+	pending_progression_level = 0
+	progression_stage = ""
 	save_progress()
 	progress_changed.emit()
 	return true
@@ -81,6 +93,18 @@ func record_board_completion(level_id: int, final_score: int, statistics: Dictio
 # does not unlock the next level.
 func mark_level_completed(level_id: int) -> bool:
 	return record_board_completion(level_id, 0, {})
+
+
+func select_story_level(level_id: int) -> bool:
+	if not LevelCatalog.has_level(level_id):
+		return false
+	selected_story_level = level_id
+	save_progress()
+	return true
+
+
+func finish_level_results(_level_id: int) -> bool:
+	return true
 
 
 func begin_post_level_story(level_id: int) -> bool:
@@ -202,6 +226,7 @@ func save_progress() -> bool:
 		"best_scores": best_scores,
 		"last_level_stats": last_level_stats,
 		"selected_level": selected_level,
+		"selected_story_level": selected_story_level,
 		"pending_progression_level": pending_progression_level,
 		"progression_stage": progression_stage,
 		"game_completed": game_completed,
@@ -226,12 +251,34 @@ func load_progress() -> void:
 		progress_changed.emit()
 		return
 	var data: Dictionary = json.data
-	if int(data.get("version", 1)) < SAVE_VERSION:
+	var loaded_version := int(data.get("version", 1))
+	if loaded_version < SAVE_VERSION:
+		_backup_save_before_migration(loaded_version)
+	if loaded_version < 2:
 		_migrate_version_one(data)
+		_migrate_to_question_first()
 		save_progress()
 	else:
 		_load_version_two(data)
+		if loaded_version < SAVE_VERSION:
+			_migrate_to_question_first()
+			save_progress()
 	progress_changed.emit()
+
+
+func _backup_save_before_migration(from_version: int) -> void:
+	var backup_path := "%s.pre-v%d-backup.json" % [save_path.trim_suffix(".json"), from_version]
+	if FileAccess.file_exists(backup_path):
+		return
+	var source := FileAccess.open(save_path, FileAccess.READ)
+	if source == null:
+		push_warning("Unable to back up HistoryRoll progress before migration.")
+		return
+	var backup := FileAccess.open(backup_path, FileAccess.WRITE)
+	if backup == null:
+		push_warning("Unable to create HistoryRoll migration backup: %s" % backup_path)
+		return
+	backup.store_string(source.get_as_text())
 
 
 func _load_version_two(data: Dictionary) -> void:
@@ -254,6 +301,7 @@ func _load_version_two(data: Dictionary) -> void:
 	if data.get("last_level_stats", {}) is Dictionary:
 		last_level_stats = (data.get("last_level_stats", {}) as Dictionary).duplicate(true)
 	selected_level = clampi(int(data.get("selected_level", 1)), 1, highest_unlocked_level)
+	selected_story_level = clampi(int(data.get("selected_story_level", selected_level)), 1, LevelCatalog.get_highest_level_id())
 	if not LevelCatalog.has_level(selected_level):
 		selected_level = 1
 	pending_progression_level = int(data.get("pending_progression_level", 0))
@@ -288,6 +336,25 @@ func _migrate_version_one(data: Dictionary) -> void:
 	game_completed = completed_levels.has(LevelCatalog.get_highest_level_id())
 
 
+func _migrate_to_question_first() -> void:
+	# Old saves could be paused between Results, Story, and Character Unlock.
+	# Treat a recorded board completion as a legitimate completion so players
+	# keep their earned progress and are never trapped in the retired flow.
+	for level_id: int in board_completed_levels.duplicate():
+		_add_unique_int(completed_levels, level_id)
+		var reward := LevelCatalog.get_character_reward(level_id)
+		var character_id := str(reward.get("id", ""))
+		if not character_id.is_empty() and not unlocked_characters.has(character_id):
+			unlocked_characters.append(character_id)
+		_add_unique_int(claimed_character_rewards, level_id)
+		var next_level_id := LevelCatalog.get_next_level_id(level_id)
+		if next_level_id > 0:
+			highest_unlocked_level = maxi(highest_unlocked_level, next_level_id)
+	pending_progression_level = 0
+	progression_stage = ""
+	game_completed = completed_levels.has(LevelCatalog.get_highest_level_id())
+
+
 func _load_level_array(source: Variant, destination: Array[int]) -> void:
 	if not source is Array:
 		return
@@ -316,6 +383,7 @@ func _reset_to_defaults() -> void:
 	best_scores.clear()
 	last_level_stats.clear()
 	selected_level = 1
+	selected_story_level = 1
 	pending_progression_level = 0
 	progression_stage = ""
 	game_completed = false

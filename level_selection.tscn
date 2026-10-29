@@ -6,16 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://d1tcvblpy3cg5" path="res://assets/level selection buttons/back_arrow.png" id="4_back"]
 [ext_resource type="Texture2D" uid="uid://gvtyj4wvu0nb" path="res://assets/level selection buttons/Choose Your Level Glossy Game Banner.png" id="5_title"]
 [ext_resource type="Texture2D" uid="uid://cwx18hlep0std" path="res://assets/level selection buttons/Level1.png" id="6_level1"]
-[ext_resource type="Texture2D" uid="uid://duerpt7lht4c5" path="res://assets/level selection buttons/Level2.png" id="7_level2"]
-[ext_resource type="Texture2D" uid="uid://djqvfmby1kbmf" path="res://assets/level selection buttons/Level3.png" id="8_level3"]
-[ext_resource type="Texture2D" uid="uid://c7yb3ulcnv0c3" path="res://assets/level selection buttons/Level4.png" id="9_level4"]
-[ext_resource type="Texture2D" uid="uid://ciroyrohpr0fc" path="res://assets/level selection buttons/Level5.png" id="10_level5"]
-[ext_resource type="Texture2D" uid="uid://bosljc24wp1dn" path="res://assets/level selection buttons/Level6.png" id="11_level6"]
-[ext_resource type="Texture2D" path="res://assets/level selection buttons/Level2_locked.png" id="12_level2_locked"]
-[ext_resource type="Texture2D" path="res://assets/level selection buttons/Level3_locked.png" id="13_level3_locked"]
-[ext_resource type="Texture2D" path="res://assets/level selection buttons/Level4_locked.png" id="14_level4_locked"]
-[ext_resource type="Texture2D" path="res://assets/level selection buttons/Level5_locked.png" id="15_level5_locked"]
-[ext_resource type="Texture2D" path="res://assets/level selection buttons/Level6_locked.png" id="16_level6_locked"]
+[ext_resource type="Texture2D" uid="uid://br4dwwihhmsvp" path="res://assets/level selection buttons/Level2_locked.png" id="12_level2_locked"]
+[ext_resource type="Texture2D" uid="uid://884uul64mhjv" path="res://assets/level selection buttons/Level3_locked.png" id="13_level3_locked"]
+[ext_resource type="Texture2D" uid="uid://ug175rg1lk3t" path="res://assets/level selection buttons/Level4_locked.png" id="14_level4_locked"]
+[ext_resource type="Texture2D" uid="uid://bfkmqf8cpl8vi" path="res://assets/level selection buttons/Level5_locked.png" id="15_level5_locked"]
+[ext_resource type="Texture2D" uid="uid://4sr23eahlwsi" path="res://assets/level selection buttons/Level6_locked.png" id="16_level6_locked"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_status"]
 bg_color = Color(0.98, 0.91, 0.64, 0.96)
@@ -58,10 +53,10 @@ color = Color(1, 1, 1, 0)
 [node name="BackButton" type="TextureButton" parent="." unique_id=1840956577]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 22.0
-offset_top = 22.0
-offset_right = 132.0
-offset_bottom = 98.0
+offset_left = 58.0
+offset_top = 87.0
+offset_right = 168.0
+offset_bottom = 163.0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("4_back")
 ignore_texture_size = true
@@ -73,10 +68,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -225.0
-offset_top = 72.0
-offset_right = 225.0
-offset_bottom = 222.0
+offset_left = -254.0
+offset_top = 40.0
+offset_right = 258.0
+offset_bottom = 216.0
 grow_horizontal = 2
 mouse_filter = 2
 texture = ExtResource("5_title")
@@ -118,9 +113,10 @@ grow_horizontal = 2
 [node name="Level1Button" type="TextureButton" parent="LevelButtonsArea" unique_id=1656134887]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 17.5
-offset_right = 422.5
-offset_bottom = 135.0
+offset_left = 8.0
+offset_top = 32.0
+offset_right = 413.0
+offset_bottom = 167.0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("6_level1")
 ignore_texture_size = true
@@ -129,10 +125,10 @@ stretch_mode = 5
 [node name="Level2Button" type="TextureButton" parent="LevelButtonsArea" unique_id=1412063177]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 17.5
-offset_top = 143.0
-offset_right = 422.5
-offset_bottom = 278.0
+offset_left = 19.0
+offset_top = 168.0
+offset_right = 424.0
+offset_bottom = 303.0
 mouse_default_cursor_shape = 2
 disabled = true
 texture_normal = ExtResource("12_level2_locked")
@@ -143,10 +139,10 @@ stretch_mode = 5
 [node name="Level3Button" type="TextureButton" parent="LevelButtonsArea" unique_id=133107439]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 17.5
-offset_top = 286.0
-offset_right = 422.5
-offset_bottom = 421.0
+offset_left = 5.0
+offset_top = 301.0
+offset_right = 410.0
+offset_bottom = 436.0
 mouse_default_cursor_shape = 2
 disabled = true
 texture_normal = ExtResource("13_level3_locked")
@@ -157,10 +153,10 @@ stretch_mode = 5
 [node name="Level4Button" type="TextureButton" parent="LevelButtonsArea" unique_id=1203216843]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 17.5
-offset_top = 429.0
-offset_right = 422.5
-offset_bottom = 564.0
+offset_left = -5.0
+offset_top = 446.0
+offset_right = 400.0
+offset_bottom = 581.0
 mouse_default_cursor_shape = 2
 disabled = true
 texture_normal = ExtResource("14_level4_locked")
@@ -171,10 +167,10 @@ stretch_mode = 5
 [node name="Level5Button" type="TextureButton" parent="LevelButtonsArea" unique_id=2142259706]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 17.5
-offset_top = 572.0
-offset_right = 422.5
-offset_bottom = 707.0
+offset_left = 5.0
+offset_top = 600.0
+offset_right = 410.0
+offset_bottom = 735.0
 mouse_default_cursor_shape = 2
 disabled = true
 texture_normal = ExtResource("15_level5_locked")
@@ -185,10 +181,10 @@ stretch_mode = 5
 [node name="Level6Button" type="TextureButton" parent="LevelButtonsArea" unique_id=698727809]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 17.5
-offset_top = 715.0
-offset_right = 422.5
-offset_bottom = 850.0
+offset_left = 5.0
+offset_top = 758.0
+offset_right = 410.0
+offset_bottom = 893.0
 mouse_default_cursor_shape = 2
 disabled = true
 texture_normal = ExtResource("16_level6_locked")
@@ -202,10 +198,10 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -150.0
-offset_top = 1145.0
-offset_right = 150.0
-offset_bottom = 1240.0
+offset_left = -139.0
+offset_top = 1257.0
+offset_right = 161.0
+offset_bottom = 1352.0
 grow_horizontal = 2
 mouse_default_cursor_shape = 2
 disabled = true

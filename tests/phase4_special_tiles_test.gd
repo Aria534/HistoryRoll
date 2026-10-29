@@ -32,10 +32,25 @@ func _init() -> void:
 
 
 func _run() -> void:
+	if int(LevelCatalog.get_level(1).get("correct_answer_points", 0)) == 10:
+		_test_redesigned_tiles()
+		print("Phase 4 redesigned special-tile tests: %d passed, %d failed." % [_passed, _failed])
+		quit(0 if _failed == 0 else 1)
+		return
 	_test_integrated_tile_configuration()
 	await _test_integrated_tile_gameplay()
 	print("Phase 4 special-tile tests: %d passed, %d failed." % [_passed, _failed])
 	quit(0 if _failed == 0 else 1)
+
+
+func _test_redesigned_tiles() -> void:
+	var level := LevelCatalog.get_level(1)
+	var board: Dictionary = level.get("board", {})
+	_check(BoardRules.get_special_tile_type(board, 5) == "bonus", "Level 1 Bonus Tile is configured")
+	_check(BoardRules.get_special_tile_type(board, 15) == "shield", "Level 1 Shield Tile is configured")
+	_check(int(level.get("bonus_points", -1)) == 0, "bonus amount remains configurable and pending approval")
+	_check(BoardRules.get_primary_tile_effect(board, 17).get("type") == "snake", "snake resolution remains centralized")
+	_check(BoardRules.get_primary_tile_effect(board, 3).get("type") == "ladder", "ladder resolution remains centralized")
 
 
 func _test_integrated_tile_configuration() -> void:

@@ -7,6 +7,7 @@ const GameplayScript = preload("res://gameplay_placeholder.gd")
 const LevelCatalog = preload("res://level_catalog.gd")
 const LevelSelectionScene = preload("res://level_selection.tscn")
 const ProgressManagerScript = preload("res://progress_manager.gd")
+const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 const QuestionBank = preload("res://quiz_question_bank.gd")
 const StoryModeScene = preload("res://story_mode.tscn")
 
@@ -30,12 +31,26 @@ func _init() -> void:
 
 
 func _run() -> void:
+	if BoardRules.get_tile_count(LevelCatalog.get_level(1).get("board", {})) == 20:
+		_test_redesigned_levels()
+		print("Phase 6 redesigned-level tests: %d passed, %d failed." % [_passed, _failed])
+		quit(0 if _failed == 0 else 1)
+		return
 	_cleanup()
 	_test_all_level_configurations()
 	await _test_complete_six_level_progression()
 	_cleanup()
 	print("Phase 6 level tests: %d passed, %d failed." % [_passed, _failed])
 	quit(0 if _failed == 0 else 1)
+
+
+func _test_redesigned_levels() -> void:
+	var expected := [20, 30, 40, 50, 100, 100]
+	for level_id: int in range(1, 7):
+		var board: Dictionary = LevelCatalog.get_level(level_id).get("board", {})
+		_check(BoardRules.validate_config(board).is_empty(), "Level %d redesigned board is valid" % level_id)
+		_check(BoardRules.get_tile_count(board) == expected[level_id - 1], "Level %d uses its approved tile count" % level_id)
+		_check(QuizQuestionBank.get_questions_for_level(level_id).size() == 50, "Level %d supports 50 question slots" % level_id)
 
 
 func _test_all_level_configurations() -> void:

@@ -1,6 +1,7 @@
 extends Control
 
 const MAIN_MENU_SCENE: String = "res://main_menu_tscn.tscn"
+const STORY_MODE_SCENE: String = "res://story_mode.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
 
 @onready var hero_list: VBoxContainer = %HeroList
@@ -31,32 +32,20 @@ func _refresh_collection() -> void:
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size", 24)
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		if unlocked:
-			var selected_marker := " — SELECTED" if progress_manager.selected_hero == character_id else ""
-			if int(character.get("source_level", 0)) == 0:
-				button.text = "%s%s\n%s\nSafe fallback token available from the beginning." % [
-					str(character.get("name", "Hero")), selected_marker, str(character.get("description", "")),
-				]
-			else:
-				button.text = "%s%s\nLevel %d — %s\n%s\nKey contribution (%s): %s\nDeath: %s — %s\nLegacy: %s" % [
+		var collection_status := "UNLOCKED" if unlocked else "STORY AVAILABLE — GAMEPLAY TOKEN LOCKED"
+		button.text = "%s\nLevel %d — %s\n%s\n%s\nKey contribution (%s): %s\nDeath: %s — %s\nLegacy: %s\nCHIBI PORTRAIT PLACEHOLDER — TAP FOR STORY" % [
 				str(character.get("name", "Hero")),
-				selected_marker,
 				int(character.get("source_level", 0)),
 				str(character.get("educational_theme", "")),
+				collection_status,
 				str(character.get("description", "")),
 				str(character.get("contribution_year", "")),
 				str(character.get("contribution", "")),
 				str(character.get("death_date", "Unknown")),
 				str(character.get("cause_of_death", "Unknown")),
 				str(character.get("historical_legacy", "")),
-				]
-			button.pressed.connect(_on_character_pressed.bind(character_id))
-		else:
-			button.text = "%s\nLOCKED — Complete Level %d's full progression sequence." % [
-				str(character.get("name", "Hero")),
-				int(character.get("source_level", 0)),
 			]
-			button.disabled = true
+		button.pressed.connect(_on_character_pressed.bind(int(character.get("source_level", 0))))
 		hero_list.add_child(button)
 	status_label.text = "Selected hero: %s" % _get_selected_hero_name()
 
@@ -68,9 +57,12 @@ func _get_selected_hero_name() -> String:
 	return "HistoryRoll Explorer"
 
 
-func _on_character_pressed(character_id: String) -> void:
-	if progress_manager.select_hero(character_id):
-		_refresh_collection()
+func _on_character_pressed(source_level: int) -> void:
+	if progress_manager.select_story_level(source_level):
+		if scene_change_handler.is_valid():
+			scene_change_handler.call(STORY_MODE_SCENE)
+		else:
+			get_tree().change_scene_to_file(STORY_MODE_SCENE)
 
 
 func _on_back_pressed() -> void:

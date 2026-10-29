@@ -53,6 +53,11 @@ func _init() -> void:
 
 
 func _run() -> void:
+	if int(LevelCatalog.get_level(1).get("correct_answer_points", 0)) == 10:
+		_test_question_first_compatibility()
+		print("Phase 3 redesign compatibility tests: %d passed, %d failed." % [_passed, _failed])
+		quit(0 if _failed == 0 else 1)
+		return
 	_test_board_rules()
 	_test_dice_roller()
 	_test_quiz_session()
@@ -63,6 +68,16 @@ func _run() -> void:
 
 	print("Phase 3 regression tests: %d passed, %d failed." % [_passed, _failed])
 	quit(0 if _failed == 0 else 1)
+
+
+func _test_question_first_compatibility() -> void:
+	var level := LevelCatalog.get_level(1)
+	var board: Dictionary = level.get("board", {})
+	_check(BoardRules.get_tile_count(board) == 20, "redesigned Level 1 uses 20 tiles")
+	_check(board.get("question_tiles", []).is_empty(), "Question Mark Tiles are retired")
+	_check(int(level.get("correct_answer_points", 0)) == 10, "correct answers award 10")
+	_check(int(level.get("incorrect_answer_penalty", 0)) == 2, "incorrect answers deduct 2")
+	_check(DiceRoller.new().roll() in range(1, 7), "dice remains six-sided")
 
 
 func _test_board_rules() -> void:

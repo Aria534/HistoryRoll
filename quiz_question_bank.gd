@@ -1,5 +1,11 @@
 extends RefCounted
 
+const QUESTION_SLOTS_PER_LEVEL: int = 50
+const FINAL_HERO_IDS := {
+	1: "lapulapu", 2: "andres_bonifacio", 3: "jose_rizal",
+	4: "antonio_luna", 5: "melchora_aquino", 6: "apolinario_mabini",
+}
+
 # Source-reviewed offline question profiles. Each fact produces one regular
 # question, while alternate wording supplies five more regular and five bonus
 # questions per hero level. Level 6 mixes the five featured heroes.
@@ -83,21 +89,34 @@ const PROFILES: Dictionary = {
 
 
 static func get_questions_for_level(level_id: int, question_type: String = "regular") -> Array:
-	if level_id == 6:
-		return _get_mixed_questions(question_type)
+	if question_type != "regular":
+		return []
+	if level_id >= 4 and level_id <= 6:
+		return _build_development_slots(level_id)
 	var profile: Dictionary = PROFILES.get(level_id, {})
 	if profile.is_empty():
 		return []
 	var facts: Array = profile.get("facts", [])
 	var questions: Array = []
-	if question_type == "bonus":
-		for fact_index: int in range(5, 10):
-			questions.append(_build_question(level_id, str(profile.get("hero_id", "")), fact_index, facts[fact_index], true, fact_index - 5, "bonus"))
-	else:
-		for fact_index: int in range(facts.size()):
-			questions.append(_build_question(level_id, str(profile.get("hero_id", "")), fact_index, facts[fact_index], false, fact_index, "regular"))
-		for fact_index: int in range(5):
-			questions.append(_build_question(level_id, str(profile.get("hero_id", "")), fact_index, facts[fact_index], true, fact_index + 10, "regular"))
+	for slot: int in range(QUESTION_SLOTS_PER_LEVEL):
+		var fact_index := slot % facts.size()
+		var alternate := (slot / facts.size()) % 2 == 1
+		questions.append(_build_question(level_id, str(profile.get("hero_id", "")), fact_index, facts[fact_index], alternate, slot, "regular"))
+	return questions
+
+
+static func _build_development_slots(level_id: int) -> Array:
+	var questions: Array = []
+	for slot: int in range(QUESTION_SLOTS_PER_LEVEL):
+		questions.append({
+			"question_id": "HR-L%d-DEV-%03d" % [level_id, slot + 1],
+			"question_type": "regular", "level": level_id,
+			"hero_id": str(FINAL_HERO_IDS.get(level_id, "development_placeholder")),
+			"question_text": "DEVELOPMENT PLACEHOLDER %d/50 — Approved Level %d question pending." % [slot + 1, level_id],
+			"choices": ["Placeholder A", "Placeholder B", "Placeholder C", "Placeholder D"],
+			"correct_index": 0,
+			"explanation": "This temporary fixture must be replaced with designer-supplied educational content.",
+		})
 	return questions
 
 

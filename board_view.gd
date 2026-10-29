@@ -3,17 +3,22 @@ extends Control
 const BoardRules = preload("res://board_rules.gd")
 
 @onready var player_token: Control = %PlayerToken
+@onready var player_token_label: Label = %PlayerTokenLabel
+@onready var waiting_hero_token: Control = %WaitingHeroToken
+@onready var waiting_hero_label: Label = %WaitingHeroLabel
 
 var board_config: Dictionary = {}
 var columns: int = 10
 var rows: int = 10
 var displayed_position: int = 1
+var waiting_animation_active: bool = false
 
 
 func _ready() -> void:
 	resized.connect(_on_resized)
 	queue_redraw()
 	call_deferred("set_player_position_immediate", displayed_position)
+	call_deferred("_start_waiting_animation")
 
 
 func configure(config: Dictionary) -> PackedStringArray:
@@ -33,6 +38,15 @@ func set_player_position_immediate(tile: int) -> void:
 	if not is_node_ready() or size.x <= 0.0 or size.y <= 0.0:
 		return
 	player_token.position = _get_token_top_left(tile)
+	_position_waiting_hero()
+
+
+func set_hero_placeholders(player_name: String, waiting_name: String, final_marker: bool) -> void:
+	player_token.tooltip_text = "%s chibi artwork slot" % player_name
+	player_token_label.text = _initials(player_name)
+	waiting_hero_token.tooltip_text = "%s artwork slot" % waiting_name
+	waiting_hero_label.text = "TROPHY" if final_marker else _initials(waiting_name)
+	_position_waiting_hero()
 
 
 func animate_player_to(tile: int, duration: float) -> void:
@@ -53,8 +67,10 @@ func get_tile_center(tile: int) -> Vector2:
 
 
 func get_board_rect() -> Rect2:
-	var available_side: float = minf(size.x, size.y)
-	var board_size := Vector2(available_side, available_side)
+	var aspect := float(columns) / float(rows)
+	var board_size := Vector2(size.x, size.x / aspect)
+	if board_size.y > size.y:
+		board_size = Vector2(size.y * aspect, size.y)
 	return Rect2((size - board_size) / 2.0, board_size)
 
 
@@ -66,6 +82,7 @@ func _get_token_top_left(tile: int) -> Vector2:
 func _on_resized() -> void:
 	queue_redraw()
 	set_player_position_immediate(displayed_position)
+	_position_waiting_hero()
 
 
 func _draw() -> void:
@@ -78,7 +95,7 @@ func _draw() -> void:
 		var cell := BoardRules.tile_to_visual_cell(tile, columns, rows)
 		var tile_rect := Rect2(board_rect.position + Vector2(cell.x, cell.y) * cell_size, cell_size)
 		draw_rect(tile_rect.grow(-1.0), _get_tile_color(tile, cell), true)
-		draw_rect(tile_rect, Color("#59685f"), false, 2.0)
+		draw_rect(tile_rect, Color("#806348"), false, 2.0)
 
 	for raw_start: Variant in board_config.get("ladders", {}):
 		var start := int(raw_start)
@@ -108,7 +125,8 @@ func _get_tile_color(tile: int, cell: Vector2i) -> Color:
 		return Color("#e2c4bd")
 	if _mapping_has(board_config.get("ladders", {}), tile):
 		return Color("#ead7a4")
-	return Color("#d8e1cf") if (cell.x + cell.y) % 2 == 0 else Color("#eee2c7")
+	var palette := [Color("#8CCDE8"), Color("#F5D989"), Color("#A9CFA5"), Color("#EBA49A"), Color("#F8EED7")]
+	return palette[(cell.x + cell.y * columns) % palette.size()]
 
 
 func _draw_tile_content(tile: int, tile_rect: Rect2) -> void:
@@ -191,3 +209,36 @@ func _draw_snake(start: Vector2, destination: Vector2) -> void:
 	draw_circle(start, 12.0, Color("#b95760"))
 	draw_circle(start + Vector2(-5, -3), 2.5, Color.WHITE)
 	draw_circle(start + Vector2(5, -3), 2.5, Color.WHITE)
+
+
+func _position_waiting_hero() -> void:
+	if not is_node_ready() or waiting_hero_token == null or size.x <= 0.0:
+		return
+	var board_rect := get_board_rect()
+	var cell_size := Vector2(board_rect.size.x / columns, board_rect.size.y / rows)
+	var diameter := clampf(minf(cell_size.x, cell_size.y) * 0.58, 30.0, 58.0)
+	waiting_hero_token.size = Vector2(diameter, diameter)
+	var finish_center := get_tile_center(columns * rows)
+	var target := finish_center + Vector2(cell_size.x * 0.2, cell_size.y * 0.12) - waiting_hero_token.size / 2.0
+	target.x = clampf(target.x, board_rect.position.x, board_rect.end.x - diameter)
+	target.y = clampf(target.y, board_rect.position.y, board_rect.end.y - diameter)
+	waiting_hero_token.position = target
+
+
+func _start_waiting_animation() -> void:
+	if waiting_hero_token == null or waiting_animation_active:
+		return
+	waiting_animation_active = true
+	var tween := create_tween().set_loops()
+	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(waiting_hero_token, "position:y", waiting_hero_token.position.y - 8.0, 0.8)
+	tween.tween_property(waiting_hero_token, "position:y", waiting_hero_token.position.y, 0.8)
+
+
+func _initials(hero_name: String) -> String:
+	var result := ""
+	for part: String in hero_name.split(" ", false):
+		result += part.left(1).to_upper()
+		if result.length() >= 3:
+			break
+	return result if not result.is_empty() else "H"

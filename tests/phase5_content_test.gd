@@ -29,6 +29,11 @@ func _init() -> void:
 
 
 func _run() -> void:
+	if HeroDatabase.get_hero("antonio_luna").size() > 0:
+		_test_final_roster()
+		print("Phase 5 final-roster tests: %d passed, %d failed." % [_passed, _failed])
+		quit(0 if _failed == 0 else 1)
+		return
 	_cleanup()
 	_test_hero_database_and_levels()
 	_test_question_banks()
@@ -37,6 +42,14 @@ func _run() -> void:
 	_cleanup()
 	print("Phase 5 content tests: %d passed, %d failed." % [_passed, _failed])
 	quit(0 if _failed == 0 else 1)
+
+
+func _test_final_roster() -> void:
+	_check(HeroDatabase.get_heroes().size() == 6, "final database contains six heroes")
+	_check(HeroDatabase.get_hero("antonio_luna").get("associated_level") == 4, "Antonio Luna maps to Level 4")
+	_check(HeroDatabase.get_hero("melchora_aquino").get("associated_level") == 5, "Melchora Aquino maps to Level 5")
+	_check(HeroDatabase.get_hero("apolinario_mabini").get("associated_level") == 6, "Apolinario Mabini maps to Level 6")
+	_check(LevelCatalog.get_all_characters().size() == 6, "Hero Cards exposes the six-hero roster")
 
 
 func _test_hero_database_and_levels() -> void:

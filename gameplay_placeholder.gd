@@ -12,7 +12,6 @@ enum GameplayState {
 }
 
 const LEVEL_SELECTION_SCENE: String = "res://level_selection.tscn"
-const STORY_MODE_SCENE: String = "res://story_mode.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
 const BoardRules = preload("res://board_rules.gd")
 const DiceRoller = preload("res://dice_roller.gd")
@@ -36,6 +35,7 @@ const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 @onready var fixture_notice: Label = %FixtureNotice
 @onready var question_label: Label = %QuestionLabel
 @onready var feedback_label: Label = %FeedbackLabel
+@onready var reaction_label: Label = %ReactionLabel
 @onready var dice_label: Label = %DiceLabel
 @onready var roll_button: Button = %RollButton
 @onready var next_turn_button: Button = %NextTurnButton
@@ -53,7 +53,8 @@ var tile_count: int = 0
 var player_position: int = 1
 var score: int = 0
 var correct_answer_points: int = 100
-var incorrect_answer_points: int = 0
+var incorrect_answer_penalty: int = 2
+var bonus_points: int = 0
 var snake_score_penalty: int = 50
 var allow_negative_score: bool = false
 var maximum_shield_charges: int = 0
@@ -80,7 +81,6 @@ var scene_change_handler: Callable
 var results_transition_started: bool = false
 var dice_roller
 var quiz_session = QuizSession.new()
-var bonus_quiz_session = QuizSession.new()
 
 
 func _ready() -> void:
@@ -117,18 +117,16 @@ func _initialize_gameplay() -> void:
 		_show_fatal_error("Invalid board configuration:\n%s" % "\n".join(config_errors))
 		return
 	tile_count = BoardRules.get_tile_count(board_config)
-	correct_answer_points = maxi(0, int(level_data.get("correct_answer_points", 100)))
-	incorrect_answer_points = maxi(0, int(level_data.get("incorrect_answer_points", 0)))
-	snake_score_penalty = maxi(0, int(level_data.get("snake_score_penalty", 50)))
+	correct_answer_points = maxi(0, int(level_data.get("correct_answer_points", 10)))
+	incorrect_answer_penalty = maxi(0, int(level_data.get("incorrect_answer_penalty", 2)))
+	bonus_points = maxi(0, int(level_data.get("bonus_points", 0)))
+	snake_score_penalty = maxi(0, int(level_data.get("snake_score_penalty", 0)))
 	allow_negative_score = bool(level_data.get("allow_negative_score", false))
 	maximum_shield_charges = maxi(0, int(level_data.get("maximum_shield_charges", 0)))
 	maximum_effect_depth = maxi(1, int(level_data.get("maximum_effect_depth", 12)))
 	resolve_destination_effects = bool(level_data.get("resolve_destination_effects", true))
 	if not quiz_session.configure(QuizQuestionBank.get_questions_for_level(level_id, "regular"), shuffle_questions):
 		_show_fatal_error("No valid regular questions are configured for this level.")
-		return
-	if not bonus_quiz_session.configure(QuizQuestionBank.get_questions_for_level(level_id, "bonus"), shuffle_questions):
-		_show_fatal_error("No valid bonus questions are configured for this level.")
 		return
 
 	level_label.text = str(level_data.get("title", "LEVEL %d" % level_id)).to_upper()
@@ -151,34 +149,33 @@ func _initialize_gameplay() -> void:
 	resolved_tiles_this_turn.clear()
 	results_panel.hide()
 	board_view.set_player_position_immediate(player_position)
+	board_view.set_hero_placeholders(
+		str(level_data.get("hero_name", "Hero")),
+		str(level_data.get("waiting_hero_name", "FINAL TROPHY")),
+		level_id == LevelCatalog.get_highest_level_id()
+	)
 	_update_status_labels()
 	dice_label.text = "—"
-	_prepare_for_roll("Roll the die to begin. Questions appear only after landing on ? or Bonus tiles.")
+	_begin_question("regular")
 
 
 func _begin_question(question_type: String) -> void:
 	current_question_type = question_type
-	current_question = (
-		bonus_quiz_session.next_question()
-		if question_type == "bonus"
-		else quiz_session.next_question()
-	)
+	current_question = quiz_session.next_question()
 	if current_question.is_empty():
 		_show_fatal_error("The quiz could not provide a %s question." % question_type)
 		return
 	question_label.text = str(current_question.get("question_text", ""))
-	fixture_notice.hide()
+	fixture_notice.visible = question_label.text.begins_with("DEVELOPMENT PLACEHOLDER")
+	fixture_notice.text = "DEVELOPMENT QUESTION FIXTURE — NOT FINAL CONTENT"
+	reaction_label.hide()
 	question_label.show()
 	answer_buttons[0].get_parent().show()
 	var choices: Array = current_question.get("choices", [])
 	for index: int in range(answer_buttons.size()):
 		answer_buttons[index].text = str(choices[index])
 		answer_buttons[index].modulate = Color.WHITE
-	feedback_label.text = (
-		"Bonus question: a correct answer doubles your current score."
-		if question_type == "bonus"
-		else "Choose one answer. Correct answers earn %d points." % correct_answer_points
-	)
+	feedback_label.text = "Answer first. Correct: +%d. Incorrect: -%d. Both outcomes allow one roll." % [correct_answer_points, incorrect_answer_penalty]
 	next_turn_button.hide()
 	next_turn_button.text = "Continue"
 	_set_quiz_panel_height(true)
@@ -188,8 +185,7 @@ func _begin_question(question_type: String) -> void:
 func _on_answer_pressed(choice_index: int) -> void:
 	if state != GameplayState.QUESTION:
 		return
-	var active_session = bonus_quiz_session if current_question_type == "bonus" else quiz_session
-	var result: Dictionary = active_session.submit_answer(choice_index)
+	var result: Dictionary = quiz_session.submit_answer(choice_index)
 	if not bool(result.get("accepted", false)):
 		return
 	_set_state(GameplayState.ANSWER_FEEDBACK)
@@ -203,26 +199,18 @@ func _on_answer_pressed(choice_index: int) -> void:
 
 	if is_correct:
 		correct_answers += 1
-		if current_question_type == "bonus":
-			bonus_correct_answers += 1
-			var previous_score := score
-			score *= 2
-			var increase := score - previous_score
-			bonus_score_increase += increase
-			feedback_label.text = "Correct bonus answer! Score %d × 2 = %d. %s" % [previous_score, score, explanation]
-		else:
-			score += correct_answer_points
-			feedback_label.text = "Correct! +%d points. %s" % [correct_answer_points, explanation]
+		score += correct_answer_points
+		feedback_label.text = "Correct! +%d points. %s Roll the die." % [correct_answer_points, explanation]
+		_show_chibi_reaction(true, correct_answer_points)
 	else:
 		incorrect_answers += 1
-		if current_question_type == "bonus":
-			bonus_incorrect_answers += 1
-			feedback_label.text = "Not quite. Your score remains %d. %s" % [score, explanation]
-		else:
-			score += incorrect_answer_points
-			feedback_label.text = "Not quite. +%d points. %s" % [incorrect_answer_points, explanation]
+		score -= incorrect_answer_penalty
+		if not allow_negative_score:
+			score = maxi(0, score)
+		feedback_label.text = "Not quite. -%d points. %s Roll the die." % [incorrect_answer_penalty, explanation]
+		_show_chibi_reaction(false, incorrect_answer_penalty)
 	_update_status_labels()
-	next_turn_button.show()
+	_set_state(GameplayState.READY_TO_ROLL)
 
 
 func _on_roll_pressed() -> void:
@@ -247,7 +235,7 @@ func _resolve_roll(dice_result: int) -> void:
 		bool(board_config.get("exact_finish", true))
 	)
 	if destination == player_position:
-		_prepare_for_roll("You rolled %d. An exact roll is needed to reach tile %d." % [dice_result, tile_count])
+		_begin_next_turn("You rolled %d. An exact roll is needed to reach tile %d." % [dice_result, tile_count])
 		return
 	_set_state(GameplayState.PLAYER_MOVING)
 	for tile: int in range(player_position + 1, destination + 1):
@@ -270,24 +258,29 @@ func _resolve_current_tile(landing_feedback: String, depth: int) -> void:
 		_complete_level()
 		return
 	if depth >= maximum_effect_depth:
-		_prepare_for_roll("Tile-effect safety limit reached. Roll again.")
+		_begin_next_turn("Tile-effect safety limit reached.")
 		return
 	if resolved_tiles_this_turn.has(player_position):
-		_prepare_for_roll("Tile %d was already resolved this turn. Roll again." % player_position)
+		_begin_next_turn("Tile %d was already resolved this turn." % player_position)
 		return
 	resolved_tiles_this_turn[player_position] = true
 	var effect := BoardRules.get_primary_tile_effect(board_config, player_position)
 	match str(effect.get("type", "normal")):
-		"question":
-			_begin_question("regular")
 		"bonus":
-			_begin_question("bonus")
+			_collect_bonus()
 		"shield":
 			_collect_shield()
 		"ladder", "snake":
 			await _apply_snake_or_ladder(effect, depth)
 		_:
-			_prepare_for_roll("%s Roll again." % landing_feedback)
+			_begin_next_turn(landing_feedback)
+
+
+func _collect_bonus() -> void:
+	score += bonus_points
+	bonus_score_increase += bonus_points
+	_update_status_labels()
+	_begin_next_turn("Bonus Tile! +%d points. (Amount is configurable.)" % bonus_points)
 
 
 func _collect_shield() -> void:
@@ -298,7 +291,7 @@ func _collect_shield() -> void:
 	if shield_charges > previous_charges:
 		shields_collected += 1
 	_update_status_labels()
-	_prepare_for_roll("Shield acquired! Shield count: %d. Roll again." % shield_charges)
+	_begin_next_turn("Shield acquired! Shield count: %d." % shield_charges)
 
 
 func _apply_snake_or_ladder(effect: Dictionary, depth: int) -> void:
@@ -309,7 +302,7 @@ func _apply_snake_or_ladder(effect: Dictionary, depth: int) -> void:
 		shield_charges -= 1
 		shields_consumed += 1
 		_update_status_labels()
-		_prepare_for_roll("Shield protected you from the snake on tile %d. No score penalty was applied." % player_position)
+		_begin_next_turn("Shield protected you from the snake on tile %d." % player_position)
 		return
 
 	var effect_feedback := "Ladder! Climb to tile %d." % effect_destination
@@ -331,18 +324,15 @@ func _apply_snake_or_ladder(effect: Dictionary, depth: int) -> void:
 	elif resolve_destination_effects:
 		await _resolve_current_tile(effect_feedback, depth + 1)
 	else:
-		_prepare_for_roll("%s Roll again." % effect_feedback)
+		_begin_next_turn(effect_feedback)
 
 
-func _prepare_for_roll(message: String) -> void:
+func _begin_next_turn(message: String) -> void:
 	fixture_notice.hide()
-	question_label.hide()
-	if not answer_buttons.is_empty():
-		answer_buttons[0].get_parent().hide()
 	next_turn_button.hide()
 	feedback_label.text = message
-	_set_quiz_panel_height(false)
-	_set_state(GameplayState.READY_TO_ROLL)
+	_begin_question("regular")
+	feedback_label.text = "%s\n%s" % [message, feedback_label.text]
 
 
 func _complete_level() -> void:
@@ -357,7 +347,7 @@ func _complete_level() -> void:
 		level_id, score, correct_answers, incorrect_answers, bonus_score_increase,
 		snake_penalties, shields_collected, shields_consumed,
 	]
-	return_button.text = "CONTINUE TO STORY MODE"
+	return_button.text = "RETURN TO LEVEL SELECTION"
 	return_button.disabled = false
 	results_panel.show()
 
@@ -378,13 +368,11 @@ func get_gameplay_statistics() -> Dictionary:
 
 
 func _on_next_turn_pressed() -> void:
-	if state != GameplayState.ANSWER_FEEDBACK:
-		return
-	_prepare_for_roll("Question complete. Roll the die for your next turn.")
+	return
 
 
 func _on_back_pressed() -> void:
-	if state != GameplayState.READY_TO_ROLL:
+	if state != GameplayState.READY_TO_ROLL and state != GameplayState.QUESTION:
 		return
 	get_tree().change_scene_to_file(LEVEL_SELECTION_SCENE)
 
@@ -397,12 +385,8 @@ func _on_return_pressed() -> void:
 	if fatal_error_active:
 		_change_scene(LEVEL_SELECTION_SCENE)
 		return
-	if progress_manager.is_board_completed(level_id) and progress_manager.begin_post_level_story(level_id):
-		_change_scene(STORY_MODE_SCENE)
-		return
-	results_transition_started = false
-	return_button.disabled = false
-	results_label.text += "\n\nUnable to start Story Mode. Return to Level Selection and resume this level's pending progress."
+	progress_manager.finish_level_results(level_id)
+	_change_scene(LEVEL_SELECTION_SCENE)
 
 
 func _change_scene(path: String) -> void:
@@ -421,6 +405,18 @@ func _set_state(new_state: GameplayState) -> void:
 	back_button.disabled = state != GameplayState.READY_TO_ROLL
 	if state != GameplayState.ANSWER_FEEDBACK:
 		next_turn_button.hide()
+
+
+func _show_chibi_reaction(correct: bool, points: int) -> void:
+	var hero_name := str(level_data.get("hero_name", "Hero"))
+	reaction_label.text = "%s CHIBI PLACEHOLDER — %s — %s%d POINTS" % [
+		"HAPPY" if correct else "SAD", hero_name, "+" if correct else "-", points,
+	]
+	reaction_label.modulate = Color("#2f7d45") if correct else Color("#9b4a4a")
+	reaction_label.show()
+	reaction_label.scale = Vector2(0.85, 0.85)
+	var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(reaction_label, "scale", Vector2.ONE, 0.2)
 
 
 func _update_status_labels() -> void:

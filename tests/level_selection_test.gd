@@ -157,7 +157,7 @@ func _test_saved_selection_and_pending_progression() -> void:
 	reloaded.load_progress()
 	_check(reloaded.selected_level == 2, "selected level survives save reload")
 	_check(reloaded.select_level(1), "Level 1 can be reselected for progression testing")
-	_check(reloaded.record_board_completion(1, 100, {}), "test board completion creates pending progression")
+	_check(reloaded.record_board_completion(1, 100, {}), "test board completion records direct progression")
 
 	var requested_scenes: Array[String] = []
 	var screen = LevelSelectionScene.instantiate()
@@ -177,10 +177,10 @@ func _test_saved_selection_and_pending_progression() -> void:
 		if screen.level_buttons[level_id].texture_normal.resource_path.ends_with("_locked.png"):
 			returning_lock_count += 1
 	_check(returning_lock_count == 3, "returning-player Level Selection displays exactly three locked PNGs")
-	_check(screen.play_button.tooltip_text == "Continue Level 1 progression", "pending progression gives Play a Continue description")
+	_check(screen.play_button.tooltip_text == "Play Level 1", "completed levels remain directly replayable")
 	screen.play_button.pressed.emit()
-	_check(requested_scenes == ["res://story_mode.tscn"], "pending results progression resumes Story Mode")
-	_check(reloaded.progression_stage == reloaded.STAGE_POST_STORY, "pending progression advances without resetting save data")
+	_check(requested_scenes == ["res://gameplay_placeholder.tscn"], "completed level replay opens gameplay, not Story Mode")
+	_check(not reloaded.has_pending_progression(), "direct progression has no mandatory Story stage")
 
 	screen.queue_free()
 	await process_frame
@@ -199,10 +199,8 @@ func _test_unlock_visual_refresh() -> void:
 	_check(screen.level_buttons[2].texture_normal.resource_path.ends_with("Level2_locked.png"), "Level 2 starts with its locked PNG")
 
 	_check(progress.record_board_completion(1, 100, {}), "Level 1 board completion is recorded for unlock testing")
-	_check(progress.begin_post_level_story(1), "Level 1 post-game progression begins")
-	_check(progress.mark_story_completed(1), "Level 1 story completion is recorded")
-	_check(progress.claim_character_reward(1), "Level 1 character reward is claimed")
-	_check(progress.confirm_character_unlock(1), "Level 1 confirmation legitimately unlocks Level 2")
+	_check(progress.is_level_completed(1), "Level 1 completion is finalized immediately")
+	_check(progress.is_level_unlocked(2), "Level 1 completion legitimately unlocks Level 2")
 	await process_frame
 	await process_frame
 
@@ -231,12 +229,9 @@ func _test_unlock_visual_refresh() -> void:
 	_check(reloaded.is_level_unlocked(2), "Level 2 unlock persists after save reload")
 	_check(not reopened.level_buttons[2].disabled, "reopened Level 2 remains enabled")
 	_check(reopened.level_buttons[2].texture_normal.resource_path.ends_with("Level2.png"), "reopened Level 2 keeps its unlocked PNG")
-	_check(reloaded.finish_progression(1), "Level 1 unlock confirmation is finalized before Level 2")
 	_check(reloaded.record_board_completion(2, 200, {}), "Level 2 board completion is recorded for sequential unlock testing")
-	_check(reloaded.begin_post_level_story(2), "Level 2 post-game progression begins")
-	_check(reloaded.mark_story_completed(2), "Level 2 story completion is recorded")
-	_check(reloaded.claim_character_reward(2), "Level 2 character reward is claimed")
-	_check(reloaded.confirm_character_unlock(2), "Level 2 confirmation legitimately unlocks Level 3")
+	_check(reloaded.is_level_completed(2), "Level 2 completion is finalized immediately")
+	_check(reloaded.is_level_unlocked(3), "Level 2 completion legitimately unlocks Level 3")
 	await process_frame
 	await process_frame
 	var level_three: TextureButton = reopened.level_buttons[3]

@@ -18,6 +18,11 @@ func _init() -> void:
 
 
 func _run() -> void:
+	if ProgressManagerScript.SAVE_VERSION >= 3:
+		_test_direct_unlock_progression()
+		print("Direct progression integration tests: %d passed, %d failed." % [_passed, _failed])
+		quit(0 if _failed == 0 else 1)
+		return
 	_cleanup(_test_path)
 	_cleanup(_legacy_path)
 	_cleanup(_corrupt_path)
@@ -30,6 +35,23 @@ func _run() -> void:
 	_cleanup(_corrupt_path)
 	print("Progression integration tests: %d passed, %d failed." % [_passed, _failed])
 	quit(0 if _failed == 0 else 1)
+
+
+func _test_direct_unlock_progression() -> void:
+	var test_path := "user://historyroll_direct_progression_test.json"
+	if FileAccess.file_exists(test_path): DirAccess.remove_absolute(ProjectSettings.globalize_path(test_path))
+	var progress = ProgressManagerScript.new()
+	progress.save_path = test_path
+	_check(progress.is_level_unlocked(1), "Level 1 starts unlocked")
+	_check(not progress.is_level_unlocked(2), "Level 2 starts locked")
+	_check(progress.record_board_completion(1, 10, {}), "board completion is accepted")
+	_check(progress.is_level_completed(1), "board completion completes Level 1")
+	_check(progress.is_level_unlocked(2), "completion directly unlocks Level 2")
+	_check(not progress.has_pending_progression(), "Story Mode does not gate progression")
+	var reloaded = ProgressManagerScript.new(); reloaded.save_path = test_path; reloaded.load_progress()
+	_check(reloaded.is_level_unlocked(2), "direct unlock persists")
+	progress.free(); reloaded.free()
+	if FileAccess.file_exists(test_path): DirAccess.remove_absolute(ProjectSettings.globalize_path(test_path))
 
 
 func _test_required_progression_sequence() -> void:
