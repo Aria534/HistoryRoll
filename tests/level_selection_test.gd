@@ -55,10 +55,11 @@ func _test_fresh_level_selection() -> void:
 	_check(screen.get_node("InstructionLabel").visible == false, "instruction text remains hidden")
 	for level_id: int in range(1, 7):
 		var level_button = screen.level_buttons[level_id]
+		var expected_texture := "Level1.png" if level_id == 1 else "Level%d_locked.png" % level_id
 		_check(level_button is TextureButton, "Level %d uses a TextureButton" % level_id)
 		_check(level_button.owner == screen, "Level %d button is stored in the packed scene" % level_id)
 		_check(level_button.texture_normal != null, "Level %d custom texture is loaded" % level_id)
-		_check(level_button.texture_normal.resource_path.ends_with("Level%d.png" % level_id), "Level %d uses its matching custom PNG" % level_id)
+		_check(level_button.texture_normal.resource_path.ends_with(expected_texture), "Level %d uses the correct fresh-player PNG" % level_id)
 		_check(level_button.size.is_equal_approx(Vector2(405.0, 135.0)), "Level %d keeps the approved 405 by 135 dimensions" % level_id)
 		_check(is_equal_approx(level_button.size.x / level_button.size.y, 3.0), "Level %d keeps the source artwork's 3-to-1 aspect ratio" % level_id)
 		_check(level_button.position.is_equal_approx(editor_geometry[level_id].position), "Level %d editor position is preserved at runtime" % level_id)
@@ -66,45 +67,19 @@ func _test_fresh_level_selection() -> void:
 	_check(screen.back_button is TextureButton, "Back uses a TextureButton")
 	_check(screen.play_button is TextureButton, "Play uses a TextureButton")
 	_check(not screen.level_buttons[1].disabled, "Level 1 is unlocked by default")
-	_check(not screen.level_buttons[1].get_node("LockOverlay").visible, "unlocked Level 1 has no visible padlock")
-	var visible_lock_count := 0
-	_check(screen.LOCK_GOLD.is_equal_approx(Color("#FFD43B")), "padlock fill uses the required bright gold color")
-	_check(screen.LOCK_OUTLINE.is_equal_approx(Color("#5C3900")), "padlock uses the required dark-brown outline")
+	_check(screen.level_buttons[1].texture_disabled == null, "unlocked Level 1 has no disabled-state texture")
+	var locked_texture_count := 0
 	for level_id: int in range(2, 7):
 		var level_button: TextureButton = screen.level_buttons[level_id]
-		var lock_nodes := level_button.find_children("LockOverlay", "Control", false, false)
 		_check(level_button.disabled, "Level %d is disabled while locked" % level_id)
 		_check(level_button.self_modulate.is_equal_approx(Color.WHITE), "Level %d locked artwork keeps the original full-color palette" % level_id)
-		_check(lock_nodes.size() == 1, "Level %d has exactly one permanent lock overlay" % level_id)
-		if lock_nodes.size() != 1:
-			continue
-		var lock_indicator: Control = lock_nodes[0]
-		_check(lock_indicator.visible, "Level %d displays its lock indicator" % level_id)
-		if lock_indicator.visible:
-			visible_lock_count += 1
-		_check(lock_indicator.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Level %d lock does not intercept input" % level_id)
-		var padlock_rect: Rect2 = lock_indicator.get_padlock_rect()
-		var concealment_rect: Rect2 = lock_indicator.get_concealment_rect()
-		_check(is_equal_approx(padlock_rect.size.y / level_button.size.y, 0.5), "Level %d lock occupies 50 percent of the button height" % level_id)
-		_check(padlock_rect.get_center().distance_to(level_button.size * 0.5) <= 0.75, "Level %d lock is centered inside its button" % level_id)
-		_check(concealment_rect.size.x >= level_button.size.x * 0.85, "Level %d concealment covers the embedded hero-name area" % level_id)
-		_check(concealment_rect.position.y >= level_button.size.y * 0.22, "Level %d blue overlay stays below the upper gold border" % level_id)
-		_check(concealment_rect.end.y <= level_button.size.y * 0.78, "Level %d blue overlay stays above the lower gold border" % level_id)
-		_check(concealment_rect.encloses(padlock_rect), "Level %d padlock stays entirely inside the blue interior" % level_id)
-		_check(lock_indicator.get_hero_surname() == ["", "LAPU-LAPU", "BONIFACIO", "RIZAL", "LUNA", "AQUINO", "MABINI"][level_id], "Level %d uses its required locked surname" % level_id)
-		_check(lock_indicator.get_left_text_rect().end.x < padlock_rect.position.x, "Level %d left label does not overlap its centered padlock" % level_id)
-		_check(lock_indicator.get_right_text_rect().position.x > padlock_rect.end.x, "Level %d surname does not overlap its centered padlock" % level_id)
+		_check(level_button.get_child_count() == 0, "Level %d has no runtime lock overlay" % level_id)
+		_check(level_button.texture_normal.resource_path.ends_with("Level%d_locked.png" % level_id), "Level %d displays its self-contained locked PNG" % level_id)
+		_check(level_button.texture_disabled == level_button.texture_normal, "Level %d disabled state preserves its locked artwork" % level_id)
+		if level_button.texture_normal.resource_path.ends_with("_locked.png"):
+			locked_texture_count += 1
 		_check(not level_button.tooltip_text.contains(["", "LAPU-LAPU", "BONIFACIO", "RIZAL", "LUNA", "AQUINO", "MABINI"][level_id]), "Level %d locked tooltip does not reveal its hero name" % level_id)
-		if level_id == 2:
-			_check(lock_indicator.LOCKED_TEXT_FONT.resource_path.ends_with("TitanOne-Regular.ttf"), "locked labels use the bundled cartoon display font")
-			_check(lock_indicator.LOCKED_TEXT_FONT != ThemeDB.fallback_font, "locked labels do not use Godot's default fallback font")
-			_check(lock_indicator.TEXT_COLOR.is_equal_approx(Color.WHITE), "locked labels use Level 1-style white lettering")
-			_check(lock_indicator.TEXT_OUTLINE.is_equal_approx(Color("#071D64")), "locked labels use a dark-blue outline")
-			_check(lock_indicator.COVER_BLUE.is_equal_approx(Color("#0A86F4")), "locked buttons use the approved bright-blue fill")
-			_check(lock_indicator.COVER_BLUE_DARK.is_equal_approx(Color("#052E93")), "locked buttons retain their dark-blue depth outline")
-			_check(lock_indicator.COVER_HIGHLIGHT.is_equal_approx(Color("#72E8FF")), "locked buttons retain a cyan glossy highlight")
-			_check(FileAccess.file_exists("res://assets/fonts/OFL.txt"), "bundled font includes its open-font license")
-	_check(visible_lock_count == 5, "fresh-player Level Selection displays exactly five visible padlocks")
+	_check(locked_texture_count == 5, "fresh-player Level Selection displays exactly five locked PNGs")
 	_check(screen.selected_level_id == 1, "saved default Level 1 selection is restored")
 	_check(selection_label.text == "Selected: Level 1", "selected-level message updates without a null error")
 	_check(not selection_label.get_parent().visible, "selected-level status panel is hidden without removing its label")
@@ -156,13 +131,10 @@ func _test_editor_customization_round_trip() -> void:
 	get_root().add_child(reloaded)
 	await process_frame
 	var reloaded_button := reloaded.get_node("LevelButtonsArea/Level4Button") as TextureButton
-	var resized_overlay := reloaded_button.get_node("LockOverlay") as Control
 	_check(reloaded_button.position.is_equal_approx(expected_position), "manual button position survives a scene save and reload")
 	_check(reloaded_button.size.is_equal_approx(expected_size), "manual button size survives a scene save and reload")
-	_check(resized_overlay.size.is_equal_approx(expected_size), "locked overlay follows a manually resized button")
-	_check(resized_overlay.get_padlock_rect().get_center().distance_to(expected_size * 0.5) <= 0.75, "resized locked button keeps its padlock centered")
-	_check(resized_overlay.get_left_text_rect().end.x < resized_overlay.get_padlock_rect().position.x, "resized locked button keeps left text clear of the padlock")
-	_check(resized_overlay.get_right_text_rect().position.x > resized_overlay.get_padlock_rect().end.x, "resized locked button keeps surname clear of the padlock")
+	_check(reloaded_button.texture_normal.resource_path.ends_with("Level4_locked.png"), "resized locked button keeps its self-contained texture")
+	_check(reloaded_button.get_child_count() == 0, "resized button remains independently editable without overlay children")
 	reloaded.queue_free()
 	await process_frame
 	progress.free()
@@ -196,14 +168,15 @@ func _test_saved_selection_and_pending_progression() -> void:
 	var returning_lock_count := 0
 	for level_id: int in range(1, 4):
 		_check(not screen.level_buttons[level_id].disabled, "returning-player Level %d remains unlocked" % level_id)
-		_check(not screen.level_buttons[level_id].get_node("LockOverlay").visible, "returning-player Level %d hides its padlock" % level_id)
+		_check(screen.level_buttons[level_id].texture_normal.resource_path.ends_with("Level%d.png" % level_id), "returning-player Level %d uses its original unlocked PNG" % level_id)
+		_check(screen.level_buttons[level_id].texture_disabled == null, "returning-player Level %d has no locked disabled texture" % level_id)
 		_check(screen.level_buttons[level_id].self_modulate.is_equal_approx(Color.WHITE), "returning-player Level %d uses its original colors" % level_id)
 	for level_id: int in range(4, 7):
 		_check(screen.level_buttons[level_id].disabled, "returning-player Level %d remains locked" % level_id)
-		_check(screen.level_buttons[level_id].get_node("LockOverlay").visible, "returning-player Level %d keeps its padlock" % level_id)
-		if screen.level_buttons[level_id].get_node("LockOverlay").visible:
+		_check(screen.level_buttons[level_id].texture_normal.resource_path.ends_with("Level%d_locked.png" % level_id), "returning-player Level %d keeps its locked PNG" % level_id)
+		if screen.level_buttons[level_id].texture_normal.resource_path.ends_with("_locked.png"):
 			returning_lock_count += 1
-	_check(returning_lock_count == 3, "returning-player Level Selection displays exactly three visible padlocks")
+	_check(returning_lock_count == 3, "returning-player Level Selection displays exactly three locked PNGs")
 	_check(screen.play_button.tooltip_text == "Continue Level 1 progression", "pending progression gives Play a Continue description")
 	screen.play_button.pressed.emit()
 	_check(requested_scenes == ["res://story_mode.tscn"], "pending results progression resumes Story Mode")
@@ -223,7 +196,7 @@ func _test_unlock_visual_refresh() -> void:
 	get_root().add_child(screen)
 	await process_frame
 	_check(screen.level_buttons[2].disabled, "Level 2 starts locked before progression confirmation")
-	_check(screen.level_buttons[2].get_node("LockOverlay").visible, "Level 2 starts with a visible padlock")
+	_check(screen.level_buttons[2].texture_normal.resource_path.ends_with("Level2_locked.png"), "Level 2 starts with its locked PNG")
 
 	_check(progress.record_board_completion(1, 100, {}), "Level 1 board completion is recorded for unlock testing")
 	_check(progress.begin_post_level_story(1), "Level 1 post-game progression begins")
@@ -236,7 +209,8 @@ func _test_unlock_visual_refresh() -> void:
 	var level_two: TextureButton = screen.level_buttons[2]
 	_check(progress.is_level_unlocked(2), "ProgressManager reports Level 2 unlocked")
 	_check(not level_two.disabled, "Level 2 becomes enabled without reopening the screen")
-	_check(not level_two.get_node("LockOverlay").visible, "Level 2 padlock disappears after unlocking")
+	_check(level_two.texture_normal.resource_path.ends_with("Level2.png"), "Level 2 switches to its original full-name PNG after unlocking")
+	_check(level_two.texture_disabled == null, "Level 2 clears its locked disabled texture after unlocking")
 	_check(level_two.self_modulate.is_equal_approx(Color.WHITE), "Level 2 returns to its original full-color appearance")
 	_check(not screen.level_buttons[1].disabled, "completed Level 1 remains replayable")
 	screen._select_level(2)
@@ -256,7 +230,7 @@ func _test_unlock_visual_refresh() -> void:
 	await process_frame
 	_check(reloaded.is_level_unlocked(2), "Level 2 unlock persists after save reload")
 	_check(not reopened.level_buttons[2].disabled, "reopened Level 2 remains enabled")
-	_check(not reopened.level_buttons[2].get_node("LockOverlay").visible, "reopened Level 2 has no leftover padlock")
+	_check(reopened.level_buttons[2].texture_normal.resource_path.ends_with("Level2.png"), "reopened Level 2 keeps its unlocked PNG")
 	_check(reloaded.finish_progression(1), "Level 1 unlock confirmation is finalized before Level 2")
 	_check(reloaded.record_board_completion(2, 200, {}), "Level 2 board completion is recorded for sequential unlock testing")
 	_check(reloaded.begin_post_level_story(2), "Level 2 post-game progression begins")
@@ -268,7 +242,8 @@ func _test_unlock_visual_refresh() -> void:
 	var level_three: TextureButton = reopened.level_buttons[3]
 	_check(reloaded.is_level_unlocked(3), "ProgressManager reports Level 3 unlocked")
 	_check(not level_three.disabled, "Level 3 becomes enabled without reopening the screen")
-	_check(not level_three.get_node("LockOverlay").visible, "Level 3 padlock disappears after unlocking")
+	_check(level_three.texture_normal.resource_path.ends_with("Level3.png"), "Level 3 switches to its original full-name PNG after unlocking")
+	_check(level_three.texture_disabled == null, "Level 3 clears its locked disabled texture after unlocking")
 	_check(level_three.self_modulate.is_equal_approx(Color.WHITE), "Level 3 returns to its original full-color appearance")
 	reopened._select_level(3)
 	_check(reopened.selected_level_id == 3, "newly unlocked Level 3 can be selected")

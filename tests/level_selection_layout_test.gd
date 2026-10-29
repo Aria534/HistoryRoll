@@ -48,31 +48,26 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 	_check(_rect_is_inside(screen.play_button.get_global_rect(), viewport_size), "%s PLAY stays on-screen" % size_label)
 
 	var previous_rect := Rect2()
-	var visible_lock_count := 0
+	var locked_texture_count := 0
 	for level_id: int in range(1, 7):
 		var button: TextureButton = screen.level_buttons[level_id]
 		var button_rect := button.get_global_rect()
 		_check(_rect_is_inside(button_rect, viewport_size), "%s Level %d stays on-screen" % [size_label, level_id])
-		var lock_indicator := button.get_node("LockOverlay") as Control
 		if level_id == 1:
-			_check(not lock_indicator.visible, "%s unlocked Level 1 has no visible padlock" % size_label)
+			_check(button.texture_normal.resource_path.ends_with("Level1.png"), "%s unlocked Level 1 uses its original PNG" % size_label)
 		else:
-			var local_lock_rect: Rect2 = lock_indicator.get_padlock_rect()
-			var lock_rect := Rect2(lock_indicator.global_position + local_lock_rect.position, local_lock_rect.size)
-			_check(lock_indicator.visible, "%s Level %d padlock is visible" % [size_label, level_id])
-			if lock_indicator.visible:
-				visible_lock_count += 1
-			_check(is_equal_approx(local_lock_rect.size.y / button.size.y, 0.5), "%s Level %d padlock scales to 50 percent height" % [size_label, level_id])
-			_check(lock_rect.get_center().distance_to(button_rect.get_center()) <= 1.0, "%s Level %d padlock is centered" % [size_label, level_id])
-			_check(_rect_contains(button_rect, lock_rect), "%s Level %d padlock stays inside its button" % [size_label, level_id])
+			_check(button.texture_normal.resource_path.ends_with("Level%d_locked.png" % level_id), "%s Level %d uses its complete locked PNG" % [size_label, level_id])
+			_check(button.texture_disabled == button.texture_normal, "%s Level %d disabled state preserves the locked PNG" % [size_label, level_id])
+			if button.texture_normal.resource_path.ends_with("_locked.png"):
+				locked_texture_count += 1
 		if level_id > 1:
 			_check(not previous_rect.intersects(button_rect), "%s Levels %d and %d do not overlap" % [size_label, level_id - 1, level_id])
 		previous_rect = button_rect
-	_check(visible_lock_count == 5, "%s fresh-player capture has exactly five visible padlocks" % size_label)
+	_check(locked_texture_count == 5, "%s fresh-player capture has exactly five locked PNGs" % size_label)
 	_check(previous_rect.end.y <= screen.play_button.get_global_rect().position.y, "%s PLAY is below the level list" % size_label)
 
-	var image := viewport.get_texture().get_image()
-	if not image.is_empty():
+	var image: Image = viewport.get_texture().get_image()
+	if image != null and not image.is_empty():
 		var capture_path := ProjectSettings.globalize_path("user://%s" % capture_name)
 		_check(image.save_png(capture_path) == OK, "%s rendered capture is saved" % size_label)
 	else:
@@ -111,19 +106,19 @@ func _test_returning_player_capture() -> void:
 
 	for level_id: int in range(1, 4):
 		_check(not screen.level_buttons[level_id].disabled, "returning-player capture keeps Level %d enabled" % level_id)
-		_check(not screen.level_buttons[level_id].get_node("LockOverlay").visible, "returning-player capture removes Level %d padlock" % level_id)
+		_check(screen.level_buttons[level_id].texture_normal.resource_path.ends_with("Level%d.png" % level_id), "returning-player capture uses Level %d unlocked PNG" % level_id)
 		_check(screen.level_buttons[level_id].self_modulate.is_equal_approx(Color.WHITE), "returning-player capture restores Level %d colors" % level_id)
 	var returning_lock_count := 0
 	for level_id: int in range(4, 7):
 		_check(screen.level_buttons[level_id].disabled, "returning-player capture keeps Level %d disabled" % level_id)
-		_check(screen.level_buttons[level_id].get_node("LockOverlay").visible, "returning-player capture keeps Level %d padlock" % level_id)
-		if screen.level_buttons[level_id].get_node("LockOverlay").visible:
+		_check(screen.level_buttons[level_id].texture_normal.resource_path.ends_with("Level%d_locked.png" % level_id), "returning-player capture keeps Level %d locked PNG" % level_id)
+		if screen.level_buttons[level_id].texture_normal.resource_path.ends_with("_locked.png"):
 			returning_lock_count += 1
-	_check(returning_lock_count == 3, "returning-player capture has exactly three visible padlocks")
+	_check(returning_lock_count == 3, "returning-player capture has exactly three locked PNGs")
 
-	var image := viewport.get_texture().get_image()
+	var image: Image = viewport.get_texture().get_image()
 	var capture_path := ProjectSettings.globalize_path("user://level_selection_returning_1024x1536.png")
-	_check(not image.is_empty() and image.save_png(capture_path) == OK, "returning-player rendered capture is saved")
+	_check(image != null and not image.is_empty() and image.save_png(capture_path) == OK, "returning-player rendered capture is saved")
 
 	screen.queue_free()
 	viewport.queue_free()

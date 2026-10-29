@@ -4,10 +4,29 @@ const MAIN_MENU_SCENE: String = "res://main_menu_tscn.tscn"
 const STORY_MODE_SCENE: String = "res://story_mode.tscn"
 const CHARACTER_UNLOCK_SCENE: String = "res://character_unlock.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
-
-const LOCK_GOLD := Color("#FFD43B")
-const LOCK_OUTLINE := Color("#5C3900")
-const LOCKED_MODULATE := Color.WHITE
+const LEVEL_TEXTURES := {
+	1: {"unlocked": preload("res://assets/level selection buttons/Level1.png")},
+	2: {
+		"locked": preload("res://assets/level selection buttons/Level2_locked.png"),
+		"unlocked": preload("res://assets/level selection buttons/Level2.png"),
+	},
+	3: {
+		"locked": preload("res://assets/level selection buttons/Level3_locked.png"),
+		"unlocked": preload("res://assets/level selection buttons/Level3.png"),
+	},
+	4: {
+		"locked": preload("res://assets/level selection buttons/Level4_locked.png"),
+		"unlocked": preload("res://assets/level selection buttons/Level4.png"),
+	},
+	5: {
+		"locked": preload("res://assets/level selection buttons/Level5_locked.png"),
+		"unlocked": preload("res://assets/level selection buttons/Level5.png"),
+	},
+	6: {
+		"locked": preload("res://assets/level selection buttons/Level6_locked.png"),
+		"unlocked": preload("res://assets/level selection buttons/Level6.png"),
+	},
+}
 const SELECTED_SCALE := 1.025
 
 @export var hover_scale: float = 1.03
@@ -88,14 +107,13 @@ func _refresh_levels() -> void:
 			continue
 		var button: TextureButton = level_buttons[level_id]
 		var locked: bool = not progress_manager.is_level_unlocked(level_id)
+		var texture_state := "locked" if locked else "unlocked"
+		var texture: Texture2D = LEVEL_TEXTURES[level_id][texture_state]
+		button.texture_normal = texture
+		button.texture_disabled = texture if locked else null
 		button.disabled = locked
 		button.tooltip_text = _get_level_button_tooltip(level, locked)
-		var lock_overlay := button.get_node_or_null("LockOverlay") as Control
-		if lock_overlay == null:
-			push_error("Level%dButton is missing its permanent LockOverlay." % level_id)
-		else:
-			lock_overlay.visible = locked
-		button.self_modulate = LOCKED_MODULATE if locked else Color.WHITE
+		button.self_modulate = Color.WHITE
 
 	var preferred_level: int = progress_manager.selected_level
 	if level_buttons.has(preferred_level) and progress_manager.is_level_unlocked(preferred_level):
@@ -148,7 +166,7 @@ func _select_level(level_id: int) -> void:
 	)
 	for key: Variant in level_buttons:
 		var button: TextureButton = level_buttons[key]
-		button.self_modulate = LOCKED_MODULATE if button.disabled else Color.WHITE
+		button.self_modulate = Color.WHITE
 		button.scale = Vector2.ONE * _get_rest_scale(button)
 
 
