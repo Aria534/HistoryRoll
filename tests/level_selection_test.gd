@@ -14,6 +14,111 @@ func _init() -> void:
 
 func _run() -> void:
 	_cleanup()
+	await _test_pixel_art_fresh_state()
+	_cleanup()
+	await _test_dynamic_unlock_and_persistence()
+	_cleanup()
+	print("Level Selection pixel redesign tests: %d passed, %d failed." % [_passed, _failed])
+	quit(0 if _failed == 0 else 1)
+
+
+func _test_pixel_art_fresh_state() -> void:
+	var progress = ProgressManagerScript.new()
+	progress.save_path = _save_path
+	var requested_scenes: Array[String] = []
+	var screen = LevelSelectionScene.instantiate()
+	screen.progress_manager = progress
+	screen.scene_change_handler = func(path: String): requested_scenes.append(path)
+	get_root().add_child(screen)
+	await process_frame
+
+	_check(screen._validate_required_nodes(), "pixel Level Selection required nodes resolve")
+	_check(screen.level_buttons.size() == 6, "all six reusable level rows are cached")
+	_check(screen.get_node("Background").texture.resource_path.ends_with("tropical_pixel_background.png"), "pixel tropical background is active")
+	_check(screen.title_banner.get_node("TitleLabel").text == "CHOOSE YOUR LEVEL", "title banner text is exact")
+	_check(screen.help_button.pressed.get_connections().size() == 1, "Help icon is connected")
+	_check(screen.get_node_or_null("%SettingsButton") == null, "Settings icon is removed")
+	_check(screen.get_node_or_null("%MusicButton") == null, "Music icon is removed")
+	_check(screen.back_button.pressed.get_connections().size() == 1, "Back icon is connected")
+	_check(screen.play_button.pressed.get_connections().size() == 1, "PLAY button is connected")
+
+	var expected_names := ["", "LEVEL 1 - LAPU-LAPU", "LEVEL 2 - ANDRES BONIFACIO", "LEVEL 3 - JOSE RIZAL", "LEVEL 4 - ANTONIO LUNA", "LEVEL 5 - MELCHORA AQUINO", "LEVEL 6 - APOLINARIO MABINI"]
+	var lock_count := 0
+	for level_id: int in range(1, 7):
+		var row: LevelSelectionRow = screen.level_buttons[level_id]
+		_check(row != null, "Level %d uses the reusable pixel row" % level_id)
+		_check(row.level_title == expected_names[level_id], "Level %d title is exact" % level_id)
+		_check(row.get_node_or_null("Row/Text/Subtitle") == null, "Level %d has no subtitle" % level_id)
+		_check(row.portrait != null and row.portrait.resource_path.ends_with(".png"), "Level %d portrait is loaded" % level_id)
+		_check(not row.level_title.contains("★"), "Level %d contains no star rating" % level_id)
+		if row.is_lock_visible():
+			lock_count += 1
+	_check(not screen.level_buttons[1].disabled, "fresh Level 1 is unlocked")
+	_check(not screen.level_buttons[1].is_lock_visible(), "fresh Level 1 has no padlock")
+	_check(screen.level_buttons[1].status_label.text == "UNLOCKED", "fresh Level 1 displays UNLOCKED")
+	for level_id: int in range(2, 7):
+		var locked_row: LevelSelectionRow = screen.level_buttons[level_id]
+		_check(locked_row.disabled, "fresh Level %d is disabled" % level_id)
+		_check(locked_row.is_lock_visible(), "fresh Level %d displays a padlock" % level_id)
+		_check(locked_row.status_label.text == "LOCKED", "fresh Level %d displays LOCKED" % level_id)
+		_check(locked_row.portrait_rect.self_modulate.r < 0.7, "fresh Level %d portrait is visibly dimmed" % level_id)
+	_check(lock_count == 5, "fresh player has exactly five visible padlocks")
+	_check(screen.selected_level_id == 1, "Level 1 is highlighted as the default selection")
+	_check(not screen.play_button.disabled, "PLAY is enabled for Level 1")
+
+	_check(not screen.help_overlay.visible, "Help overlay starts hidden")
+	screen.help_button.pressed.emit()
+	_check(screen.help_overlay.visible, "Help icon opens the instructions overlay")
+	screen.close_help_button.pressed.emit()
+	_check(not screen.help_overlay.visible, "Help overlay closes through GOT IT")
+	screen.back_button.pressed.emit()
+	_check(requested_scenes == ["res://main_menu_tscn.tscn"], "Back icon opens the Main Menu")
+
+	screen.queue_free()
+	await process_frame
+	progress.free()
+
+
+func _test_dynamic_unlock_and_persistence() -> void:
+	var progress = ProgressManagerScript.new()
+	progress.save_path = _save_path
+	var screen = LevelSelectionScene.instantiate()
+	screen.progress_manager = progress
+	get_root().add_child(screen)
+	await process_frame
+	_check(screen.level_buttons[2].is_lock_visible(), "Level 2 starts with its dynamic padlock")
+	_check(progress.record_board_completion(1, 100, {}), "Level 1 completion is recorded")
+	await process_frame
+	await process_frame
+	var level_two: LevelSelectionRow = screen.level_buttons[2]
+	_check(not level_two.disabled, "Level 2 becomes selectable after Level 1")
+	_check(not level_two.is_lock_visible(), "Level 2 padlock disappears after unlocking")
+	_check(level_two.status_label.text == "UNLOCKED", "Level 2 status changes to UNLOCKED")
+	_check(level_two.portrait_rect.self_modulate.is_equal_approx(Color.WHITE), "Level 2 portrait regains full color")
+	_check(screen.level_buttons[3].disabled, "Level 3 remains locked until Level 2 completion")
+	progress.save_progress()
+
+	screen.queue_free()
+	await process_frame
+	progress.free()
+	var reloaded = ProgressManagerScript.new()
+	reloaded.save_path = _save_path
+	reloaded.load_progress()
+	var reopened = LevelSelectionScene.instantiate()
+	reopened.progress_manager = reloaded
+	get_root().add_child(reopened)
+	await process_frame
+	_check(not reopened.level_buttons[2].disabled, "Level 2 unlocked state survives restart")
+	_check(not reopened.level_buttons[2].is_lock_visible(), "Level 2 remains without a padlock after restart")
+	_check(reopened.level_buttons[3].is_lock_visible(), "Level 3 padlock persists after restart")
+
+	reopened.queue_free()
+	await process_frame
+	reloaded.free()
+
+
+func _run_legacy_png_suite() -> void:
+	_cleanup()
 	await _test_fresh_level_selection()
 	await _test_editor_customization_round_trip()
 	await _test_saved_selection_and_pending_progression()

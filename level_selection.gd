@@ -4,40 +4,22 @@ const MAIN_MENU_SCENE: String = "res://main_menu_tscn.tscn"
 const STORY_MODE_SCENE: String = "res://story_mode.tscn"
 const CHARACTER_UNLOCK_SCENE: String = "res://character_unlock.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
-const LEVEL_TEXTURES := {
-	1: {"unlocked": preload("res://assets/level selection buttons/Level1.png")},
-	2: {
-		"locked": preload("res://assets/level selection buttons/Level2_locked.png"),
-		"unlocked": preload("res://assets/level selection buttons/Level2.png"),
-	},
-	3: {
-		"locked": preload("res://assets/level selection buttons/Level3_locked.png"),
-		"unlocked": preload("res://assets/level selection buttons/Level3.png"),
-	},
-	4: {
-		"locked": preload("res://assets/level selection buttons/Level4_locked.png"),
-		"unlocked": preload("res://assets/level selection buttons/Level4.png"),
-	},
-	5: {
-		"locked": preload("res://assets/level selection buttons/Level5_locked.png"),
-		"unlocked": preload("res://assets/level selection buttons/Level5.png"),
-	},
-	6: {
-		"locked": preload("res://assets/level selection buttons/Level6_locked.png"),
-		"unlocked": preload("res://assets/level selection buttons/Level6.png"),
-	},
-}
 const SELECTED_SCALE := 1.025
+const DESIGN_SIZE := Vector2(1024.0, 1536.0)
 
 @export var hover_scale: float = 1.03
 @export var press_scale: float = 0.97
 @export var animation_time: float = 0.12
 
 @onready var level_buttons_area: Control = %LevelButtonsArea
-@onready var title_banner: TextureRect = %TitleBanner
+@onready var ui_root: Control = %UIRoot
+@onready var title_banner: Control = %TitleBanner
 @onready var selection_label: Label = %SelectionLabel
 @onready var back_button: TextureButton = %BackButton
-@onready var play_button: TextureButton = %PlayButton
+@onready var help_button: Button = %HelpButton
+@onready var help_overlay: Control = %HelpOverlay
+@onready var close_help_button: Button = %CloseHelpButton
+@onready var play_button: BaseButton = %PlayButton
 
 var selected_level_id: int = 0
 var level_buttons: Dictionary = {}
@@ -49,22 +31,36 @@ var scene_transition_pending := false
 
 
 func _ready() -> void:
+	resized.connect(_apply_responsive_layout)
+	_apply_responsive_layout()
 	if progress_manager == null:
 		progress_manager = get_node_or_null("/root/ProgressManager")
 	_cache_level_buttons()
 	if not _validate_required_nodes():
 		return
 	_connect_button_once(back_button, _on_back_pressed)
+	_connect_button_once(help_button, _on_help_pressed)
+	_connect_button_once(close_help_button, _on_close_help_pressed)
 	_connect_button_once(play_button, _on_play_pressed)
 	_setup_animated_button(back_button)
+	_setup_animated_button(help_button)
+	_setup_animated_button(close_help_button)
 	_setup_animated_button(play_button)
 	if not progress_manager.progress_changed.is_connected(_refresh_levels):
 		progress_manager.progress_changed.connect(_refresh_levels)
 	for level_id: int in range(1, 7):
-		var button: TextureButton = level_buttons[level_id]
+		var button: BaseButton = level_buttons[level_id]
 		_connect_button_once(button, _on_level_pressed.bind(level_id))
 		_setup_animated_button(button)
 	_refresh_levels()
+
+
+func _apply_responsive_layout() -> void:
+	if ui_root == null or size.x <= 0.0 or size.y <= 0.0:
+		return
+	var layout_scale := minf(size.x / DESIGN_SIZE.x, size.y / DESIGN_SIZE.y)
+	ui_root.scale = Vector2.ONE * layout_scale
+	ui_root.position = (size - DESIGN_SIZE * layout_scale) * 0.5
 
 
 func _cache_level_buttons() -> void:
@@ -72,13 +68,15 @@ func _cache_level_buttons() -> void:
 	if level_buttons_area == null:
 		return
 	for level_id: int in range(1, 7):
-		var button := level_buttons_area.get_node_or_null("Level%dButton" % level_id) as TextureButton
+		var button := level_buttons_area.get_node_or_null("Level%dButton" % level_id) as BaseButton
 		if button != null:
 			level_buttons[level_id] = button
 
 
 func _validate_required_nodes() -> bool:
 	var missing_nodes: Array[String] = []
+	if ui_root == null:
+		missing_nodes.append("UIRoot")
 	if level_buttons_area == null:
 		missing_nodes.append("LevelButtonsArea")
 	if title_banner == null:
@@ -87,6 +85,12 @@ func _validate_required_nodes() -> bool:
 		missing_nodes.append("SelectionLabel")
 	if back_button == null:
 		missing_nodes.append("BackButton")
+	if help_button == null:
+		missing_nodes.append("HelpButton")
+	if help_overlay == null:
+		missing_nodes.append("HelpOverlay")
+	if close_help_button == null:
+		missing_nodes.append("CloseHelpButton")
 	if play_button == null:
 		missing_nodes.append("PlayButton")
 	for level_id: int in range(1, 7):
@@ -105,19 +109,20 @@ func _refresh_levels() -> void:
 		var level_id := int(level.get("id", 0))
 		if not level_buttons.has(level_id):
 			continue
-		var button: TextureButton = level_buttons[level_id]
+		var button: BaseButton = level_buttons[level_id]
 		var locked: bool = not progress_manager.is_level_unlocked(level_id)
-		var texture_state := "locked" if locked else "unlocked"
-		var texture: Texture2D = LEVEL_TEXTURES[level_id][texture_state]
-		button.texture_normal = texture
-		button.texture_disabled = texture if locked else null
-		button.disabled = locked
+		if button.has_method("set_locked"):
+			button.call("set_locked", locked)
+		else:
+			button.disabled = locked
 		button.tooltip_text = _get_level_button_tooltip(level, locked)
 		button.self_modulate = Color.WHITE
 
 	var preferred_level: int = progress_manager.selected_level
 	if level_buttons.has(preferred_level) and progress_manager.is_level_unlocked(preferred_level):
 		_select_level(preferred_level)
+	elif level_buttons.has(1) and progress_manager.is_level_unlocked(1):
+		_select_level(1)
 	else:
 		selected_level_id = 0
 		selection_label.text = "Select an unlocked level"
@@ -165,7 +170,7 @@ func _select_level(level_id: int) -> void:
 		else "Level %d is unlocked, but its gameplay content is still pending." % level_id
 	)
 	for key: Variant in level_buttons:
-		var button: TextureButton = level_buttons[key]
+		var button: BaseButton = level_buttons[key]
 		button.self_modulate = Color.WHITE
 		button.scale = Vector2.ONE * _get_rest_scale(button)
 
@@ -205,11 +210,22 @@ func _on_back_pressed() -> void:
 	_change_scene(MAIN_MENU_SCENE)
 
 
+func _on_help_pressed() -> void:
+	help_overlay.visible = true
+	close_help_button.grab_focus()
+
+
+func _on_close_help_pressed() -> void:
+	help_overlay.visible = false
+	help_button.grab_focus()
+
+
 func _change_scene(path: String) -> void:
 	if scene_transition_pending:
 		return
 	scene_transition_pending = true
 	back_button.disabled = true
+	help_button.disabled = true
 	play_button.disabled = true
 	if scene_change_handler.is_valid():
 		scene_change_handler.call(path)
@@ -218,6 +234,7 @@ func _change_scene(path: String) -> void:
 		if error != OK:
 			scene_transition_pending = false
 			back_button.disabled = false
+			help_button.disabled = false
 			play_button.disabled = (
 				selected_level_id < 1
 				or not progress_manager.is_level_unlocked(selected_level_id)
