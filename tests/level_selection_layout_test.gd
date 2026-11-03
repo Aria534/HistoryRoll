@@ -41,12 +41,18 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 	_check(screen.size.round() == Vector2(viewport_size), "%s root fills the viewport" % size_label)
 	_check(screen.level_buttons.size() == 6, "%s shows all six level controls" % size_label)
 	_check(screen.level_buttons_area.get_child_count() == 6, "%s does not create duplicate runtime buttons" % size_label)
+	_check(not screen.level_buttons_area is Container, "%s keeps level cards independently positionable in the 2D Editor" % size_label)
 	_check(screen.selection_label.visible, "%s keeps the selected-level status readable" % size_label)
 	_check(_rect_is_inside(screen.title_banner.get_global_rect(), viewport_size), "%s title banner stays on-screen" % size_label)
-	_check(not screen.title_banner.get_global_rect().intersects(screen.back_button.get_global_rect()), "%s title does not overlap Back Arrow" % size_label)
+	_check(screen.back_button.visible and screen.help_button.visible, "%s top controls remain visible beside the transparent banner" % size_label)
 	_check(_rect_is_inside(screen.back_button.get_global_rect(), viewport_size), "%s Back Arrow stays on-screen" % size_label)
 	_check(_rect_is_inside(screen.help_button.get_global_rect(), viewport_size), "%s Help icon stays on-screen" % size_label)
+	_check(screen.help_button.texture_normal.resource_path.ends_with("help_button_reference.png"), "%s Help uses the matching pixel-art texture" % size_label)
 	_check(_rect_is_inside(screen.play_button.get_global_rect(), viewport_size), "%s PLAY stays on-screen" % size_label)
+	var instructions: Label = screen.get_node("UIRoot/HelpOverlay/Panel/Margin/Content/Instructions")
+	_check(instructions.text.contains("Earn 10 points"), "%s Help explains correct-answer scoring" % size_label)
+	_check(instructions.text.contains("Lose 2 points"), "%s Help explains wrong-answer scoring" % size_label)
+	_check(instructions.text.contains("exact dice roll"), "%s Help explains exact-roll completion" % size_label)
 
 	var previous_rect := Rect2()
 	var visible_lock_count := 0
@@ -54,11 +60,19 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 		var button: LevelSelectionRow = screen.level_buttons[level_id]
 		var button_rect := button.get_global_rect()
 		_check(_rect_is_inside(button_rect, viewport_size), "%s Level %d stays on-screen" % [size_label, level_id])
+		_check(button.name_label.position.x - (button.portrait_rect.position.x + button.portrait_rect.size.x) >= 50.0, "%s Level %d keeps reference spacing between portrait and text" % [size_label, level_id])
+		var row_font: Font = button.name_label.get_theme_font("font")
+		var uses_row_font := row_font is FontVariation and (row_font as FontVariation).base_font.resource_path.ends_with("Roboto-Variable.ttf")
+		_check(uses_row_font, "%s Level %d uses the approved condensed game font" % [size_label, level_id])
+		_check(is_equal_approx(button.lock_icon.position.x + button.lock_icon.size.x, button.size.x - 28.0), "%s Level %d padlock keeps the reference right margin" % [size_label, level_id])
+		_check(is_equal_approx(button.lock_icon.position.y + button.lock_icon.size.y * 0.5, button.size.y * 0.5), "%s Level %d padlock stays vertically centered" % [size_label, level_id])
 		if level_id == 1:
 			_check(not button.is_lock_visible(), "%s unlocked Level 1 has no padlock" % size_label)
 		else:
 			_check(button.disabled, "%s Level %d is disabled" % [size_label, level_id])
 			_check(button.is_lock_visible(), "%s Level %d shows its padlock" % [size_label, level_id])
+			var lock_uses_reference := button.lock_icon is TextureRect and (button.lock_icon as TextureRect).texture.resource_path.ends_with("locked_padlock_reference.png")
+			_check(lock_uses_reference, "%s Level %d uses the reference-style silver lock" % [size_label, level_id])
 			if button.is_lock_visible():
 				visible_lock_count += 1
 		if level_id > 1:
@@ -73,6 +87,22 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 		_check(image.save_png(capture_path) == OK, "%s rendered capture is saved" % size_label)
 	else:
 		_check(false, "%s rendered capture is available" % size_label)
+
+	screen.help_button.pressed.emit()
+	await process_frame
+	var help_panel: Control = screen.get_node("UIRoot/HelpOverlay/Panel")
+	_check(screen.help_overlay.visible, "%s Help panel opens" % size_label)
+	_check(_rect_is_inside(help_panel.get_global_rect(), viewport_size), "%s Help panel stays on-screen" % size_label)
+	_check(_rect_contains(help_panel.get_global_rect(), instructions.get_global_rect()), "%s Help instructions stay inside the panel" % size_label)
+	var help_image: Image = viewport.get_texture().get_image()
+	if help_image != null and not help_image.is_empty():
+		var help_capture_name := capture_name.trim_suffix(".png") + "_help.png"
+		var help_capture_path := ProjectSettings.globalize_path("user://%s" % help_capture_name)
+		_check(help_image.save_png(help_capture_path) == OK, "%s Help-panel capture is saved" % size_label)
+	else:
+		_check(false, "%s Help-panel capture is available" % size_label)
+	screen.close_help_button.pressed.emit()
+	_check(not screen.help_overlay.visible, "%s Help panel closes" % size_label)
 
 	screen.queue_free()
 	viewport.queue_free()

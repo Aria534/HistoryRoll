@@ -1,8 +1,9 @@
 extends Control
 
-@export var body_color := Color("#FFD43B")
-@export var highlight_color := Color("#FFF2A6")
-@export var outline_color := Color("#3B2A12")
+@export var body_color := Color("#E3E7EB")
+@export var highlight_color := Color("#FFFFFF")
+@export var outline_color := Color("#111827")
+@export var shackle_color := Color("#AEB8C2")
 
 
 func _ready() -> void:
@@ -17,7 +18,6 @@ func _draw() -> void:
 	var body_rect := Rect2(center.x - body_size.x * 0.5, center.y - unit, body_size.x, body_size.y)
 
 	# Pixel-stepped shackle. Separate bars leave the middle genuinely open.
-	var shackle_color := Color("#A9BAC6")
 	draw_rect(Rect2(center.x - unit * 4.0, center.y - unit * 6.0, unit * 8.0, unit * 2.0), outline_color)
 	draw_rect(Rect2(center.x - unit * 4.0, center.y - unit * 5.0, unit * 2.0, unit * 6.0), outline_color)
 	draw_rect(Rect2(center.x + unit * 2.0, center.y - unit * 5.0, unit * 2.0, unit * 6.0), outline_color)
