@@ -38,7 +38,8 @@ func _test_main_menu_viewport(viewport_size: Vector2i, capture_name: String) -> 
 	_check(not menu.has_node("HistoryRollLogo"), "%s has no duplicate logo node" % label)
 	var background := menu.get_node("LiveBackground") as AnimatedSprite2D
 	var background_texture := background.sprite_frames.get_frame_texture("default", 0)
-	_check(background_texture.resource_path.ends_with("main_menu_background_reference_v3.png"), "%s uses final pixel-art background" % label)
+	_check(background_texture.resource_path.ends_with("main_menu_complete_reference_v7_natural_board.png"), "%s uses the natural integrated 25-tile board artwork" % label)
+	_check(menu.get_node("AnimatedPlants").self_modulate.a <= 0.15, "%s keeps foliage motion subtle over the complete artwork" % label)
 	var buttons: Array[TextureButton] = [menu.start_button, menu.hero_cards_button, menu.settings_button, menu.quit_button]
 	var previous_rect := Rect2()
 	for index: int in buttons.size():
@@ -48,11 +49,39 @@ func _test_main_menu_viewport(viewport_size: Vector2i, capture_name: String) -> 
 		_check(rect.size.y >= 90.0, "%s button %d remains touch-friendly" % [label, index + 1])
 		if index > 0:
 			_check(not previous_rect.intersects(rect), "%s buttons %d and %d do not overlap" % [label, index, index + 1])
+			_check(rect.position.y - previous_rect.end.y >= viewport_size.y * 0.015, "%s buttons %d and %d have a clear vertical gap" % [label, index, index + 1])
 		previous_rect = rect
+	menu._on_button_mouse_entered(buttons[0])
+	await create_timer(menu.anim_time + 0.05).timeout
+	_check(is_equal_approx(buttons[0].scale.x, 1.03), "%s mouse hover matches Level Selection's 1.03 scale" % label)
+	_check(is_equal_approx(buttons[0].self_modulate.a, 1.0), "%s mouse hover fully displays the animated button artwork" % label)
+	if viewport_size == Vector2i(720, 1280):
+		var hover_image := viewport.get_texture().get_image()
+		var hover_capture_path := ProjectSettings.globalize_path("user://main_menu_hover_720x1280.png")
+		_check(hover_image != null and not hover_image.is_empty() and hover_image.save_png(hover_capture_path) == OK, "720x1280 hover-state capture is saved")
+	menu._on_button_mouse_exited(buttons[0])
+	await create_timer(menu.anim_time + 0.05).timeout
+	menu._on_button_down(buttons[0])
+	await create_timer(menu.anim_time + 0.05).timeout
+	_check(is_equal_approx(buttons[0].scale.x, menu.press_scale), "%s touch press visibly shrinks the active button" % label)
+	_check(is_equal_approx(buttons[0].self_modulate.a, menu.press_overlay_alpha), "%s touch press displays the button feedback overlay" % label)
+	menu._on_button_up(buttons[0])
+	await create_timer(menu.anim_time + 0.05).timeout
+	_check(is_equal_approx(buttons[0].scale.x, 1.0), "%s released button returns to normal scale" % label)
+	_check(is_equal_approx(buttons[0].self_modulate.a, 0.0), "%s released touch feedback clears" % label)
 	var board: Control = menu.get_node("BoardDecoration")
-	_check(_rect_inside(board.get_global_rect(), viewport_size), "%s decorative board stays on-screen" % label)
-	_check(board.get_visual_numbers() == [[11, 12, 13, 14, 15], [10, 9, 8, 7, 6], [1, 2, 3, 4, 5]], "%s board numbering is exact and serpentine" % label)
-	_check(not previous_rect.intersects(board.get_global_rect()), "%s board does not overlap Quit" % label)
+	_check(not board.visible, "%s avoids drawing a duplicate procedural board" % label)
+	var board_rect := board.get_global_rect()
+	_check(board_rect.position.x < 0.0 and board_rect.end.x > viewport_size.x, "%s board extends beyond both side edges like the reference" % label)
+	_check(board_rect.position.y > 0.0 and board_rect.position.y < viewport_size.y, "%s board begins visibly behind Quit" % label)
+	_check(board_rect.end.y > viewport_size.y, "%s board continues below the viewport like the reference" % label)
+	_check(board_rect.position.y <= previous_rect.end.y - viewport_size.y * 0.04, "%s board visibly overlaps behind the Quit artwork" % label)
+	_check(board.get_visual_numbers() == [[21, 22, 23, 24, 25], [20, 19, 18, 17, 16], [11, 12, 13, 14, 15], [10, 9, 8, 7, 6], [1, 2, 3, 4, 5]], "%s board numbering is exact and serpentine" % label)
+	_check(board.get_start_label() == "START", "%s board marks the starting tile" % label)
+	_check(board.get_path_sequence() == range(1, 26), "%s board path is sequential from 1 through 25" % label)
+	_check(board.has_snakes_and_ladders(), "%s board contains snakes and ladders" % label)
+	_check(board_rect.position.y < previous_rect.end.y, "%s board begins behind Quit like the reference" % label)
+	_check(board.z_index < menu.quit_button.z_index, "%s board stays visually behind Quit" % label)
 	var image := viewport.get_texture().get_image()
 	var capture_path := ProjectSettings.globalize_path("user://%s" % capture_name)
 	_check(image != null and not image.is_empty() and image.save_png(capture_path) == OK, "%s capture is saved" % label)

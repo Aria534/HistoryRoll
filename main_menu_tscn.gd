@@ -4,9 +4,11 @@ extends Control
 @export_file("*.tscn") var hero_cards_scene: String = "res://hero_cards.tscn"
 @export_file("*.tscn") var settings_scene: String = "res://settings.tscn"
 
-@export var hover_scale: float = 1.05
-@export var press_scale: float = 0.95
-@export var anim_time: float = 0.15
+@export var hover_scale: float = 1.03
+@export var press_scale: float = 0.97
+@export var anim_time: float = 0.12
+@export_range(0.0, 1.0, 0.01) var hover_overlay_alpha: float = 1.0
+@export_range(0.0, 1.0, 0.01) var press_overlay_alpha: float = 1.0
 
 @onready var start_button := get_node_or_null("StartButton") as TextureButton
 @onready var hero_cards_button := get_node_or_null("HeroCardsButton") as TextureButton
@@ -21,7 +23,6 @@ var quit_handler: Callable
 
 
 func _ready() -> void:
-	# Siguroha nga ang root mo-cover sa tibuok screen ug dili mo-block sa click
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
@@ -81,29 +82,31 @@ func _update_button_pivot(button: TextureButton) -> void:
 func _on_button_mouse_entered(button: TextureButton) -> void:
 	_hovered_buttons[button] = true
 	if not button.button_pressed:
-		_animate_button(button, hover_scale)
+		_animate_button(button, hover_scale, hover_overlay_alpha)
 
 
 func _on_button_mouse_exited(button: TextureButton) -> void:
 	_hovered_buttons[button] = false
 	if not button.button_pressed:
-		_animate_button(button, 1.0)
+		_animate_button(button, 1.0, 0.0)
 
 
 func _on_button_down(button: TextureButton) -> void:
-	_animate_button(button, press_scale)
+	_animate_button(button, press_scale, press_overlay_alpha)
 
 
 func _on_button_up(button: TextureButton) -> void:
 	# Touch devices return to normal size even when touch-to-mouse emulation leaves
 	# a synthetic hover active. Desktop mouse input keeps its hover scale.
 	var target_scale := 1.0
+	var target_alpha := 0.0
 	if not DisplayServer.is_touchscreen_available() and _hovered_buttons.get(button, false):
 		target_scale = hover_scale
-	_animate_button(button, target_scale)
+		target_alpha = hover_overlay_alpha
+	_animate_button(button, target_scale, target_alpha)
 
 
-func _animate_button(button: TextureButton, target_scale: float) -> void:
+func _animate_button(button: TextureButton, target_scale: float, target_alpha: float) -> void:
 	# Stop this button's previous animation so rapid input cannot stack tweens.
 	var current_tween: Tween = _button_tweens.get(button)
 	if current_tween != null and current_tween.is_valid():
@@ -113,6 +116,7 @@ func _animate_button(button: TextureButton, target_scale: float) -> void:
 	tween.set_trans(Tween.TRANS_QUAD)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(button, "scale", Vector2.ONE * target_scale, anim_time)
+	tween.parallel().tween_property(button, "self_modulate:a", target_alpha, anim_time)
 	_button_tweens[button] = tween
 
 
