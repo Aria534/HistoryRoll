@@ -1,116 +1,147 @@
-[gd_scene format=3 uid="uid://couyhgwqwj2h4"]
+[gd_scene load_steps=12 format=3 uid="uid://couyhgwqwj2h4"]
 
-[ext_resource type="Script" uid="uid://daxgpngbxt8fq" path="res://main_menu_tscn.gd" id="1_60y3q"]
-[ext_resource type="Texture2D" uid="uid://cwalcnt8aa2f6" path="res://assets/background/main_menu_foliage/main_menu_static.png" id="2_pur26"]
-[ext_resource type="Texture2D" uid="uid://dlax1x85v7lib" path="res://assets/buttons/start.png" id="4_obwwd"]
-[ext_resource type="Texture2D" uid="uid://bis73hgier538" path="res://assets/buttons/herocard.png" id="5_pur26"]
-[ext_resource type="Texture2D" uid="uid://dxlbhl21pnarl" path="res://assets/buttons/quit.png" id="7_axwo0"]
-[ext_resource type="Texture2D" uid="uid://daegcgwkdjxt2" path="res://assets/buttons/Settings.png" id="13_ndcec"]
-[ext_resource type="Script" uid="uid://uupsexotbnxm" path="res://live_background.gd" id="37_aefuk"]
-[ext_resource type="Script" uid="uid://brobs23vcesah" path="res://plant_sway.gd" id="38_plants"]
-[ext_resource type="Texture2D" uid="uid://bdmjic0dmtheg" path="res://assets/background/main_menu_foliage/plant_top_left.png" id="39_top_left"]
-[ext_resource type="Texture2D" uid="uid://c62s8g2qwshga" path="res://assets/background/main_menu_foliage/plant_top_right.png" id="40_top_right"]
-[ext_resource type="Texture2D" uid="uid://8e8v2jbi2wdw" path="res://assets/background/main_menu_foliage/plant_left.png" id="41_left"]
-[ext_resource type="Texture2D" uid="uid://dlwj3bw0qy38a" path="res://assets/background/main_menu_foliage/plant_right.png" id="42_right"]
-[ext_resource type="Texture2D" uid="uid://bjcpr1d1q7fep" path="res://assets/background/main_menu_foliage/plant_bottom_left.png" id="43_bottom_left"]
-[ext_resource type="Texture2D" uid="uid://3hocwd3vv8rk" path="res://assets/background/main_menu_foliage/plant_bottom_right.png" id="44_bottom_right"]
+[ext_resource type="Script" path="res://main_menu_tscn.gd" id="1_menu"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/main_menu_background_reference_v3.png" id="2_background"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/start_game_button_reference_v2_cropped.png" id="3_start"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/hero_cards_button_reference_v2_cropped.png" id="4_hero"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/settings_button_reference_v2_cropped.png" id="5_settings"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/quit_game_button_reference_v2_cropped.png" id="6_quit"]
+[ext_resource type="Script" path="res://live_background.gd" id="7_background_script"]
+[ext_resource type="Script" path="res://plant_sway.gd" id="8_plants"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/animated_foliage_cluster.png" id="9_foliage"]
+[ext_resource type="Script" path="res://main_menu_board.gd" id="15_board"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_7ixyk"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_background"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_pur26")
-}],
-"loop": 1,
+"frames": [{"duration": 1.0, "texture": ExtResource("2_background")}],
+"loop": false,
 "name": &"default",
-"speed": 5.0
+"speed": 1.0
 }]
 
-[node name="main_menu_tscn" type="Control" unique_id=137861337]
+[node name="main_menu_tscn" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_60y3q")
+script = ExtResource("1_menu")
 
-[node name="LiveBackground" type="AnimatedSprite2D" parent="." unique_id=899736171]
+[node name="LiveBackground" type="AnimatedSprite2D" parent="."]
 position = Vector2(512, 768)
-sprite_frames = SubResource("SpriteFrames_7ixyk")
-script = ExtResource("37_aefuk")
+sprite_frames = SubResource("SpriteFrames_background")
+script = ExtResource("7_background_script")
 metadata/_edit_lock_ = true
 
-[node name="AnimatedPlants" type="Node2D" parent="." unique_id=2085318141]
-script = ExtResource("38_plants")
+[node name="AnimatedPlants" type="Node2D" parent="."]
+self_modulate = Color(1, 1, 1, 0.62)
+script = ExtResource("8_plants")
 
-[node name="PlantTopLeft" type="Sprite2D" parent="AnimatedPlants" unique_id=1777470700]
-position = Vector2(80, -15)
-texture = ExtResource("39_top_left")
-offset = Vector2(107.5, 122.5)
+[node name="PlantTopLeft" type="Sprite2D" parent="AnimatedPlants"]
+position = Vector2(25, 170)
+scale = Vector2(0.14, 0.14)
+texture = ExtResource("9_foliage")
+offset = Vector2(0, -512)
 
-[node name="PlantTopRight" type="Sprite2D" parent="AnimatedPlants" unique_id=1679151937]
-position = Vector2(865, -10)
-texture = ExtResource("40_top_right")
-offset = Vector2(-179.5, 122.5)
+[node name="PlantTopRight" type="Sprite2D" parent="AnimatedPlants"]
+position = Vector2(999, 175)
+scale = Vector2(-0.14, 0.14)
+texture = ExtResource("9_foliage")
+offset = Vector2(0, -512)
 
-[node name="PlantLeft" type="Sprite2D" parent="AnimatedPlants" unique_id=1025138817]
-position = Vector2(70, 960)
-texture = ExtResource("41_left")
-offset = Vector2(47.5, -375)
+[node name="PlantLeft" type="Sprite2D" parent="AnimatedPlants"]
+position = Vector2(8, 1010)
+scale = Vector2(0.14, 0.14)
+texture = ExtResource("9_foliage")
+offset = Vector2(0, -512)
 
-[node name="PlantRight" type="Sprite2D" parent="AnimatedPlants" unique_id=1816947970]
-position = Vector2(890, 975)
-texture = ExtResource("42_right")
-offset = Vector2(-74.5, -380)
+[node name="PlantRight" type="Sprite2D" parent="AnimatedPlants"]
+position = Vector2(1016, 1020)
+scale = Vector2(-0.14, 0.14)
+texture = ExtResource("9_foliage")
+offset = Vector2(0, -512)
 
-[node name="PlantBottomLeft" type="Sprite2D" parent="AnimatedPlants" unique_id=103961522]
-position = Vector2(130, 1660)
-texture = ExtResource("43_bottom_left")
-offset = Vector2(80, -411.5)
+[node name="PlantBottomLeft" type="Sprite2D" parent="AnimatedPlants"]
+position = Vector2(70, 1535)
+scale = Vector2(0.16, 0.16)
+texture = ExtResource("9_foliage")
+offset = Vector2(0, -512)
 
-[node name="PlantBottomRight" type="Sprite2D" parent="AnimatedPlants" unique_id=429633255]
-position = Vector2(850, 1660)
-texture = ExtResource("44_bottom_right")
-offset = Vector2(-97, -414)
+[node name="PlantBottomRight" type="Sprite2D" parent="AnimatedPlants"]
+position = Vector2(954, 1535)
+scale = Vector2(-0.16, 0.16)
+texture = ExtResource("9_foliage")
+offset = Vector2(0, -512)
 
-[node name="StartButton" type="TextureButton" parent="." unique_id=1768276902]
-layout_mode = 0
-offset_left = 302.0
-offset_top = 512.0
-offset_right = 733.0
-offset_bottom = 805.0
-mouse_force_pass_scroll_events = false
-texture_normal = ExtResource("4_obwwd")
+[node name="StartButton" type="TextureButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.19
+anchor_top = 0.405
+anchor_right = 0.81
+anchor_bottom = 0.495
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("3_start")
 ignore_texture_size = true
-stretch_mode = 5
+stretch_mode = 0
+texture_filter = 1
 
-[node name="HeroCardsButton" type="TextureButton" parent="." unique_id=1501236565]
-layout_mode = 0
-offset_left = 287.0
-offset_top = 663.0
-offset_right = 707.0
-offset_bottom = 1062.0
-texture_normal = ExtResource("5_pur26")
+[node name="HeroCardsButton" type="TextureButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.19
+anchor_top = 0.505
+anchor_right = 0.81
+anchor_bottom = 0.595
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_hero")
 ignore_texture_size = true
-stretch_mode = 5
+stretch_mode = 0
+texture_filter = 1
 
-[node name="SettingsButton" type="TextureButton" parent="." unique_id=1174385454]
-layout_mode = 0
-offset_left = 307.0
-offset_top = 901.0
-offset_right = 735.0
-offset_bottom = 1207.0
-texture_normal = ExtResource("13_ndcec")
+[node name="SettingsButton" type="TextureButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.19
+anchor_top = 0.605
+anchor_right = 0.81
+anchor_bottom = 0.695
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_settings")
 ignore_texture_size = true
-stretch_mode = 5
+stretch_mode = 0
+texture_filter = 1
 
-[node name="QuitButton" type="TextureButton" parent="." unique_id=189569183]
-layout_mode = 0
-offset_left = 183.0
-offset_top = 1171.0
-offset_right = 870.0
-offset_bottom = 1320.0
-texture_normal = ExtResource("7_axwo0")
+[node name="QuitButton" type="TextureButton" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.19
+anchor_top = 0.705
+anchor_right = 0.81
+anchor_bottom = 0.795
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("6_quit")
 ignore_texture_size = true
-stretch_mode = 5
+stretch_mode = 0
+texture_filter = 1
+
+[node name="BoardDecoration" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.015
+anchor_top = 0.805
+anchor_right = 0.985
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("15_board")

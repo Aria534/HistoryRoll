@@ -1,17 +1,184 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=8 format=3]
 
-[ext_resource type="Script" path="res://back_to_main_menu.gd" id="1_back"]
+[ext_resource type="Script" path="res://settings.gd" id="1_settings"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/main_menu_background.png" id="2_background"]
+[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="3_font"]
 
-[node name="Achievements" type="Control"]
+[sub_resource type="StyleBoxFlat" id="Panel"]
+bg_color = Color(0.97, 0.87, 0.68, 0.98)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.96, 0.62, 0.08, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+shadow_color = Color(0.03, 0.1, 0.2, 0.85)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="BlueButton"]
+bg_color = Color(0.04, 0.45, 0.84, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 0.78, 0.18, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0.02, 0.1, 0.24, 1)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="BlueHover"]
+bg_color = Color(0.06, 0.6, 0.94, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 0.88, 0.32, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="HelpPanel"]
+bg_color = Color(0.98, 0.9, 0.72, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.98, 0.66, 0.12, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[node name="Settings" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_back")
+script = ExtResource("1_settings")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_background")
+expand_mode = 1
+stretch_mode = 6
+texture_filter = 1
+
+[node name="Shade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.01, 0.06, 0.13, 0.42)
+
+[node name="SettingsPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.14
+anchor_right = 0.9
+anchor_bottom = 0.86
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Margin" type="MarginContainer" parent="SettingsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 58
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 58
+
+[node name="Content" type="VBoxContainer" parent="SettingsPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Title" type="Label" parent="SettingsPanel/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.17, 0.3, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 64
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="MusicToggle" type="Button" parent="SettingsPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 126)
+layout_mode = 2
+toggle_mode = true
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.98, 0.88, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 38
+theme_override_styles/normal = SubResource("BlueButton")
+theme_override_styles/hover = SubResource("BlueHover")
+theme_override_styles/pressed = SubResource("BlueHover")
+text = "MUSIC: ON"
+
+[node name="SfxToggle" type="Button" parent="SettingsPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 126)
+layout_mode = 2
+toggle_mode = true
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.98, 0.88, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 38
+theme_override_styles/normal = SubResource("BlueButton")
+theme_override_styles/hover = SubResource("BlueHover")
+theme_override_styles/pressed = SubResource("BlueHover")
+text = "SOUND EFFECTS: ON"
+
+[node name="HelpButton" type="Button" parent="SettingsPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 126)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.98, 0.88, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 38
+theme_override_styles/normal = SubResource("BlueButton")
+theme_override_styles/hover = SubResource("BlueHover")
+theme_override_styles/pressed = SubResource("BlueHover")
+text = "?  HOW TO PLAY"
+
+[node name="Spacer" type="Control" parent="SettingsPanel/Margin/Content"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="SettingsPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 116)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.98, 0.88, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("BlueButton")
+theme_override_styles/hover = SubResource("BlueHover")
+theme_override_styles/pressed = SubResource("BlueHover")
+text = "BACK"
+
+[node name="HowToPlayOverlay" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,19 +186,64 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 32.0
-offset_right = 992.0
-offset_bottom = 80.0
-text = "ACHIEVEMENTS"
+[node name="OverlayShade" type="ColorRect" parent="HowToPlayOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.01, 0.04, 0.09, 0.78)
+
+[node name="Panel" type="PanelContainer" parent="HowToPlayOverlay"]
+layout_mode = 1
+anchor_left = 0.07
+anchor_top = 0.06
+anchor_right = 0.93
+anchor_bottom = 0.94
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("HelpPanel")
+
+[node name="Margin" type="MarginContainer" parent="HowToPlayOverlay/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 42
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 42
+
+[node name="Content" type="VBoxContainer" parent="HowToPlayOverlay/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Heading" type="Label" parent="HowToPlayOverlay/Panel/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.03, 0.17, 0.3, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 48
+text = "HOW TO PLAY"
 horizontal_alignment = 1
 
-[node name="BackButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 112.0
-offset_right = 152.0
-offset_bottom = 168.0
-text = "Back"
+[node name="Instructions" type="Label" parent="HowToPlayOverlay/Panel/Margin/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.06, 0.12, 0.2, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 24
+text = "1. A multiple-choice question appears first.\n2. Answer the question before rolling the dice.\n3. A correct answer gives +10 points.\n4. A wrong answer deducts 2 points, but never below zero.\n5. Roll the dice after answering.\n6. Move your Filipino hero by the dice result.\n7. Ladders move you forward.\n8. Snakes move you backward unless you have a shield.\n9. One shield protects you from one snake.\n10. Bonus Tiles award additional points.\n11. Reach the final tile with an exact dice roll.\n12. Complete a level to unlock the next level."
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="CloseHelpButton" type="Button" parent="HowToPlayOverlay/Panel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.98, 0.88, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 34
+theme_override_styles/normal = SubResource("BlueButton")
+theme_override_styles/hover = SubResource("BlueHover")
+theme_override_styles/pressed = SubResource("BlueHover")
+text = "GOT IT"

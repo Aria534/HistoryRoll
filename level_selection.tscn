@@ -1,19 +1,19 @@
-[gd_scene load_steps=22 format=3 uid="uid://dqnvxi15q2xue"]
+[gd_scene format=3 uid="uid://dqnvxi15q2xue"]
 
-[ext_resource type="Script" path="res://level_selection.gd" id="1_level"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/tropical_pixel_background.png" id="2_background"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/back_button_reference.png" id="3_back"]
-[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="4_font"]
+[ext_resource type="Script" uid="uid://bi0rgtrdac8qr" path="res://level_selection.gd" id="1_level"]
+[ext_resource type="Texture2D" uid="uid://c5rc2mq63gxkp" path="res://assets/level_selection_pixel/tropical_pixel_background.png" id="2_background"]
+[ext_resource type="Texture2D" uid="uid://dusysc2wryspv" path="res://assets/level_selection_pixel/back_button_reference.png" id="3_back"]
+[ext_resource type="FontFile" uid="uid://2exqupx3ke7s" path="res://assets/fonts/PixelifySans.ttf" id="4_font"]
 [ext_resource type="PackedScene" path="res://level_row.tscn" id="5_row"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/lapulapu.png" id="6_lapulapu"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/bonifacio.png" id="7_bonifacio"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/rizal.png" id="8_rizal"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/luna.png" id="9_luna"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/aquino.png" id="10_aquino"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/mabini.png" id="11_mabini"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/title_banner_reference.png" id="12_title_frame"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/play_button_reference.png" id="13_play_frame"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/help_button_reference.png" id="14_help"]
+[ext_resource type="Texture2D" uid="uid://crso6usgfeo1r" path="res://assets/level_selection_pixel/lapulapu.png" id="6_lapulapu"]
+[ext_resource type="Texture2D" uid="uid://cjs4rfbp0bdq1" path="res://assets/level_selection_pixel/bonifacio.png" id="7_bonifacio"]
+[ext_resource type="Texture2D" uid="uid://b1h56krfonq08" path="res://assets/level_selection_pixel/rizal.png" id="8_rizal"]
+[ext_resource type="Texture2D" uid="uid://e52rtyhfslkx" path="res://assets/level_selection_pixel/luna.png" id="9_luna"]
+[ext_resource type="Texture2D" uid="uid://dnb4scenw3w2w" path="res://assets/level_selection_pixel/aquino.png" id="10_aquino"]
+[ext_resource type="Texture2D" uid="uid://bsje3efmemqv1" path="res://assets/level_selection_pixel/mabini.png" id="11_mabini"]
+[ext_resource type="Texture2D" uid="uid://bcttj5kiwc8pc" path="res://assets/level_selection_pixel/title_banner_reference.png" id="12_title_frame"]
+[ext_resource type="Texture2D" uid="uid://dn3kkgfejgi0c" path="res://assets/level_selection_pixel/play_button_reference.png" id="13_play_frame"]
+[ext_resource type="Texture2D" uid="uid://c2a1c7y20eek2" path="res://assets/level_selection_pixel/help_button_reference.png" id="14_help"]
 
 [sub_resource type="StyleBoxFlat" id="Style_title"]
 bg_color = Color(0.965, 0.855, 0.62, 0.98)
@@ -57,47 +57,7 @@ corner_radius_bottom_left = 10
 shadow_color = Color(1, 0.76, 0.16, 1)
 shadow_size = 6
 
-[sub_resource type="StyleBoxFlat" id="Style_play_normal"]
-bg_color = Color(0.04, 0.27, 0.5, 1)
-border_width_left = 8
-border_width_top = 8
-border_width_right = 8
-border_width_bottom = 8
-border_color = Color(1, 0.72, 0.12, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_color = Color(0.03, 0.1, 0.18, 1)
-shadow_size = 8
-
-[sub_resource type="StyleBoxFlat" id="Style_play_hover"]
-bg_color = Color(0.03, 0.43, 0.7, 1)
-border_width_left = 8
-border_width_top = 8
-border_width_right = 8
-border_width_bottom = 8
-border_color = Color(1, 0.84, 0.28, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_color = Color(0.03, 0.1, 0.18, 1)
-shadow_size = 9
-
-[sub_resource type="StyleBoxFlat" id="Style_disabled"]
-bg_color = Color(0.39, 0.46, 0.5, 0.96)
-border_width_left = 8
-border_width_top = 8
-border_width_right = 8
-border_width_bottom = 8
-border_color = Color(0.58, 0.58, 0.54, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[node name="LevelSelection" type="Control"]
+[node name="LevelSelection" type="Control" unique_id=61055790]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -106,7 +66,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_level")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="." unique_id=1606619570]
+texture_filter = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -117,9 +78,8 @@ mouse_filter = 2
 texture = ExtResource("2_background")
 expand_mode = 1
 stretch_mode = 6
-texture_filter = 1
 
-[node name="BackdropTint" type="ColorRect" parent="."]
+[node name="BackdropTint" type="ColorRect" parent="." unique_id=1683104312]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -129,15 +89,15 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.02, 0.12, 0.2, 0.1)
 
-[node name="UIRoot" type="Control" parent="."]
+[node name="UIRoot" type="Control" parent="." unique_id=511740690]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(1024, 1536)
-layout_mode = 0
+anchors_preset = 0
 offset_right = 1024.0
 offset_bottom = 1536.0
 mouse_filter = 1
 
-[node name="BackButton" type="TextureButton" parent="UIRoot"]
+[node name="BackButton" type="TextureButton" parent="UIRoot" unique_id=1582335023]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 32.0
@@ -149,8 +109,9 @@ texture_normal = ExtResource("3_back")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="HelpButton" type="TextureButton" parent="UIRoot"]
+[node name="HelpButton" type="TextureButton" parent="UIRoot" unique_id=1312519284]
 unique_name_in_owner = true
+texture_filter = 1
 layout_mode = 0
 offset_left = 882.0
 offset_top = 28.0
@@ -158,14 +119,14 @@ offset_right = 986.0
 offset_bottom = 132.0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("14_help")
-texture_hover = ExtResource("14_help")
 texture_pressed = ExtResource("14_help")
+texture_hover = ExtResource("14_help")
 ignore_texture_size = true
 stretch_mode = 5
-texture_filter = 1
 
-[node name="TitleBanner" type="TextureRect" parent="UIRoot"]
+[node name="TitleBanner" type="TextureRect" parent="UIRoot" unique_id=807028397]
 unique_name_in_owner = true
+texture_filter = 1
 layout_mode = 0
 offset_left = 86.0
 offset_top = 50.0
@@ -175,9 +136,8 @@ mouse_filter = 2
 texture = ExtResource("12_title_frame")
 expand_mode = 1
 stretch_mode = 5
-texture_filter = 1
 
-[node name="TitleLabel" type="Label" parent="UIRoot/TitleBanner"]
+[node name="TitleLabel" type="Label" parent="UIRoot/TitleBanner" unique_id=271846468]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -198,25 +158,23 @@ text = "CHOOSE YOUR LEVEL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="LevelButtonsArea" type="Control" parent="UIRoot"]
+[node name="LevelButtonsArea" type="Control" parent="UIRoot" unique_id=1400040509]
 unique_name_in_owner = true
-layout_mode = 0
+anchors_preset = 0
 offset_left = 156.0
 offset_top = 342.0
 offset_right = 868.0
 offset_bottom = 1254.0
 
-[node name="Level1Button" parent="UIRoot/LevelButtonsArea" instance=ExtResource("5_row")]
+[node name="Level1Button" parent="UIRoot/LevelButtonsArea" unique_id=1076678431 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_right = 712.0
 offset_bottom = 142.0
-level_id = 1
-level_title = "LEVEL 1 - LAPU-LAPU"
 portrait = ExtResource("6_lapulapu")
 name_font_size = 34
 
-[node name="Level2Button" parent="UIRoot/LevelButtonsArea" instance=ExtResource("5_row")]
+[node name="Level2Button" parent="UIRoot/LevelButtonsArea" unique_id=522892594 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 154.0
@@ -228,7 +186,7 @@ level_title = "LEVEL 2 - ANDRES BONIFACIO"
 portrait = ExtResource("7_bonifacio")
 name_font_size = 25
 
-[node name="Level3Button" parent="UIRoot/LevelButtonsArea" instance=ExtResource("5_row")]
+[node name="Level3Button" parent="UIRoot/LevelButtonsArea" unique_id=1622845960 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 308.0
@@ -240,7 +198,7 @@ level_title = "LEVEL 3 - JOSE RIZAL"
 portrait = ExtResource("8_rizal")
 name_font_size = 32
 
-[node name="Level4Button" parent="UIRoot/LevelButtonsArea" instance=ExtResource("5_row")]
+[node name="Level4Button" parent="UIRoot/LevelButtonsArea" unique_id=1796087367 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 462.0
@@ -252,7 +210,7 @@ level_title = "LEVEL 4 - ANTONIO LUNA"
 portrait = ExtResource("9_luna")
 name_font_size = 30
 
-[node name="Level5Button" parent="UIRoot/LevelButtonsArea" instance=ExtResource("5_row")]
+[node name="Level5Button" parent="UIRoot/LevelButtonsArea" unique_id=1708645918 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 616.0
@@ -264,7 +222,7 @@ level_title = "LEVEL 5 - MELCHORA AQUINO"
 portrait = ExtResource("10_aquino")
 name_font_size = 25
 
-[node name="Level6Button" parent="UIRoot/LevelButtonsArea" instance=ExtResource("5_row")]
+[node name="Level6Button" parent="UIRoot/LevelButtonsArea" unique_id=1112743727 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 770.0
@@ -276,8 +234,9 @@ level_title = "LEVEL 6 - APOLINARIO MABINI"
 portrait = ExtResource("11_mabini")
 name_font_size = 27
 
-[node name="PlayButton" type="TextureButton" parent="UIRoot"]
+[node name="PlayButton" type="TextureButton" parent="UIRoot" unique_id=1085011560]
 unique_name_in_owner = true
+texture_filter = 1
 layout_mode = 0
 offset_left = 260.0
 offset_top = 1284.0
@@ -286,14 +245,13 @@ offset_bottom = 1436.0
 mouse_default_cursor_shape = 2
 disabled = true
 texture_normal = ExtResource("13_play_frame")
-texture_hover = ExtResource("13_play_frame")
 texture_pressed = ExtResource("13_play_frame")
+texture_hover = ExtResource("13_play_frame")
 texture_disabled = ExtResource("13_play_frame")
 ignore_texture_size = true
 stretch_mode = 5
-texture_filter = 1
 
-[node name="PlayLabel" type="Label" parent="UIRoot/PlayButton"]
+[node name="PlayLabel" type="Label" parent="UIRoot/PlayButton" unique_id=1017356862]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -301,7 +259,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.98, 0.9, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.08, 0.18, 1)
 theme_override_constants/outline_size = 4
@@ -311,7 +268,7 @@ text = "▶  PLAY"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SelectionLabel" type="Label" parent="UIRoot"]
+[node name="SelectionLabel" type="Label" parent="UIRoot" unique_id=2037767357]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 190.0
@@ -327,7 +284,7 @@ text = "Select an unlocked level"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HelpOverlay" type="Control" parent="UIRoot"]
+[node name="HelpOverlay" type="Control" parent="UIRoot" unique_id=1676897280]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -338,7 +295,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="Shade" type="ColorRect" parent="UIRoot/HelpOverlay"]
+[node name="Shade" type="ColorRect" parent="UIRoot/HelpOverlay" unique_id=1232427964]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -348,7 +305,7 @@ grow_vertical = 2
 mouse_filter = 1
 color = Color(0.01, 0.05, 0.1, 0.72)
 
-[node name="Panel" type="PanelContainer" parent="UIRoot/HelpOverlay"]
+[node name="Panel" type="PanelContainer" parent="UIRoot/HelpOverlay" unique_id=1484799434]
 layout_mode = 0
 offset_left = 128.0
 offset_top = 276.0
@@ -356,18 +313,18 @@ offset_right = 896.0
 offset_bottom = 1260.0
 theme_override_styles/panel = SubResource("Style_title")
 
-[node name="Margin" type="MarginContainer" parent="UIRoot/HelpOverlay/Panel"]
+[node name="Margin" type="MarginContainer" parent="UIRoot/HelpOverlay/Panel" unique_id=274411137]
 layout_mode = 2
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 42
 theme_override_constants/margin_right = 50
 theme_override_constants/margin_bottom = 42
 
-[node name="Content" type="VBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin"]
+[node name="Content" type="VBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin" unique_id=1367659964]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Heading" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content"]
+[node name="Heading" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content" unique_id=1078158359]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.035, 0.18, 0.31, 1)
 theme_override_fonts/font = ExtResource("4_font")
@@ -375,31 +332,40 @@ theme_override_font_sizes/font_size = 44
 text = "HOW TO PLAY"
 horizontal_alignment = 1
 
-[node name="Instructions" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content"]
+[node name="Instructions" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content" unique_id=908964260]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.08, 0.14, 0.2, 1)
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 22
-text = "1. Answer the multiple-choice question first.\n2. Earn 10 points for a correct answer.\n3. Lose 2 points for a wrong answer. Your score never goes below zero.\n4. Roll the dice after answering.\n5. Move your hero by the number shown on the dice.\n6. Ladders move you forward.\n7. Snakes move you backward.\n8. A shield protects you from one snake.\n9. Bonus Tiles give additional points.\n10. Reach the final tile with an exact dice roll.\n11. Complete the level to unlock the next one."
-horizontal_alignment = 0
+text = "1. Answer the multiple-choice question first.
+2. Earn 10 points for a correct answer.
+3. Lose 2 points for a wrong answer. Your score never goes below zero.
+4. Roll the dice after answering.
+5. Move your hero by the number shown on the dice.
+6. Ladders move you forward.
+7. Snakes move you backward.
+8. A shield protects you from one snake.
+9. Bonus Tiles give additional points.
+10. Reach the final tile with an exact dice roll.
+11. Complete the level to unlock the next one."
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="CloseHelpButton" type="Button" parent="UIRoot/HelpOverlay/Panel/Margin/Content"]
+[node name="CloseHelpButton" type="Button" parent="UIRoot/HelpOverlay/Panel/Margin/Content" unique_id=895855597]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 82)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.04, 0.19, 0.32, 1)
-theme_override_colors/font_hover_color = Color(0.04, 0.19, 0.32, 1)
-theme_override_colors/font_pressed_color = Color(0.04, 0.19, 0.32, 1)
 theme_override_colors/font_focus_color = Color(0.04, 0.19, 0.32, 1)
+theme_override_colors/font_pressed_color = Color(0.04, 0.19, 0.32, 1)
+theme_override_colors/font_hover_color = Color(0.04, 0.19, 0.32, 1)
 theme_override_colors/font_outline_color = Color(1, 0.84, 0.28, 1)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("Style_icon_normal")
-theme_override_styles/hover = SubResource("Style_icon_hover")
 theme_override_styles/pressed = SubResource("Style_icon_normal")
+theme_override_styles/hover = SubResource("Style_icon_hover")
 text = "GOT IT"
