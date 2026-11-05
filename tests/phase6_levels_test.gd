@@ -50,7 +50,8 @@ func _test_redesigned_levels() -> void:
 		var board: Dictionary = LevelCatalog.get_level(level_id).get("board", {})
 		_check(BoardRules.validate_config(board).is_empty(), "Level %d redesigned board is valid" % level_id)
 		_check(BoardRules.get_tile_count(board) == expected[level_id - 1], "Level %d uses its approved tile count" % level_id)
-		_check(QuizQuestionBank.get_questions_for_level(level_id).size() == 50, "Level %d supports 50 question slots" % level_id)
+		_check(QuizQuestionBank.get_source_questions_for_level(level_id).size() == 50, "Level %d preserves 50 source question slots" % level_id)
+		_check(not QuizQuestionBank.get_active_questions_for_level(level_id).is_empty(), "Level %d has validated active questions" % level_id)
 
 
 func _test_all_level_configurations() -> void:

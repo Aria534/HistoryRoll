@@ -58,7 +58,8 @@ func _test_catalog_and_boards() -> void:
 
 func _test_question_slots_and_heroes() -> void:
 	for level_id: int in range(1, 7):
-		_check(QuizQuestionBank.get_questions_for_level(level_id).size() == 50, "Level %d exposes exactly 50 question slots" % level_id)
+		_check(QuizQuestionBank.get_source_questions_for_level(level_id).size() == 50, "Level %d preserves exactly 50 source questions" % level_id)
+		_check(not QuizQuestionBank.get_active_questions_for_level(level_id).is_empty(), "Level %d has validated active questions" % level_id)
 	_check(HeroDatabase.get_heroes().size() == 6, "hero database contains the final six-hero roster")
 	_check(HeroDatabase.get_hero("antonio_luna").get("references", []).size() > 0, "Antonio Luna content has a historical reference")
 	_check(HeroDatabase.get_hero("melchora_aquino").get("references", []).size() > 0, "Melchora Aquino content has a historical reference")
@@ -122,7 +123,7 @@ func _test_question_first_gameplay() -> void:
 	game.roll_button.pressed.emit()
 	_check(await _wait_state(game, GameplayScript.GameplayState.QUESTION), "movement finishes before the next question")
 	_check(game.player_position == 2, "movement uses the displayed dice result")
-	var wrong := (int(game.current_question.correct_index) + 1) % 4
+	var wrong: int = (int(game.current_question.correct_index) + 1) % game.current_question.choices.size()
 	game.answer_buttons[wrong].pressed.emit()
 	_check(game.score == 8, "wrong answer deducts 2 points")
 	_check(not game.roll_button.disabled, "wrong answer still allows a dice roll")
