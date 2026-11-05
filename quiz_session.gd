@@ -28,8 +28,14 @@ func next_question() -> Dictionary:
 		return {}
 	_cursor += 1
 	if _cursor >= _order.size():
+		var previous_question_index := _order[-1]
 		_cursor = 0
 		_order.shuffle()
+		if _order.size() > 1 and _order[0] == previous_question_index:
+			var swap_index := 1 + randi() % (_order.size() - 1)
+			var temporary_index := _order[0]
+			_order[0] = _order[swap_index]
+			_order[swap_index] = temporary_index
 	_answered = false
 	return get_current_question()
 
@@ -44,7 +50,8 @@ func submit_answer(choice_index: int) -> Dictionary:
 	if _answered:
 		return {"accepted": false, "correct": false}
 	var question := get_current_question()
-	if question.is_empty() or choice_index < 0 or choice_index >= 4:
+	var choices: Array = question.get("choices", [])
+	if question.is_empty() or choice_index < 0 or choice_index >= choices.size():
 		return {"accepted": false, "correct": false}
 
 	_answered = true
@@ -60,14 +67,19 @@ func submit_answer(choice_index: int) -> Dictionary:
 func _is_valid_question(question: Dictionary) -> bool:
 	var choices: Variant = question.get("choices", [])
 	var correct_index := int(question.get("correct_index", -1))
+	var question_format := str(question.get("question_format", ""))
+	var choices_are_valid: bool = choices is Array and choices.size() >= 2 and choices.size() <= 4
+	if question_format == "multiple_choice":
+		choices_are_valid = choices is Array and choices.size() == 3
+	elif question_format == "true_false":
+		choices_are_valid = choices is Array and choices.size() == 2
 	return (
 		not str(question.get("question_id", "")).is_empty()
 		and int(question.get("level", 0)) >= 1
 		and not str(question.get("hero_id", "")).is_empty()
 		and ["regular", "bonus"].has(str(question.get("question_type", "")))
 		and not str(question.get("question_text", "")).is_empty()
-		and choices is Array
-		and choices.size() == 4
+		and choices_are_valid
 		and correct_index >= 0
-		and correct_index < 4
+		and correct_index < choices.size()
 	)

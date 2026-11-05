@@ -26,6 +26,7 @@ const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 @export var enable_test_dice_controls: bool = false
 
 @onready var board_view: Control = %BoardView
+@onready var board_panel: PanelContainer = $MarginContainer/Content/BoardPanel
 @onready var level_label: Label = %LevelLabel
 @onready var position_label: Label = %PositionLabel
 @onready var score_label: Label = %ScoreLabel
@@ -172,9 +173,14 @@ func _begin_question(question_type: String) -> void:
 	question_label.show()
 	answer_buttons[0].get_parent().show()
 	var choices: Array = current_question.get("choices", [])
+	if choices.size() < 2 or choices.size() > answer_buttons.size():
+		_show_fatal_error("The current question has an invalid number of answer choices.")
+		return
 	for index: int in range(answer_buttons.size()):
-		answer_buttons[index].text = str(choices[index])
-		answer_buttons[index].modulate = Color.WHITE
+		var answer_button := answer_buttons[index]
+		answer_button.visible = index < choices.size()
+		answer_button.text = str(choices[index]) if answer_button.visible else ""
+		answer_button.modulate = Color.WHITE
 	feedback_label.text = "Answer first. Correct: +%d. Incorrect: -%d. Both outcomes allow one roll." % [correct_answer_points, incorrect_answer_penalty]
 	next_turn_button.hide()
 	next_turn_button.text = "Continue"
@@ -400,7 +406,7 @@ func _set_state(new_state: GameplayState) -> void:
 	state = new_state
 	state_label.text = GameplayState.keys()[state].capitalize()
 	for button: Button in answer_buttons:
-		button.disabled = state != GameplayState.QUESTION
+		button.disabled = state != GameplayState.QUESTION or not button.visible
 	roll_button.disabled = state != GameplayState.READY_TO_ROLL
 	back_button.disabled = state != GameplayState.READY_TO_ROLL
 	if state != GameplayState.ANSWER_FEEDBACK:
@@ -427,6 +433,9 @@ func _update_status_labels() -> void:
 
 func _set_quiz_panel_height(quiz_active: bool) -> void:
 	quiz_panel.custom_minimum_size.y = 430.0 if quiz_active else 230.0
+	var viewport_height := get_viewport_rect().size.y
+	var responsive_board_height := clampf(viewport_height * 0.42, 440.0, 720.0)
+	board_panel.custom_minimum_size.y = responsive_board_height if quiz_active else minf(720.0, viewport_height * 0.58)
 
 
 func _show_fatal_error(message: String) -> void:
