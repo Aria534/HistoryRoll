@@ -32,7 +32,22 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	_check(game.question_label.visible, "Level %d question is visible before rolling at %s" % [level_id, viewport_size])
 	_check(game.roll_button.disabled, "Level %d dice is initially disabled" % level_id)
 	_check(game.board_view.get_board_rect().size.x <= game.board_view.size.x + 0.1, "Level %d board fits horizontally" % level_id)
-	_check(game.board_view.waiting_hero_token.visible, "Level %d finish placeholder is visible" % level_id)
+	_check(game.board_view.player_sprite.texture != null and game.board_view.player_sprite.visible, "Level %d current hero chibi is visible" % level_id)
+	_check(game.board_view.player_token_label.visible == false, "Level %d no longer shows start initials over the chibi" % level_id)
+	var player_center: Vector2 = game.board_view.player_token.position + game.board_view.player_token.size / 2.0
+	_check(player_center.distance_to(game.board_view.get_tile_center(1)) < 1.0, "Level %d current hero starts on Tile 1" % level_id)
+	var finish_center: Vector2 = game.board_view.waiting_hero_token.position + game.board_view.waiting_hero_token.size / 2.0
+	_check(finish_center.distance_to(game.board_view.get_tile_center(game.tile_count)) < 1.0, "Level %d finish marker is centered on the final tile" % level_id)
+	if level_id < 6:
+		_check(game.board_view.waiting_hero_sprite.texture != null and game.board_view.waiting_hero_sprite.visible, "Level %d next unlock hero chibi is visible at the finish" % level_id)
+		_check(game.board_view.waiting_hero_sprite.texture.resource_path.ends_with("_wave.png"), "Level %d finish hero uses its waving pose" % level_id)
+		_check(game.board_view.waiting_hero_label.visible == false, "Level %d next hero chibi replaces finish initials" % level_id)
+		if level_id == 1:
+			var wave_rotation_before: float = game.board_view.waiting_hero_sprite.rotation
+			await create_timer(0.24).timeout
+			_check(not is_equal_approx(game.board_view.waiting_hero_sprite.rotation, wave_rotation_before), "finish hero visibly moves during its wave animation")
+	else:
+		_check(not game.board_view.waiting_hero_sprite.visible and game.board_view.waiting_hero_label.text == "TROPHY", "Level 6 uses the final trophy instead of inventing a next hero")
 	var image: Image = viewport.get_texture().get_image()
 	_check(image != null and not image.is_empty() and image.save_png(ProjectSettings.globalize_path("user://%s" % filename)) == OK, "%s rendered capture is saved" % filename)
 	game.progress_manager = null; game.queue_free(); viewport.queue_free(); await process_frame; progress.free()

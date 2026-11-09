@@ -46,10 +46,22 @@ func _run() -> void:
 
 func _test_redesigned_levels() -> void:
 	var expected := [20, 30, 40, 50, 100, 100]
+	var previous_snake_count := 0
 	for level_id: int in range(1, 7):
-		var board: Dictionary = LevelCatalog.get_level(level_id).get("board", {})
+		var level: Dictionary = LevelCatalog.get_level(level_id)
+		var board: Dictionary = level.get("board", {})
 		_check(BoardRules.validate_config(board).is_empty(), "Level %d redesigned board is valid" % level_id)
 		_check(BoardRules.get_tile_count(board) == expected[level_id - 1], "Level %d uses its approved tile count" % level_id)
+		var snake_count := (board.get("snakes", {}) as Dictionary).size()
+		_check(snake_count == level_id + 1, "Level %d adds one snake to the difficulty curve" % level_id)
+		if level_id > 1:
+			_check(snake_count > previous_snake_count, "Level %d has more snakes than the preceding level" % level_id)
+		previous_snake_count = snake_count
+		_check(ResourceLoader.exists(str(level.get("portrait_path", ""))), "Level %d current hero chibi exists" % level_id)
+		if level_id < 6:
+			_check(ResourceLoader.exists(str(level.get("waiting_hero_portrait_path", ""))), "Level %d next unlock hero chibi exists" % level_id)
+		else:
+			_check(str(level.get("waiting_hero_portrait_path", "")).is_empty(), "Level 6 correctly ends with no invented next hero")
 		_check(QuizQuestionBank.get_source_questions_for_level(level_id).size() == 50, "Level %d preserves 50 source question slots" % level_id)
 		_check(not QuizQuestionBank.get_active_questions_for_level(level_id).is_empty(), "Level %d has validated active questions" % level_id)
 
