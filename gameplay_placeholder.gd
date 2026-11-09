@@ -150,9 +150,11 @@ func _initialize_gameplay() -> void:
 	resolved_tiles_this_turn.clear()
 	results_panel.hide()
 	board_view.set_player_position_immediate(player_position)
-	board_view.set_hero_placeholders(
+	board_view.set_hero_tokens(
 		str(level_data.get("hero_name", "Hero")),
+		str(level_data.get("portrait_path", "")),
 		str(level_data.get("waiting_hero_name", "FINAL TROPHY")),
+		str(level_data.get("waiting_hero_portrait_path", "")),
 		level_id == LevelCatalog.get_highest_level_id()
 	)
 	_update_status_labels()

@@ -23,6 +23,7 @@ static func get_level(level_id: int) -> Dictionary:
 			result["character_reward"] = _hero_to_character(hero)
 			var waiting := HeroDatabase.get_hero(str(result.get("waiting_hero_id", "")))
 			result["waiting_hero_name"] = str(waiting.get("hero_name", "FINAL TROPHY"))
+			result["waiting_hero_portrait_path"] = str(waiting.get("portrait_path", ""))
 			return result
 	return {}
 
