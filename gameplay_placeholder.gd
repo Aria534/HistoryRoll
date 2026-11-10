@@ -410,6 +410,16 @@ func _set_state(new_state: GameplayState) -> void:
 	for button: Button in answer_buttons:
 		button.disabled = state != GameplayState.QUESTION or not button.visible
 	roll_button.disabled = state != GameplayState.READY_TO_ROLL
+	if state == GameplayState.QUESTION:
+		roll_button.text = "Answer First"
+		roll_button.tooltip_text = "Choose an answer before rolling the die."
+	elif state == GameplayState.READY_TO_ROLL:
+		roll_button.text = "Roll Die"
+		roll_button.tooltip_text = "Roll the die and move your hero."
+		roll_button.grab_focus()
+	else:
+		roll_button.text = "Rolling..." if state == GameplayState.DICE_ROLLING else "Roll Die"
+		roll_button.tooltip_text = "Please wait for the current turn to finish."
 	back_button.disabled = state in [
 		GameplayState.DICE_ROLLING,
 		GameplayState.PLAYER_MOVING,
