@@ -1,32 +1,172 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://gameplay_placeholder.gd" id="1_gameplay"]
 [ext_resource type="Texture2D" uid="uid://d0tbtxkqj58wb" path="res://assets/background/Pastel Castle Overlook by the Sea.png" id="2_background"]
 [ext_resource type="Script" path="res://board_view.gd" id="3_board"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/historyroll_sign.png" id="4_logo"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/level_parchment.png" id="5_level_banner"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/quiz_scroll.png" id="6_quiz_scroll"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/board_frame.png" id="7_board_frame"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_main"]
-bg_color = Color(0.055, 0.102, 0.153, 0.94)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.88, 0.68, 0.29, 1)
-corner_radius_top_left = 22
-corner_radius_top_right = 22
-corner_radius_bottom_right = 22
-corner_radius_bottom_left = 22
+[sub_resource type="StyleBoxTexture" id="StyleBox_main"]
+texture = ExtResource("7_board_frame")
+texture_margin_left = 145.0
+texture_margin_top = 145.0
+texture_margin_right = 145.0
+texture_margin_bottom = 145.0
+content_margin_left = 25.0
+content_margin_top = 25.0
+content_margin_right = 25.0
+content_margin_bottom = 25.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_quiz"]
-bg_color = Color(0.94, 0.9, 0.76, 0.97)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.42, 0.31, 0.18, 1)
+[sub_resource type="StyleBoxTexture" id="StyleBox_quiz"]
+texture = ExtResource("6_quiz_scroll")
+texture_margin_left = 115.0
+texture_margin_top = 145.0
+texture_margin_right = 115.0
+texture_margin_bottom = 145.0
+content_margin_left = 54.0
+content_margin_top = 52.0
+content_margin_right = 54.0
+content_margin_bottom = 58.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_brand"]
+bg_color = Color(0.32, 0.118, 0.047, 0.98)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.93, 0.63, 0.18, 1)
 corner_radius_top_left = 18
 corner_radius_top_right = 18
 corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
+shadow_color = Color(0.08, 0.035, 0.012, 0.55)
+shadow_size = 6
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_level_banner"]
+texture = ExtResource("5_level_banner")
+texture_margin_left = 210.0
+texture_margin_top = 80.0
+texture_margin_right = 210.0
+texture_margin_bottom = 80.0
+content_margin_left = 62.0
+content_margin_top = 14.0
+content_margin_right = 62.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_brown_button"]
+bg_color = Color(0.48, 0.2, 0.08, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.86, 0.49, 0.17, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_brown_hover"]
+bg_color = Color(0.61, 0.278, 0.102, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 0.69, 0.25, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_status"]
+bg_color = Color(0.31, 0.129, 0.047, 0.96)
+border_width_top = 3
+border_width_bottom = 3
+border_color = Color(0.86, 0.51, 0.16, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_answer"]
+bg_color = Color(0.184, 0.478, 0.102, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.12, 0.306, 0.063, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0.08, 0.16, 0.035, 0.4)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_answer_hover"]
+bg_color = Color(0.263, 0.604, 0.133, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.75, 0.82, 0.2, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_answer_pressed"]
+bg_color = Color(0.125, 0.349, 0.067, 1)
+border_width_left = 4
+border_width_top = 6
+border_width_right = 4
+border_width_bottom = 2
+border_color = Color(0.09, 0.235, 0.047, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_disabled"]
+bg_color = Color(0.58, 0.55, 0.48, 0.82)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.43, 0.4, 0.34, 0.8)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_feedback_backing"]
+bg_color = Color(0.965, 0.855, 0.62, 0.94)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 8.0
+content_margin_right = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_roll"]
+bg_color = Color(0.91, 0.56, 0.12, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.46, 0.22, 0.055, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_roll_hover"]
+bg_color = Color(1, 0.69, 0.18, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.58, 0.29, 0.07, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_token"]
 bg_color = Color(0.94, 0.28, 0.22, 1)
@@ -81,7 +221,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.016, 0.039, 0.066, 0.66)
+color = Color(0.016, 0.039, 0.066, 0.34)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -89,36 +229,79 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 26.0
-offset_top = 24.0
+offset_top = 10.0
 offset_right = -26.0
-offset_bottom = -24.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Content" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
-[node name="Header" type="HBoxContainer" parent="MarginContainer/Content"]
-custom_minimum_size = Vector2(0, 72)
+[node name="HistoryRollBrand" type="TextureRect" parent="MarginContainer/Content"]
+custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
-theme_override_constants/separation = 16
+mouse_filter = 2
+texture = ExtResource("4_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Header" type="Control" parent="MarginContainer/Content"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+
+[node name="LevelBannerBackground" type="TextureRect" parent="MarginContainer/Content/Header"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 0.72
+anchor_bottom = 1.0
+offset_right = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_level_banner")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="LevelLabel" type="Label" parent="MarginContainer/Content/Header"]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
-theme_override_font_sizes/font_size = 30
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 0.72
+anchor_bottom = 1.0
+offset_left = 52.0
+offset_right = -60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.29, 0.12, 0.035, 1)
+theme_override_colors/font_outline_color = Color(1, 0.9, 0.65, 1)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 31
 text = "LEVEL 1 — FILIPINO HEROES"
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="BackButton" type="Button" parent="MarginContainer/Content/Header"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(230, 72)
-layout_mode = 2
-theme_override_font_sizes/font_size = 25
-text = "Back to Levels"
+custom_minimum_size = Vector2(220, 82)
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.73
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.88, 0.78, 0.63, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBox_brown_button")
+theme_override_styles/hover = SubResource("StyleBox_brown_hover")
+theme_override_styles/pressed = SubResource("StyleBox_brown_button")
+theme_override_styles/disabled = SubResource("StyleBox_brown_button")
+text = "‹  Back to Levels"
 
 [node name="BoardPanel" type="PanelContainer" parent="MarginContainer/Content"]
 custom_minimum_size = Vector2(0, 720)
@@ -188,43 +371,52 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="StatusRow" type="HBoxContainer" parent="MarginContainer/Content"]
-custom_minimum_size = Vector2(0, 46)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="PositionLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.96, 0.97, 1, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBox_status")
 text = "Position: 1 / 100"
+vertical_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBox_status")
 text = "Score: 0"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="PowerStatusLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.72, 0.86, 0.96, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 21
+theme_override_styles/normal = SubResource("StyleBox_status")
 text = "1x  |  Shield: 0"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="StateLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBox_status")
 text = "Loading"
 horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="QuizPanel" type="PanelContainer" parent="MarginContainer/Content"]
 custom_minimum_size = Vector2(0, 230)
@@ -233,14 +425,14 @@ theme_override_styles/panel = SubResource("StyleBox_quiz")
 
 [node name="QuizMargin" type="MarginContainer" parent="MarginContainer/Content/QuizPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 22
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 22
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="QuizContent" type="VBoxContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="FixtureNotice" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
@@ -254,10 +446,12 @@ horizontal_alignment = 1
 [node name="QuestionLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 82)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.12, 0.16, 0.17, 1)
-theme_override_font_sizes/font_size = 25
+theme_override_colors/font_outline_color = Color(1, 0.93, 0.75, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 28
 text = "Question"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -267,51 +461,72 @@ autowrap_mode = 2
 visible = false
 layout_mode = 2
 theme_override_constants/h_separation = 12
-theme_override_constants/v_separation = 10
+theme_override_constants/v_separation = 8
 columns = 2
 
 [node name="AnswerButton0" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBox_answer")
+theme_override_styles/hover = SubResource("StyleBox_answer_hover")
+theme_override_styles/pressed = SubResource("StyleBox_answer_pressed")
+theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 1"
 autowrap_mode = 2
 
 [node name="AnswerButton1" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBox_answer")
+theme_override_styles/hover = SubResource("StyleBox_answer_hover")
+theme_override_styles/pressed = SubResource("StyleBox_answer_pressed")
+theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 2"
 autowrap_mode = 2
 
 [node name="AnswerButton2" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBox_answer")
+theme_override_styles/hover = SubResource("StyleBox_answer_hover")
+theme_override_styles/pressed = SubResource("StyleBox_answer_pressed")
+theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 3"
 autowrap_mode = 2
 
 [node name="AnswerButton3" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 78)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBox_answer")
+theme_override_styles/hover = SubResource("StyleBox_answer_hover")
+theme_override_styles/pressed = SubResource("StyleBox_answer_pressed")
+theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 4"
 autowrap_mode = 2
 
 [node name="FeedbackLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 62)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.18, 0.22, 0.19, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 19
+theme_override_styles/normal = SubResource("StyleBox_feedback_backing")
 text = "Roll the die to begin."
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -329,7 +544,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="TurnControls" type="HBoxContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
@@ -343,7 +558,7 @@ vertical_alignment = 1
 
 [node name="DiceLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 70)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.52, 0.2, 0.16, 1)
 theme_override_font_sizes/font_size = 42
@@ -353,9 +568,15 @@ vertical_alignment = 1
 
 [node name="RollButton" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 76)
+custom_minimum_size = Vector2(260, 66)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.22, 0.09, 0.025, 1)
+theme_override_colors/font_disabled_color = Color(0.86, 0.83, 0.75, 1)
 theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBox_roll")
+theme_override_styles/hover = SubResource("StyleBox_roll_hover")
+theme_override_styles/pressed = SubResource("StyleBox_roll")
+theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Roll Die"
 
 [node name="NextTurnButton" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]

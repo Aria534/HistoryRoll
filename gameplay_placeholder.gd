@@ -157,6 +157,7 @@ func _initialize_gameplay() -> void:
 		str(level_data.get("waiting_hero_portrait_path", "")),
 		level_id == LevelCatalog.get_highest_level_id()
 	)
+	board_view.reset_dice_display()
 	_update_status_labels()
 	dice_label.text = "—"
 	_begin_question("regular")
@@ -228,9 +229,8 @@ func _on_roll_pressed() -> void:
 	landing_effect_resolved = false
 	resolved_tiles_this_turn.clear()
 	var dice_result: int = dice_roller.roll()
-	for step: int in range(maxi(1, dice_animation_steps)):
-		dice_label.text = str((dice_result + step) % 6 + 1)
-		await get_tree().create_timer(maxf(0.0, dice_animation_interval)).timeout
+	dice_label.text = "..."
+	await board_view.animate_dice_result(dice_result, dice_animation_steps, dice_animation_interval)
 	dice_label.text = str(dice_result)
 	await _resolve_roll(dice_result)
 
@@ -406,11 +406,16 @@ func _change_scene(path: String) -> void:
 
 func _set_state(new_state: GameplayState) -> void:
 	state = new_state
-	state_label.text = GameplayState.keys()[state].capitalize()
+	state_label.text = "?  %s" % GameplayState.keys()[state].capitalize()
 	for button: Button in answer_buttons:
 		button.disabled = state != GameplayState.QUESTION or not button.visible
 	roll_button.disabled = state != GameplayState.READY_TO_ROLL
-	back_button.disabled = state != GameplayState.READY_TO_ROLL
+	back_button.disabled = state in [
+		GameplayState.DICE_ROLLING,
+		GameplayState.PLAYER_MOVING,
+		GameplayState.RESOLVING_TILE,
+		GameplayState.LEVEL_COMPLETE,
+	]
 	if state != GameplayState.ANSWER_FEEDBACK:
 		next_turn_button.hide()
 
@@ -428,15 +433,15 @@ func _show_chibi_reaction(correct: bool, points: int) -> void:
 
 
 func _update_status_labels() -> void:
-	position_label.text = "Position: %d / %d" % [player_position, tile_count]
-	score_label.text = "Score: %d" % score
-	power_status_label.text = "Shield: %d" % shield_charges
+	position_label.text = "●  Position: %d / %d" % [player_position, tile_count]
+	score_label.text = "★  Score: %d" % score
+	power_status_label.text = "◆  Shield: %d" % shield_charges
 
 
 func _set_quiz_panel_height(quiz_active: bool) -> void:
-	quiz_panel.custom_minimum_size.y = 430.0 if quiz_active else 230.0
 	var viewport_height := get_viewport_rect().size.y
-	var responsive_board_height := clampf(viewport_height * 0.42, 440.0, 720.0)
+	quiz_panel.custom_minimum_size.y = clampf(viewport_height * 0.27, 360.0, 430.0) if quiz_active else 220.0
+	var responsive_board_height := clampf(viewport_height * 0.40, 440.0, 700.0)
 	board_panel.custom_minimum_size.y = responsive_board_height if quiz_active else minf(720.0, viewport_height * 0.58)
 
 

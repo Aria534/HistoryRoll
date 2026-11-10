@@ -39,7 +39,7 @@ func _run() -> void:
 
 func _test_catalog_and_boards() -> void:
 	var expected_tiles := [20, 30, 40, 50, 100, 100]
-	var expected_snakes := [2, 3, 4, 5, 6, 7]
+	var expected_snakes := [3, 4, 5, 6, 7, 8]
 	var expected_ladders := [3, 4, 4, 5, 6, 6]
 	var expected_heroes := ["lapulapu", "andres_bonifacio", "jose_rizal", "antonio_luna", "melchora_aquino", "apolinario_mabini"]
 	for level_id: int in range(1, 7):
@@ -123,6 +123,9 @@ func _test_question_first_gameplay() -> void:
 	game.roll_button.pressed.emit()
 	_check(await _wait_state(game, GameplayScript.GameplayState.QUESTION), "movement finishes before the next question")
 	_check(game.player_position == 2, "movement uses the displayed dice result")
+	_check(game.board_view.board_die.visible, "rolled die travels onto the board")
+	_check(game.board_view.board_die.face_value == 1, "on-board die shows the same result used for movement")
+	_check(game.board_view.get_board_rect().has_point(game.board_view.board_die.position + game.board_view.board_die.size / 2.0), "on-board die stops inside the board")
 	var wrong: int = (int(game.current_question.correct_index) + 1) % game.current_question.choices.size()
 	game.answer_buttons[wrong].pressed.emit()
 	_check(game.score == 8, "wrong answer deducts 2 points")
