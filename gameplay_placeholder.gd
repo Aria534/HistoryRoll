@@ -35,6 +35,7 @@ const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 @onready var quiz_panel: PanelContainer = $MarginContainer/Content/QuizPanel
 @onready var fixture_notice: Label = %FixtureNotice
 @onready var question_label: Label = %QuestionLabel
+@onready var answers_grid: GridContainer = $MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers
 @onready var feedback_label: Label = %FeedbackLabel
 @onready var reaction_label: Label = %ReactionLabel
 @onready var dice_label: Label = %DiceLabel
@@ -179,10 +180,14 @@ func _begin_question(question_type: String) -> void:
 	if choices.size() < 2 or choices.size() > answer_buttons.size():
 		_show_fatal_error("The current question has an invalid number of answer choices.")
 		return
+	# Keep every supported question visually balanced. Three-choice questions use
+	# one complete row instead of leaving an orphaned button in a second row.
+	answers_grid.columns = choices.size() if choices.size() <= 3 else 2
 	for index: int in range(answer_buttons.size()):
 		var answer_button := answer_buttons[index]
 		answer_button.visible = index < choices.size()
 		answer_button.text = str(choices[index]) if answer_button.visible else ""
+		answer_button.custom_minimum_size.y = 60.0 if choices.size() <= 3 else 52.0
 		answer_button.modulate = Color.WHITE
 	feedback_label.text = "Answer first. Correct: +%d. Incorrect: -%d. Both outcomes allow one roll." % [correct_answer_points, incorrect_answer_penalty]
 	next_turn_button.hide()
@@ -450,8 +455,8 @@ func _update_status_labels() -> void:
 
 func _set_quiz_panel_height(quiz_active: bool) -> void:
 	var viewport_height := get_viewport_rect().size.y
-	quiz_panel.custom_minimum_size.y = clampf(viewport_height * 0.27, 360.0, 430.0) if quiz_active else 220.0
-	var responsive_board_height := clampf(viewport_height * 0.40, 440.0, 700.0)
+	quiz_panel.custom_minimum_size.y = clampf(viewport_height * 0.30, 420.0, 470.0) if quiz_active else 230.0
+	var responsive_board_height := clampf(viewport_height * 0.48, 520.0, 760.0)
 	board_panel.custom_minimum_size.y = responsive_board_height if quiz_active else minf(720.0, viewport_height * 0.58)
 
 

@@ -33,6 +33,15 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	viewport.add_child(game); await process_frame; await process_frame
 	_check(game.question_label.visible, "Level %d question is visible before rolling at %s" % [level_id, viewport_size])
 	_check(game.roll_button.disabled, "Level %d dice is initially disabled" % level_id)
+	var choice_count: int = game.current_question.get("choices", []).size()
+	var expected_columns: int = choice_count if choice_count <= 3 else 2
+	_check(game.answers_grid.columns == expected_columns, "Level %d balances its %d answer choices across the quiz row" % [level_id, choice_count])
+	_check(not game.get_node("MarginContainer/Content/HistoryRollBrand").visible, "Level %d gameplay header removes the redundant HistoryRoll logo" % level_id)
+	var level_banner := game.get_node("MarginContainer/Content/Header/LevelBannerBackground") as TextureRect
+	var back_button := game.get_node("%BackButton") as Button
+	_check(not level_banner.visible and not game.level_label.visible, "Level %d gameplay header removes the level parchment and title" % level_id)
+	_check(back_button.visible and back_button.size.y >= 60.0, "Level %d keeps a large touch-friendly Back to Levels button" % level_id)
+	_check(game.board_panel.size.y >= minf(float(viewport_size.y) * 0.45, 700.0), "Level %d board uses the freed header space" % level_id)
 	_check(game.board_view.get_board_rect().size.x <= game.board_view.size.x + 0.1, "Level %d board fits horizontally" % level_id)
 	_check(game.board_view.player_sprite.texture != null and game.board_view.player_sprite.visible, "Level %d current hero chibi is visible" % level_id)
 	_check(game.board_view.player_token_label.visible == false, "Level %d no longer shows start initials over the chibi" % level_id)

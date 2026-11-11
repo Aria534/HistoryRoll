@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="Script" path="res://gameplay_placeholder.gd" id="1_gameplay"]
 [ext_resource type="Texture2D" uid="uid://d0tbtxkqj58wb" path="res://assets/background/Pastel Castle Overlook by the Sea.png" id="2_background"]
@@ -80,10 +80,28 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_status"]
-bg_color = Color(0.31, 0.129, 0.047, 0.96)
-border_width_top = 3
-border_width_bottom = 3
-border_color = Color(0.86, 0.51, 0.16, 1)
+bg_color = Color(0.29, 0.105, 0.035, 0.97)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.95, 0.62, 0.19, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+shadow_color = Color(0.08, 0.025, 0.008, 0.5)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_status_item"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_color = Color(0.94, 0.64, 0.24, 0.85)
+content_margin_left = 10.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_answer"]
 bg_color = Color(0.184, 0.478, 0.102, 1)
@@ -136,13 +154,13 @@ corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_feedback_backing"]
-bg_color = Color(0.965, 0.855, 0.62, 0.94)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-content_margin_left = 8.0
-content_margin_right = 8.0
+bg_color = Color(0.965, 0.855, 0.62, 0.95)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+content_margin_left = 10.0
+content_margin_right = 10.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_roll"]
 bg_color = Color(0.91, 0.56, 0.12, 1)
@@ -237,10 +255,11 @@ grow_vertical = 2
 
 [node name="Content" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="HistoryRollBrand" type="TextureRect" parent="MarginContainer/Content"]
-custom_minimum_size = Vector2(0, 110)
+visible = false
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("4_logo")
@@ -248,15 +267,16 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Header" type="Control" parent="MarginContainer/Content"]
-custom_minimum_size = Vector2(0, 90)
+custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
 
 [node name="LevelBannerBackground" type="TextureRect" parent="MarginContainer/Content/Header"]
+visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 0.72
+anchor_left = 0.08
+anchor_top = 0.42
+anchor_right = 0.84
 anchor_bottom = 1.0
-offset_right = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -266,9 +286,11 @@ stretch_mode = 6
 
 [node name="LevelLabel" type="Label" parent="MarginContainer/Content/Header"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 0.72
+anchor_left = 0.08
+anchor_top = 0.42
+anchor_right = 0.84
 anchor_bottom = 1.0
 offset_left = 52.0
 offset_right = -60.0
@@ -277,20 +299,18 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(0.29, 0.12, 0.035, 1)
 theme_override_colors/font_outline_color = Color(1, 0.9, 0.65, 1)
 theme_override_constants/outline_size = 1
-theme_override_font_sizes/font_size = 31
+theme_override_font_sizes/font_size = 34
 text = "LEVEL 1 — FILIPINO HEROES"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="BackButton" type="Button" parent="MarginContainer/Content/Header"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 82)
+custom_minimum_size = Vector2(250, 64)
 layout_mode = 1
-anchors_preset = 15
-anchor_left = 0.73
+anchor_left = 0.7
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
@@ -370,52 +390,56 @@ text = "AB"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="StatusRow" type="HBoxContainer" parent="MarginContainer/Content"]
-custom_minimum_size = Vector2(0, 56)
+[node name="StatusRow" type="PanelContainer" parent="MarginContainer/Content"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_status")
+
+[node name="StatusItems" type="HBoxContainer" parent="MarginContainer/Content/StatusRow"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="PositionLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
+[node name="PositionLabel" type="Label" parent="MarginContainer/Content/StatusRow/StatusItems"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.96, 0.97, 1, 1)
 theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBox_status")
 text = "Position: 1 / 100"
+horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScoreLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
+[node name="ScoreLabel" type="Label" parent="MarginContainer/Content/StatusRow/StatusItems"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
 theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBox_status")
+theme_override_styles/normal = SubResource("StyleBox_status_item")
 text = "Score: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PowerStatusLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
+[node name="PowerStatusLabel" type="Label" parent="MarginContainer/Content/StatusRow/StatusItems"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.72, 0.86, 0.96, 1)
 theme_override_font_sizes/font_size = 21
-theme_override_styles/normal = SubResource("StyleBox_status")
+theme_override_styles/normal = SubResource("StyleBox_status_item")
 text = "1x  |  Shield: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="StateLabel" type="Label" parent="MarginContainer/Content/StatusRow"]
+[node name="StateLabel" type="Label" parent="MarginContainer/Content/StatusRow/StatusItems"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
 theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBox_status")
+theme_override_styles/normal = SubResource("StyleBox_status_item")
 text = "Loading"
-horizontal_alignment = 2
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="QuizPanel" type="PanelContainer" parent="MarginContainer/Content"]
@@ -432,7 +456,7 @@ theme_override_constants/margin_bottom = 0
 
 [node name="QuizContent" type="VBoxContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="FixtureNotice" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
@@ -446,12 +470,12 @@ horizontal_alignment = 1
 [node name="QuestionLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.12, 0.16, 0.17, 1)
-theme_override_colors/font_outline_color = Color(1, 0.93, 0.75, 1)
-theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 28
+theme_override_colors/font_outline_color = Color(1, 0.93, 0.75, 0.7)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 29
 text = "Question"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -460,17 +484,19 @@ autowrap_mode = 2
 [node name="Answers" type="GridContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
 visible = false
 layout_mode = 2
-theme_override_constants/h_separation = 12
+theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 8
 columns = 2
 
 [node name="AnswerButton0" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_outline_color = Color(0.05, 0.16, 0.025, 0.75)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBox_answer")
 theme_override_styles/hover = SubResource("StyleBox_answer_hover")
 theme_override_styles/pressed = SubResource("StyleBox_answer_pressed")
@@ -480,11 +506,13 @@ autowrap_mode = 2
 
 [node name="AnswerButton1" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_outline_color = Color(0.05, 0.16, 0.025, 0.75)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBox_answer")
 theme_override_styles/hover = SubResource("StyleBox_answer_hover")
 theme_override_styles/pressed = SubResource("StyleBox_answer_pressed")
@@ -494,11 +522,13 @@ autowrap_mode = 2
 
 [node name="AnswerButton2" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_outline_color = Color(0.05, 0.16, 0.025, 0.75)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBox_answer")
 theme_override_styles/hover = SubResource("StyleBox_answer_hover")
 theme_override_styles/pressed = SubResource("StyleBox_answer_pressed")
@@ -508,11 +538,13 @@ autowrap_mode = 2
 
 [node name="AnswerButton3" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 23
+theme_override_colors/font_outline_color = Color(0.05, 0.16, 0.025, 0.75)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBox_answer")
 theme_override_styles/hover = SubResource("StyleBox_answer_hover")
 theme_override_styles/pressed = SubResource("StyleBox_answer_pressed")
@@ -522,10 +554,10 @@ autowrap_mode = 2
 
 [node name="FeedbackLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.18, 0.22, 0.19, 1)
-theme_override_font_sizes/font_size = 19
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBox_feedback_backing")
 text = "Roll the die to begin."
 horizontal_alignment = 1
@@ -544,7 +576,7 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="TurnControls" type="HBoxContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
-custom_minimum_size = Vector2(0, 66)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
@@ -568,7 +600,7 @@ vertical_alignment = 1
 
 [node name="RollButton" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 66)
+custom_minimum_size = Vector2(280, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.22, 0.09, 0.025, 1)
 theme_override_colors/font_disabled_color = Color(0.86, 0.83, 0.75, 1)
