@@ -25,17 +25,20 @@ const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 @export var tile_effect_duration: float = 0.55
 @export var enable_test_dice_controls: bool = false
 
+@onready var background: TextureRect = $Background
+@onready var gameplay_body: VBoxContainer = $MarginContainer/Content/BodyCenter/Body
 @onready var board_view: Control = %BoardView
-@onready var board_panel: PanelContainer = $MarginContainer/Content/BoardPanel
+@onready var board_panel: PanelContainer = $MarginContainer/Content/BodyCenter/Body/BoardPanel
 @onready var level_label: Label = %LevelLabel
 @onready var position_label: Label = %PositionLabel
 @onready var score_label: Label = %ScoreLabel
 @onready var power_status_label: Label = %PowerStatusLabel
 @onready var state_label: Label = %StateLabel
-@onready var quiz_panel: PanelContainer = $MarginContainer/Content/QuizPanel
+@onready var quiz_panel: PanelContainer = $MarginContainer/Content/BodyCenter/Body/QuizPanel
 @onready var fixture_notice: Label = %FixtureNotice
 @onready var question_label: Label = %QuestionLabel
-@onready var answers_grid: GridContainer = $MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers
+@onready var answers_grid: GridContainer = $MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers
+@onready var turn_message_label: Label = %TurnMessageLabel
 @onready var feedback_label: Label = %FeedbackLabel
 @onready var reaction_label: Label = %ReactionLabel
 @onready var dice_label: Label = %DiceLabel
@@ -113,6 +116,7 @@ func _initialize_gameplay() -> void:
 	if level_data.is_empty() or not LevelCatalog.is_level_playable(level_id):
 		_show_fatal_error("The selected level is not configured for gameplay.")
 		return
+	_apply_level_background()
 	board_config = level_data.get("board", {})
 	var config_errors: PackedStringArray = board_view.configure(board_config)
 	if not config_errors.is_empty():
@@ -161,7 +165,20 @@ func _initialize_gameplay() -> void:
 	board_view.reset_dice_display()
 	_update_status_labels()
 	dice_label.text = "—"
+	turn_message_label.text = "Answer the question to begin."
 	_begin_question("regular")
+
+
+func _apply_level_background() -> void:
+	var background_path := str(level_data.get("background_path", ""))
+	if background_path.is_empty():
+		return
+	if not ResourceLoader.exists(background_path, "Texture2D"):
+		push_warning("Gameplay background was not found: %s" % background_path)
+		return
+	var level_background := load(background_path) as Texture2D
+	if level_background != null:
+		background.texture = level_background
 
 
 func _begin_question(question_type: String) -> void:
@@ -174,12 +191,14 @@ func _begin_question(question_type: String) -> void:
 	fixture_notice.visible = question_label.text.begins_with("DEVELOPMENT PLACEHOLDER")
 	fixture_notice.text = "DEVELOPMENT QUESTION FIXTURE — NOT FINAL CONTENT"
 	reaction_label.hide()
+	turn_message_label.show()
 	question_label.show()
 	answer_buttons[0].get_parent().show()
 	var choices: Array = current_question.get("choices", [])
 	if choices.size() < 2 or choices.size() > answer_buttons.size():
 		_show_fatal_error("The current question has an invalid number of answer choices.")
 		return
+	_apply_question_typography(choices)
 	# Keep every supported question visually balanced. Three-choice questions use
 	# one complete row instead of leaving an orphaned button in a second row.
 	answers_grid.columns = choices.size() if choices.size() <= 3 else 2
@@ -187,13 +206,38 @@ func _begin_question(question_type: String) -> void:
 		var answer_button := answer_buttons[index]
 		answer_button.visible = index < choices.size()
 		answer_button.text = str(choices[index]) if answer_button.visible else ""
-		answer_button.custom_minimum_size.y = 60.0 if choices.size() <= 3 else 52.0
+		answer_button.custom_minimum_size.y = 72.0 if choices.size() <= 3 else 60.0
 		answer_button.modulate = Color.WHITE
 	feedback_label.text = "Answer first. Correct: +%d. Incorrect: -%d. Both outcomes allow one roll." % [correct_answer_points, incorrect_answer_penalty]
 	next_turn_button.hide()
 	next_turn_button.text = "Continue"
 	_set_quiz_panel_height(true)
 	_set_state(GameplayState.QUESTION)
+
+
+func _apply_question_typography(choices: Array) -> void:
+	var question_length := question_label.text.length()
+	var question_font_size := 29
+	var question_height := 64.0
+	if question_length > 55:
+		question_font_size = 26
+		question_height = 78.0
+	if question_length > 95:
+		question_font_size = 23
+		question_height = 92.0
+	question_label.add_theme_font_size_override("font_size", question_font_size)
+	question_label.custom_minimum_size.y = question_height
+
+	var longest_choice := 0
+	for choice: Variant in choices:
+		longest_choice = maxi(longest_choice, str(choice).length())
+	var answer_font_size := 22
+	if longest_choice > 24:
+		answer_font_size = 20
+	if longest_choice > 36:
+		answer_font_size = 18
+	for answer_button: Button in answer_buttons:
+		answer_button.add_theme_font_size_override("font_size", answer_font_size)
 
 
 func _on_answer_pressed(choice_index: int) -> void:
@@ -343,9 +387,8 @@ func _apply_snake_or_ladder(effect: Dictionary, depth: int) -> void:
 func _begin_next_turn(message: String) -> void:
 	fixture_notice.hide()
 	next_turn_button.hide()
-	feedback_label.text = message
+	turn_message_label.text = message
 	_begin_question("regular")
-	feedback_label.text = "%s\n%s" % [message, feedback_label.text]
 
 
 func _complete_level() -> void:
@@ -437,6 +480,7 @@ func _set_state(new_state: GameplayState) -> void:
 
 func _show_chibi_reaction(correct: bool, points: int) -> void:
 	var hero_name := str(level_data.get("hero_name", "Hero"))
+	turn_message_label.hide()
 	reaction_label.text = "%s CHIBI PLACEHOLDER — %s — %s%d POINTS" % [
 		"HAPPY" if correct else "SAD", hero_name, "+" if correct else "-", points,
 	]
@@ -454,9 +498,17 @@ func _update_status_labels() -> void:
 
 
 func _set_quiz_panel_height(quiz_active: bool) -> void:
-	var viewport_height := get_viewport_rect().size.y
-	quiz_panel.custom_minimum_size.y = clampf(viewport_height * 0.30, 420.0, 470.0) if quiz_active else 230.0
-	var responsive_board_height := clampf(viewport_height * 0.48, 520.0, 760.0)
+	var viewport_size := get_viewport_rect().size
+	var viewport_height := viewport_size.y
+	gameplay_body.custom_minimum_size.x = maxf(1.0, viewport_size.x - 52.0)
+	quiz_panel.custom_minimum_size.y = clampf(viewport_height * 0.32, 480.0, 560.0) if quiz_active else 230.0
+	var horizontal_board_height := (
+		maxf(1.0, viewport_size.x - 52.0)
+		* float(board_view.rows)
+		/ float(board_view.columns)
+		+ 56.0
+	)
+	var responsive_board_height := clampf(horizontal_board_height, 520.0, minf(900.0, viewport_height * 0.48))
 	board_panel.custom_minimum_size.y = responsive_board_height if quiz_active else minf(720.0, viewport_height * 0.58)
 
 

@@ -18,7 +18,10 @@ func _run() -> void:
 	for level_id: int in range(1, 7):
 		await _capture_level(level_id, Vector2i(1024, 1536), "gameplay_level_%d_1024x1536.png" % level_id)
 	await _capture_level(1, Vector2i(720, 1280), "gameplay_level_1_720x1280.png")
+	await _capture_level(1, Vector2i(1080, 1920), "gameplay_level_1_1080x1920.png")
+	await _capture_level(1, Vector2i(1080, 2400), "gameplay_level_1_1080x2400.png")
 	await _capture_level(6, Vector2i(720, 1280), "gameplay_level_6_720x1280.png")
+	await _capture_long_mactan_question()
 	await _capture_dice_on_board("gameplay_dice_on_board.png")
 	await _capture_reaction(true, "gameplay_happy_reaction.png")
 	await _capture_reaction(false, "gameplay_sad_reaction.png")
@@ -33,6 +36,9 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	viewport.add_child(game); await process_frame; await process_frame
 	_check(game.question_label.visible, "Level %d question is visible before rolling at %s" % [level_id, viewport_size])
 	_check(game.roll_button.disabled, "Level %d dice is initially disabled" % level_id)
+	_check(game.turn_message_label.visible, "Level %d displays the dedicated event banner" % level_id)
+	if level_id == 1:
+		_check(game.background.texture.resource_path.ends_with("Dreamy Philippine Bay Boardwalk.png"), "Level 1 uses the Philippine coastal background")
 	var choice_count: int = game.current_question.get("choices", []).size()
 	var expected_columns: int = choice_count if choice_count <= 3 else 2
 	_check(game.answers_grid.columns == expected_columns, "Level %d balances its %d answer choices across the quiz row" % [level_id, choice_count])
@@ -41,7 +47,17 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	var back_button := game.get_node("%BackButton") as Button
 	_check(not level_banner.visible and not game.level_label.visible, "Level %d gameplay header removes the level parchment and title" % level_id)
 	_check(back_button.visible and back_button.size.y >= 60.0, "Level %d keeps a large touch-friendly Back to Levels button" % level_id)
-	_check(game.board_panel.size.y >= minf(float(viewport_size.y) * 0.45, 700.0), "Level %d board uses the freed header space" % level_id)
+	_check(game.gameplay_body.size.x >= float(viewport_size.x) - 52.1, "Level %d gameplay body fills the portrait safe width" % level_id)
+	var expected_board_height := clampf(
+		(float(viewport_size.x) - 52.0) * float(game.board_view.rows) / float(game.board_view.columns) + 56.0,
+		520.0,
+		minf(900.0, float(viewport_size.y) * 0.48)
+	)
+	_check(game.board_panel.size.y >= expected_board_height - 0.1, "Level %d board preserves its responsive aspect-based height" % level_id)
+	_check(game.quiz_panel.size.y >= 480.0, "Level %d reference-style quiz panel has sufficient vertical space" % level_id)
+	_check(_rect_inside(back_button.get_global_rect(), viewport_size), "Level %d Back button respects portrait safe bounds" % level_id)
+	_check(_rect_inside(game.board_panel.get_global_rect(), viewport_size), "Level %d board remains fully visible" % level_id)
+	_check(_rect_inside(game.quiz_panel.get_global_rect(), viewport_size), "Level %d question controls remain fully visible" % level_id)
 	_check(game.board_view.get_board_rect().size.x <= game.board_view.size.x + 0.1, "Level %d board fits horizontally" % level_id)
 	_check(game.board_view.player_sprite.texture != null and game.board_view.player_sprite.visible, "Level %d current hero chibi is visible" % level_id)
 	_check(game.board_view.player_token_label.visible == false, "Level %d no longer shows start initials over the chibi" % level_id)
@@ -71,6 +87,33 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 		_check(not game.board_view.waiting_hero_sprite.visible and game.board_view.waiting_hero_label.text == "TROPHY", "Level 6 uses the final trophy instead of inventing a next hero")
 	var image: Image = viewport.get_texture().get_image()
 	_check(image != null and not image.is_empty() and image.save_png(ProjectSettings.globalize_path("user://%s" % filename)) == OK, "%s rendered capture is saved" % filename)
+	game.progress_manager = null; game.queue_free(); viewport.queue_free(); await process_frame; progress.free()
+
+func _capture_long_mactan_question() -> void:
+	var viewport := SubViewport.new(); viewport.size = Vector2i(720, 1280); viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	get_root().add_child(viewport)
+	var progress := MockProgress.new()
+	var game = GameplayScene.instantiate(); game.progress_manager = progress; game.shuffle_questions = false
+	viewport.add_child(game); await process_frame
+	var choices := [
+		"Shallow water and coral reefs blocked them",
+		"The sea was too deep",
+		"Large rocks crashed their ships",
+	]
+	game.question_label.text = "Why couldn't the Spanish ships get close to the shore of Mactan?"
+	game._apply_question_typography(choices)
+	game.answers_grid.columns = 3
+	for index: int in range(3):
+		game.answer_buttons[index].text = choices[index]
+		game.answer_buttons[index].visible = true
+		game.answer_buttons[index].custom_minimum_size.y = 72.0
+	game.answer_buttons[3].hide()
+	await process_frame; await process_frame
+	_check(game.question_label.get_theme_font_size("font_size") == 26, "long Mactan question uses the fitted parchment font")
+	for index: int in range(3):
+		_check(_rect_inside(game.answer_buttons[index].get_global_rect(), viewport.size), "long Mactan answer %d stays inside the portrait screen" % (index + 1))
+	var image: Image = viewport.get_texture().get_image()
+	_check(image != null and not image.is_empty() and image.save_png(ProjectSettings.globalize_path("user://gameplay_long_mactan_question_720x1280.png")) == OK, "long Mactan question render is saved")
 	game.progress_manager = null; game.queue_free(); viewport.queue_free(); await process_frame; progress.free()
 
 func _capture_dice_on_board(filename: String) -> void:
@@ -108,3 +151,6 @@ func _capture_reaction(correct: bool, filename: String) -> void:
 func _check(value: bool, description: String) -> void:
 	if value: passed += 1; print("PASS: ", description)
 	else: failed += 1; push_error("FAIL: %s" % description)
+
+func _rect_inside(rect: Rect2, viewport_size: Vector2i) -> bool:
+	return rect.position.x >= -0.1 and rect.position.y >= -0.1 and rect.end.x <= viewport_size.x + 0.1 and rect.end.y <= viewport_size.y + 0.1

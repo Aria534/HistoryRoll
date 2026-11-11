@@ -202,8 +202,8 @@ func _test_gameplay_flow() -> void:
 	_check(is_equal_approx(visual_board_rect.size.x, visual_board_rect.size.y), "board renderer uses equal width and height")
 	var token_center: Vector2 = gameplay.board_view.player_token.position + gameplay.board_view.player_token.size / 2.0
 	_check(token_center.distance_to(gameplay.board_view.get_tile_center(1)) < 1.0, "player token is centered on tile 1")
-	var board_panel: Control = gameplay.get_node("MarginContainer/Content/BoardPanel")
-	var status_row: Control = gameplay.get_node("MarginContainer/Content/StatusRow")
+	var board_panel: Control = gameplay.get_node("MarginContainer/Content/BodyCenter/Body/BoardPanel")
+	var status_row: Control = gameplay.get_node("MarginContainer/Content/BodyCenter/Body/StatusRow")
 	_check(not board_panel.get_global_rect().intersects(status_row.get_global_rect()), "board and status labels do not overlap")
 	_check(gameplay.roll_button.size.y >= 70.0, "Roll Dice button has a touch-friendly height")
 

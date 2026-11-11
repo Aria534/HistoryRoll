@@ -1,7 +1,7 @@
-[gd_scene load_steps=25 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="Script" path="res://gameplay_placeholder.gd" id="1_gameplay"]
-[ext_resource type="Texture2D" uid="uid://d0tbtxkqj58wb" path="res://assets/background/Pastel Castle Overlook by the Sea.png" id="2_background"]
+[ext_resource type="Texture2D" uid="uid://dii48lafhmts6" path="res://assets/background/Dreamy Philippine Bay Boardwalk.png" id="2_background"]
 [ext_resource type="Script" path="res://board_view.gd" id="3_board"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/historyroll_sign.png" id="4_logo"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/level_parchment.png" id="5_level_banner"]
@@ -29,6 +29,13 @@ content_margin_left = 54.0
 content_margin_top = 52.0
 content_margin_right = 54.0
 content_margin_bottom = 58.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_quiz_transparent"]
+bg_color = Color(0, 0, 0, 0)
+content_margin_left = 34.0
+content_margin_top = 18.0
+content_margin_right = 34.0
+content_margin_bottom = 18.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_brand"]
 bg_color = Color(0.32, 0.118, 0.047, 0.98)
@@ -104,18 +111,18 @@ border_color = Color(0.94, 0.64, 0.24, 0.85)
 content_margin_left = 10.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_answer"]
-bg_color = Color(0.184, 0.478, 0.102, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.12, 0.306, 0.063, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+bg_color = Color(0.12, 0.43, 0.045, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.85, 0.55, 0.13, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
 shadow_color = Color(0.08, 0.16, 0.035, 0.4)
-shadow_size = 4
+shadow_size = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_answer_hover"]
 bg_color = Color(0.263, 0.604, 0.133, 1)
@@ -154,13 +161,41 @@ corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_feedback_backing"]
-bg_color = Color(0.965, 0.855, 0.62, 0.95)
+bg_color = Color(0, 0, 0, 0)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 content_margin_left = 10.0
 content_margin_right = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_message_banner"]
+bg_color = Color(0.97, 0.76, 0.35, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.29, 0.07, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+content_margin_left = 12.0
+content_margin_right = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_die_card"]
+bg_color = Color(0.92, 0.59, 0.2, 0.36)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.72, 0.39, 0.1, 0.9)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+content_margin_left = 16.0
+content_margin_right = 16.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_roll"]
 bg_color = Color(0.91, 0.56, 0.12, 1)
@@ -323,26 +358,35 @@ theme_override_styles/pressed = SubResource("StyleBox_brown_button")
 theme_override_styles/disabled = SubResource("StyleBox_brown_button")
 text = "‹  Back to Levels"
 
-[node name="BoardPanel" type="PanelContainer" parent="MarginContainer/Content"]
-custom_minimum_size = Vector2(0, 720)
+[node name="BodyCenter" type="CenterContainer" parent="MarginContainer/Content"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Body" type="VBoxContainer" parent="MarginContainer/Content/BodyCenter"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="BoardPanel" type="PanelContainer" parent="MarginContainer/Content/BodyCenter/Body"]
+custom_minimum_size = Vector2(0, 720)
+layout_mode = 2
+size_flags_vertical = 1
 theme_override_styles/panel = SubResource("StyleBox_main")
 
-[node name="BoardMargin" type="MarginContainer" parent="MarginContainer/Content/BoardPanel"]
+[node name="BoardMargin" type="MarginContainer" parent="MarginContainer/Content/BodyCenter/Body/BoardPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 14
 theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 14
 
-[node name="BoardView" type="Control" parent="MarginContainer/Content/BoardPanel/BoardMargin"]
+[node name="BoardView" type="Control" parent="MarginContainer/Content/BodyCenter/Body/BoardPanel/BoardMargin"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("3_board")
 
-[node name="PlayerToken" type="Panel" parent="MarginContainer/Content/BoardPanel/BoardMargin/BoardView"]
+[node name="PlayerToken" type="Panel" parent="MarginContainer/Content/BodyCenter/Body/BoardPanel/BoardMargin/BoardView"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(38, 38)
 layout_mode = 0
@@ -351,7 +395,7 @@ offset_bottom = 38.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBox_token")
 
-[node name="PlayerTokenLabel" type="Label" parent="MarginContainer/Content/BoardPanel/BoardMargin/BoardView/PlayerToken"]
+[node name="PlayerTokenLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/BoardPanel/BoardMargin/BoardView/PlayerToken"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -366,7 +410,7 @@ text = "LL"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="WaitingHeroToken" type="Panel" parent="MarginContainer/Content/BoardPanel/BoardMargin/BoardView"]
+[node name="WaitingHeroToken" type="Panel" parent="MarginContainer/Content/BodyCenter/Body/BoardPanel/BoardMargin/BoardView"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(58, 58)
 layout_mode = 0
@@ -375,7 +419,7 @@ offset_bottom = 58.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBox_token")
 
-[node name="WaitingHeroLabel" type="Label" parent="MarginContainer/Content/BoardPanel/BoardMargin/BoardView/WaitingHeroToken"]
+[node name="WaitingHeroLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/BoardPanel/BoardMargin/BoardView/WaitingHeroToken"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -390,16 +434,16 @@ text = "AB"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="StatusRow" type="PanelContainer" parent="MarginContainer/Content"]
+[node name="StatusRow" type="PanelContainer" parent="MarginContainer/Content/BodyCenter/Body"]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_status")
 
-[node name="StatusItems" type="HBoxContainer" parent="MarginContainer/Content/StatusRow"]
+[node name="StatusItems" type="HBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/StatusRow"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="PositionLabel" type="Label" parent="MarginContainer/Content/StatusRow/StatusItems"]
+[node name="PositionLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -409,7 +453,7 @@ text = "Position: 1 / 100"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScoreLabel" type="Label" parent="MarginContainer/Content/StatusRow/StatusItems"]
+[node name="ScoreLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -420,7 +464,7 @@ text = "Score: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PowerStatusLabel" type="Label" parent="MarginContainer/Content/StatusRow/StatusItems"]
+[node name="PowerStatusLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -431,7 +475,7 @@ text = "1x  |  Shield: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="StateLabel" type="Label" parent="MarginContainer/Content/StatusRow/StatusItems"]
+[node name="StateLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -442,23 +486,23 @@ text = "Loading"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="QuizPanel" type="PanelContainer" parent="MarginContainer/Content"]
+[node name="QuizPanel" type="PanelContainer" parent="MarginContainer/Content/BodyCenter/Body"]
 custom_minimum_size = Vector2(0, 230)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBox_quiz")
 
-[node name="QuizMargin" type="MarginContainer" parent="MarginContainer/Content/QuizPanel"]
+[node name="QuizMargin" type="MarginContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="QuizContent" type="VBoxContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin"]
+[node name="QuizContent" type="VBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="FixtureNotice" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+[node name="FixtureNotice" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -467,13 +511,13 @@ theme_override_font_sizes/font_size = 19
 text = "SOURCE-REVIEWED FILIPINO HISTORY QUESTION"
 horizontal_alignment = 1
 
-[node name="QuestionLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+[node name="QuestionLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.12, 0.16, 0.17, 1)
-theme_override_colors/font_outline_color = Color(1, 0.93, 0.75, 0.7)
+theme_override_colors/font_color = Color(0.19, 0.08, 0.025, 1)
+theme_override_colors/font_outline_color = Color(1, 0.91, 0.68, 0.75)
 theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 29
 text = "Question"
@@ -481,14 +525,14 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="Answers" type="GridContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+[node name="Answers" type="GridContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 visible = false
 layout_mode = 2
 theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 8
 columns = 2
 
-[node name="AnswerButton0" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
+[node name="AnswerButton0" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -504,7 +548,7 @@ theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 1"
 autowrap_mode = 2
 
-[node name="AnswerButton1" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
+[node name="AnswerButton1" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -520,7 +564,7 @@ theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 2"
 autowrap_mode = 2
 
-[node name="AnswerButton2" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
+[node name="AnswerButton2" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -536,7 +580,7 @@ theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 3"
 autowrap_mode = 2
 
-[node name="AnswerButton3" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/Answers"]
+[node name="AnswerButton3" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -552,45 +596,70 @@ theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 4"
 autowrap_mode = 2
 
-[node name="FeedbackLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+[node name="TurnMessageLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.18, 0.22, 0.19, 1)
+theme_override_colors/font_color = Color(0.25, 0.1, 0.025, 1)
 theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBox_message_banner")
+text = "Answer the question to begin."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="FeedbackLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.19, 0.08, 0.025, 1)
+theme_override_colors/font_outline_color = Color(1, 0.91, 0.68, 0.75)
+theme_override_constants/outline_size = 1
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBox_feedback_backing")
 text = "Roll the die to begin."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="ReactionLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
+[node name="ReactionLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBox_message_banner")
 text = "HAPPY CHIBI PLACEHOLDER — +10 POINTS"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="TurnControls" type="HBoxContainer" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent"]
-custom_minimum_size = Vector2(0, 64)
+[node name="TurnControls" type="HBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="DiceTitle" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+[node name="DiceCard" type="PanelContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+custom_minimum_size = Vector2(240, 70)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.18, 0.22, 0.19, 1)
+theme_override_styles/panel = SubResource("StyleBox_die_card")
+
+[node name="DiceCardRow" type="HBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="DiceTitle" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.25, 0.1, 0.025, 1)
 theme_override_font_sizes/font_size = 22
-text = "DIE:"
+text = "Die Result:"
 vertical_alignment = 1
 
-[node name="DiceLabel" type="Label" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+[node name="DiceLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(74, 58)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.52, 0.2, 0.16, 1)
 theme_override_font_sizes/font_size = 42
@@ -598,9 +667,9 @@ text = "—"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="RollButton" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+[node name="RollButton" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(280, 64)
+custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.22, 0.09, 0.025, 1)
 theme_override_colors/font_disabled_color = Color(0.86, 0.83, 0.75, 1)
@@ -611,7 +680,7 @@ theme_override_styles/pressed = SubResource("StyleBox_roll")
 theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Roll Die"
 
-[node name="NextTurnButton" type="Button" parent="MarginContainer/Content/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+[node name="NextTurnButton" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(300, 76)

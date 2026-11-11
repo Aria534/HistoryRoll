@@ -126,6 +126,15 @@ func _test_gameplay_choices_and_scoring(viewport_size: Vector2i) -> void:
 	for index: int in range(3):
 		_check(game.answer_buttons[index].size.y >= 70.0, "%s visible answer %d remains touch-friendly" % [label, index + 1])
 		_check(_rect_inside(game.answer_buttons[index].get_global_rect(), viewport_size), "%s visible answer %d stays on-screen" % [label, index + 1])
+	game.question_label.text = "Why couldn't the Spanish ships get close to the shore of Mactan?"
+	game._apply_question_typography([
+		"Shallow water and coral reefs blocked them",
+		"The sea was too deep",
+		"Large rocks crashed their ships",
+	])
+	_check(game.question_label.get_theme_font_size("font_size") == 26, "%s long Mactan question uses fitted parchment typography" % label)
+	_check(game.question_label.custom_minimum_size.y >= 78.0, "%s long Mactan question receives enough yellow-panel height" % label)
+	_check(game.answer_buttons[0].get_theme_font_size("font_size") == 18, "%s long Mactan choices fit inside their green buttons" % label)
 	_check(_rect_inside(game.roll_button.get_global_rect(), viewport_size), "%s Roll Dice control stays fully on-screen" % label)
 	_check(not game.board_panel.get_global_rect().intersects(game.quiz_panel.get_global_rect()), "%s board and quiz panel do not overlap" % label)
 	var correct_index := int(game.current_question.get("correct_index", -1))
