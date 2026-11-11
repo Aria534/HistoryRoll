@@ -61,14 +61,16 @@ func _test_main_menu_viewport(viewport_size: Vector2i, capture_name: String) -> 
 		_check(hover_image != null and not hover_image.is_empty() and hover_image.save_png(hover_capture_path) == OK, "720x1280 hover-state capture is saved")
 	menu._on_button_mouse_exited(buttons[0])
 	await create_timer(menu.anim_time + 0.05).timeout
+	_check(is_equal_approx(buttons[0].scale.x, 1.0), "%s mouse exit restores the normal Level Selection scale" % label)
+	_check(is_equal_approx(buttons[0].self_modulate.a, 1.0), "%s mouse exit keeps the button artwork fully visible" % label)
 	menu._on_button_down(buttons[0])
 	await create_timer(menu.anim_time + 0.05).timeout
 	_check(is_equal_approx(buttons[0].scale.x, menu.press_scale), "%s touch press visibly shrinks the active button" % label)
-	_check(is_equal_approx(buttons[0].self_modulate.a, menu.press_overlay_alpha), "%s touch press displays the button feedback overlay" % label)
+	_check(is_equal_approx(buttons[0].self_modulate.a, 1.0), "%s touch press keeps the button artwork fully visible" % label)
 	menu._on_button_up(buttons[0])
 	await create_timer(menu.anim_time + 0.05).timeout
 	_check(is_equal_approx(buttons[0].scale.x, 1.0), "%s released button returns to normal scale" % label)
-	_check(is_equal_approx(buttons[0].self_modulate.a, 0.0), "%s released touch feedback clears" % label)
+	_check(is_equal_approx(buttons[0].self_modulate.a, 1.0), "%s released button remains fully visible" % label)
 	var board: Control = menu.get_node("BoardDecoration")
 	_check(not board.visible, "%s avoids drawing a duplicate procedural board" % label)
 	var board_rect := board.get_global_rect()
