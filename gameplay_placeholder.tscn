@@ -1,11 +1,11 @@
-[gd_scene load_steps=28 format=3]
+[gd_scene load_steps=30 format=3]
 
 [ext_resource type="Script" path="res://gameplay_placeholder.gd" id="1_gameplay"]
 [ext_resource type="Texture2D" uid="uid://dii48lafhmts6" path="res://assets/background/Dreamy Philippine Bay Boardwalk.png" id="2_background"]
 [ext_resource type="Script" path="res://board_view.gd" id="3_board"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/historyroll_sign.png" id="4_logo"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/level_parchment.png" id="5_level_banner"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/quiz_scroll.png" id="6_quiz_scroll"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/quiz_frame_filipino_v2.png" id="6_quiz_scroll"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/board_frame.png" id="7_board_frame"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_main"]
@@ -21,14 +21,14 @@ content_margin_bottom = 25.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_quiz"]
 texture = ExtResource("6_quiz_scroll")
-texture_margin_left = 115.0
-texture_margin_top = 145.0
-texture_margin_right = 115.0
-texture_margin_bottom = 145.0
-content_margin_left = 54.0
-content_margin_top = 52.0
-content_margin_right = 54.0
-content_margin_bottom = 58.0
+texture_margin_left = 138.0
+texture_margin_top = 74.0
+texture_margin_right = 138.0
+texture_margin_bottom = 126.0
+content_margin_left = 58.0
+content_margin_top = 82.0
+content_margin_right = 58.0
+content_margin_bottom = 54.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_quiz_transparent"]
 bg_color = Color(0, 0, 0, 0)
@@ -36,6 +36,10 @@ content_margin_left = 34.0
 content_margin_top = 18.0
 content_margin_right = 34.0
 content_margin_bottom = 18.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_question_inset"]
+bg_color = Color(0, 0, 0, 0)
+content_margin_top = 14.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_brand"]
 bg_color = Color(0.32, 0.118, 0.047, 0.98)
@@ -161,13 +165,20 @@ corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_feedback_backing"]
-bg_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-content_margin_left = 10.0
-content_margin_right = 10.0
+bg_color = Color(1, 0.882, 0.62, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.62, 0.34, 0.09, 0.9)
+corner_radius_top_left = 13
+corner_radius_top_right = 13
+corner_radius_bottom_right = 13
+corner_radius_bottom_left = 13
+content_margin_left = 14.0
+content_margin_top = 5.0
+content_margin_right = 14.0
+content_margin_bottom = 5.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_message_banner"]
 bg_color = Color(0.97, 0.76, 0.35, 0.96)
@@ -184,7 +195,7 @@ content_margin_left = 12.0
 content_margin_right = 12.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_die_card"]
-bg_color = Color(0.92, 0.59, 0.2, 0.36)
+bg_color = Color(1, 0.68, 0.25, 0.84)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
@@ -196,6 +207,14 @@ corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
 content_margin_left = 16.0
 content_margin_right = 16.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_control_divider"]
+bg_color = Color(0.96, 0.63, 0.16, 1)
+border_width_left = 2
+border_width_right = 2
+border_color = Color(0.44, 0.2, 0.04, 1)
+content_margin_left = 3.0
+content_margin_right = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_roll"]
 bg_color = Color(0.91, 0.56, 0.12, 1)
@@ -500,7 +519,7 @@ theme_override_constants/margin_bottom = 0
 
 [node name="QuizContent" type="VBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="FixtureNotice" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
@@ -514,22 +533,23 @@ horizontal_alignment = 1
 [node name="QuestionLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.19, 0.08, 0.025, 1)
 theme_override_colors/font_outline_color = Color(1, 0.91, 0.68, 0.75)
 theme_override_constants/outline_size = 1
 theme_override_font_sizes/font_size = 29
+theme_override_styles/normal = SubResource("StyleBox_question_inset")
 text = "Question"
 horizontal_alignment = 1
-vertical_alignment = 1
+vertical_alignment = 2
 autowrap_mode = 2
 
 [node name="Answers" type="GridContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 visible = false
 layout_mode = 2
 theme_override_constants/h_separation = 14
-theme_override_constants/v_separation = 8
+theme_override_constants/v_separation = 10
 columns = 2
 
 [node name="AnswerButton0" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers"]
@@ -598,7 +618,7 @@ autowrap_mode = 2
 
 [node name="TurnMessageLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 38)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.25, 0.1, 0.025, 1)
 theme_override_font_sizes/font_size = 18
@@ -610,12 +630,12 @@ autowrap_mode = 2
 
 [node name="FeedbackLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.19, 0.08, 0.025, 1)
 theme_override_colors/font_outline_color = Color(1, 0.91, 0.68, 0.75)
 theme_override_constants/outline_size = 1
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 17
 theme_override_styles/normal = SubResource("StyleBox_feedback_backing")
 text = "Roll the die to begin."
 horizontal_alignment = 1
@@ -635,20 +655,29 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="TurnControls" type="HBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 82)
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
 [node name="DiceCard" type="PanelContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
-custom_minimum_size = Vector2(240, 70)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.9
 theme_override_styles/panel = SubResource("StyleBox_die_card")
 
 [node name="DiceCardRow" type="HBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard"]
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
+
+[node name="DiceIcon" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.43, 0.16, 0.07, 1)
+theme_override_font_sizes/font_size = 38
+text = "⚄"
+vertical_alignment = 1
 
 [node name="DiceTitle" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
 layout_mode = 2
@@ -667,10 +696,17 @@ text = "—"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ControlDivider" type="VSeparator" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+custom_minimum_size = Vector2(8, 70)
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBox_control_divider")
+
 [node name="RollButton" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 70)
+custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.1
 theme_override_colors/font_color = Color(0.22, 0.09, 0.025, 1)
 theme_override_colors/font_disabled_color = Color(0.86, 0.83, 0.75, 1)
 theme_override_font_sizes/font_size = 26

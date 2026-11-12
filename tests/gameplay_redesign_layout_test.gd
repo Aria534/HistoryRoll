@@ -39,6 +39,13 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	_check(game.turn_message_label.visible, "Level %d displays the dedicated event banner" % level_id)
 	if level_id == 1:
 		_check(game.background.texture.resource_path.ends_with("Dreamy Philippine Bay Boardwalk.png"), "Level 1 uses the Philippine coastal background")
+		var quiz_style := game.quiz_panel.get_theme_stylebox("panel") as StyleBoxTexture
+		_check(
+			quiz_style != null and quiz_style.texture.resource_path.ends_with("quiz_frame_filipino_v2.png"),
+			"Level 1 uses the Filipino bamboo-and-parchment quiz frame"
+		)
+		_check(game.get_node("%DiceLabel").get_parent().has_node("DiceIcon"), "Die Result card includes its decorative die icon")
+		_check(game.get_node("MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/ControlDivider").visible, "quiz lower controls retain the gold divider")
 	var choice_count: int = game.current_question.get("choices", []).size()
 	var expected_columns: int = choice_count if choice_count <= 3 else 2
 	_check(game.answers_grid.columns == expected_columns, "Level %d balances its %d answer choices across the quiz row" % [level_id, choice_count])
@@ -109,7 +116,7 @@ func _capture_long_mactan_question() -> void:
 		game.answer_buttons[index].custom_minimum_size.y = 72.0
 	game.answer_buttons[3].hide()
 	await process_frame; await process_frame
-	_check(game.question_label.get_theme_font_size("font_size") == 26, "long Mactan question uses the fitted parchment font")
+	_check(game.question_label.get_theme_font_size("font_size") == 24, "long Mactan question uses the fitted parchment font")
 	for index: int in range(3):
 		_check(_rect_inside(game.answer_buttons[index].get_global_rect(), viewport.size), "long Mactan answer %d stays inside the portrait screen" % (index + 1))
 	var image: Image = viewport.get_texture().get_image()

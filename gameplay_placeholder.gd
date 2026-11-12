@@ -216,14 +216,21 @@ func _begin_question(question_type: String) -> void:
 
 
 func _apply_question_typography(choices: Array) -> void:
-	var question_length := question_label.text.length()
+	var question_text := question_label.text.strip_edges()
+	var question_length := question_text.length()
 	var question_font_size := 29
 	var question_height := 64.0
 	if question_length > 55:
-		question_font_size = 26
-		question_height = 78.0
+		question_font_size = 24
+		question_height = 92.0
+		# The illustrated frame has a decorative thatched cap. A visual leading
+		# line keeps wrapped questions inside the parchment without changing the
+		# stored question text or moving the answer and dice controls.
+		question_label.text = "\n" + question_text
+	else:
+		question_label.text = question_text
 	if question_length > 95:
-		question_font_size = 23
+		question_font_size = 20
 		question_height = 92.0
 	question_label.add_theme_font_size_override("font_size", question_font_size)
 	question_label.custom_minimum_size.y = question_height
