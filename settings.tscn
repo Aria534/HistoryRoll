@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://settings.gd" id="1_settings"]
 [ext_resource type="Texture2D" path="res://assets/background/Pastel Castle Overlook by the Sea.png" id="2_background"]
@@ -6,6 +6,7 @@
 [ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="4_title_font"]
 [ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="5_body_font"]
 [ext_resource type="Texture2D" path="res://assets/level selection buttons/back_arrow.png" id="6_back_icon"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/how_to_play_frame_filipino.png" id="7_help_frame"]
 
 [sub_resource type="StyleBoxFlat" id="TealButton"]
 bg_color = Color(0.035, 0.30, 0.29, 0.98)
@@ -124,6 +125,8 @@ corner_radius_top_left = 18
 corner_radius_top_right = 18
 corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxEmpty" id="InvisibleFocus"]
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -394,57 +397,85 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.025, 0.012, 0.006, 0.80)
 
-[node name="Panel" type="PanelContainer" parent="HowToPlayOverlay"]
+[node name="HelpAspect" type="AspectRatioContainer" parent="HowToPlayOverlay"]
 layout_mode = 1
-anchor_left = 0.07
-anchor_top = 0.07
-anchor_right = 0.93
-anchor_bottom = 0.93
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("HelpPanel")
+ratio = 0.666667
+stretch_mode = 0
+alignment_horizontal = 1
+alignment_vertical = 1
 
-[node name="Margin" type="MarginContainer" parent="HowToPlayOverlay/Panel"]
+[node name="Canvas" type="Control" parent="HowToPlayOverlay/HelpAspect"]
 layout_mode = 2
-theme_override_constants/margin_left = 48
-theme_override_constants/margin_top = 42
-theme_override_constants/margin_right = 48
-theme_override_constants/margin_bottom = 42
 
-[node name="Content" type="VBoxContainer" parent="HowToPlayOverlay/Panel/Margin"]
-layout_mode = 2
-theme_override_constants/separation = 22
+[node name="HelpFrame" type="TextureRect" parent="HowToPlayOverlay/HelpAspect/Canvas"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("7_help_frame")
+expand_mode = 1
+stretch_mode = 6
 
-[node name="Heading" type="Label" parent="HowToPlayOverlay/Panel/Margin/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.28, 0.10, 0.035, 1)
-theme_override_colors/font_outline_color = Color(1, 0.89, 0.62, 0.75)
-theme_override_constants/outline_size = 3
+[node name="Heading" type="Label" parent="HowToPlayOverlay/HelpAspect/Canvas"]
+layout_mode = 1
+anchor_left = 0.20
+anchor_top = 0.069
+anchor_right = 0.80
+anchor_bottom = 0.154
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.91, 0.65, 1)
+theme_override_colors/font_outline_color = Color(0.25, 0.045, 0.018, 1)
+theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("4_title_font")
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 56
 text = "HOW TO PLAY"
 horizontal_alignment = 1
-
-[node name="Instructions" type="Label" parent="HowToPlayOverlay/Panel/Margin/Content"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.22, 0.10, 0.045, 1)
-theme_override_fonts/font = ExtResource("5_body_font")
-theme_override_font_sizes/font_size = 24
-text = "1. A multiple-choice question appears first.\n2. Answer the question before rolling the dice.\n3. A correct answer gives +10 points.\n4. A wrong answer deducts 2 points, but never below zero.\n5. Roll the dice after answering.\n6. Move your Filipino hero by the dice result.\n7. Ladders move you forward.\n8. Snakes move you backward unless you have a shield.\n9. One shield protects you from one snake.\n10. Bonus Tiles award additional points.\n11. Reach the final tile with an exact dice roll.\n12. Complete a level to unlock the next level."
 vertical_alignment = 1
-autowrap_mode = 2
 
-[node name="CloseHelpButton" type="Button" parent="HowToPlayOverlay/Panel/Margin/Content"]
+[node name="Instructions" type="Label" parent="HowToPlayOverlay/HelpAspect/Canvas"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 100)
-layout_mode = 2
+visible = false
+layout_mode = 0
+text = "1. A multiple-choice question appears first.\n2. Answer the question before rolling the dice.\n3. A correct answer gives +10 points.\n4. A wrong answer deducts 2 points, but never below zero.\n5. Roll the dice after answering.\n6. Move your Filipino hero by the dice result.\n7. Ladders move you forward.\n8. Snakes move you backward unless you have a shield.\n9. One shield protects you from one snake.\n10. Bonus Tiles award additional points.\n11. Reach the final tile with an exact dice roll.\n12. Complete a level to unlock the next level."
+
+[node name="HelpRows" type="VBoxContainer" parent="HowToPlayOverlay/HelpAspect/Canvas"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.076
+anchor_top = 0.197
+anchor_right = 0.926
+anchor_bottom = 0.790
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="CloseHelpButton" type="Button" parent="HowToPlayOverlay/HelpAspect/Canvas"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.22
+anchor_top = 0.813
+anchor_right = 0.78
+anchor_bottom = 0.897
+grow_horizontal = 2
+grow_vertical = 2
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.15, 0.06, 1)
+theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("4_title_font")
-theme_override_font_sizes/font_size = 34
-theme_override_styles/normal = SubResource("HelpClose")
-theme_override_styles/hover = SubResource("TealHover")
-theme_override_styles/pressed = SubResource("TealPressed")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/focus = SubResource("InvisibleFocus")
+flat = true
 text = "GOT IT"

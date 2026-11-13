@@ -54,6 +54,15 @@ func _capture(viewport_size: Vector2i, filename: String) -> void:
 	_check(settings.music_state_label.text == "MUSIC: OFF" and settings.music_switch_knob.anchor_left < 0.1, "%s Music OFF updates its label and switch" % viewport_size)
 	settings.help_button.pressed.emit()
 	_check(settings.how_to_play_overlay.visible, "%s How to Play overlay opens" % viewport_size)
+	_check(settings.help_rows.get_child_count() == 12, "%s How to Play displays twelve instruction rows" % viewport_size)
+	var help_frame := settings.get_node("%HelpFrame") as TextureRect
+	_check(help_frame.texture != null and help_frame.texture.resource_path.ends_with("how_to_play_frame_filipino.png"), "%s uses the Filipino How to Play frame" % viewport_size)
+	await process_frame
+	await process_frame
+	var help_image: Image = viewport.get_texture().get_image()
+	var help_filename := filename.replace("settings_", "how_to_play_")
+	var help_error := help_image.save_png(ProjectSettings.globalize_path("user://%s" % help_filename)) if help_image != null and not help_image.is_empty() else ERR_CANT_CREATE
+	_check(help_error == OK, "%s capture is saved" % help_filename)
 	settings.close_help_button.pressed.emit()
 	_check(not settings.how_to_play_overlay.visible, "%s How to Play overlay closes" % viewport_size)
 
