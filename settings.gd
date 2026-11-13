@@ -5,6 +5,12 @@ const DEFAULT_SETTINGS_PATH := "user://historyroll_settings.cfg"
 
 @onready var music_toggle: Button = %MusicToggle
 @onready var sfx_toggle: Button = %SfxToggle
+@onready var music_state_label: Label = %MusicStateLabel
+@onready var sfx_state_label: Label = %SfxStateLabel
+@onready var music_switch_track: Panel = %MusicSwitchTrack
+@onready var sfx_switch_track: Panel = %SfxSwitchTrack
+@onready var music_switch_knob: PanelContainer = %MusicSwitchKnob
+@onready var sfx_switch_knob: PanelContainer = %SfxSwitchKnob
 @onready var help_button: Button = %HelpButton
 @onready var back_button: Button = %BackButton
 @onready var how_to_play_overlay: Control = %HowToPlayOverlay
@@ -66,8 +72,20 @@ func _on_back_pressed() -> void:
 func _refresh_controls() -> void:
 	music_toggle.set_pressed_no_signal(music_enabled)
 	sfx_toggle.set_pressed_no_signal(sfx_enabled)
-	music_toggle.text = "MUSIC: ON" if music_enabled else "MUSIC: OFF"
-	sfx_toggle.text = "SOUND EFFECTS: ON" if sfx_enabled else "SOUND EFFECTS: OFF"
+	music_state_label.text = "MUSIC: ON" if music_enabled else "MUSIC: OFF"
+	sfx_state_label.text = "SOUND EFFECTS: ON" if sfx_enabled else "SOUND EFFECTS: OFF"
+	music_toggle.tooltip_text = music_state_label.text
+	sfx_toggle.tooltip_text = sfx_state_label.text
+	_update_switch_visual(music_switch_track, music_switch_knob, music_enabled)
+	_update_switch_visual(sfx_switch_track, sfx_switch_knob, sfx_enabled)
+
+
+func _update_switch_visual(track: Panel, knob: PanelContainer, enabled: bool) -> void:
+	track.modulate = Color.WHITE if enabled else Color(0.62, 0.62, 0.58, 1.0)
+	knob.anchor_left = 0.54 if enabled else 0.04
+	knob.anchor_right = 0.96 if enabled else 0.46
+	knob.offset_left = 0.0
+	knob.offset_right = 0.0
 
 
 func _apply_audio_settings() -> void:
