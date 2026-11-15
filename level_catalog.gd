@@ -20,6 +20,8 @@ static func get_level(level_id: int) -> Dictionary:
 			var result := level.duplicate(true)
 			var hero := HeroDatabase.get_hero(str(result.get("hero_id", "")))
 			for key: Variant in hero: result[key] = hero[key]
+			var story := HeroDatabase.get_story_for_level(level_id)
+			for key: Variant in story: result[key] = story[key]
 			result["character_reward"] = _hero_to_character(hero)
 			var waiting := HeroDatabase.get_hero(str(result.get("waiting_hero_id", "")))
 			result["waiting_hero_name"] = str(waiting.get("hero_name", "FINAL TROPHY"))

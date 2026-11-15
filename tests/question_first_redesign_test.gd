@@ -164,9 +164,11 @@ func _test_story_entry() -> void:
 	var story = load("res://story_mode.tscn").instantiate(); story.progress_manager = progress
 	requested.clear(); story.scene_change_handler = func(path: String): requested.append(path)
 	get_root().add_child(story); await process_frame
-	_check(story.hero_name_label.text.contains("Antonio Luna"), "Story Mode displays the selected hero")
+	_check(story.hero_name_label.text.to_lower().contains("antonio luna"), "Story Mode displays the selected hero")
 	story.continue_button.pressed.emit()
-	_check(requested == ["res://hero_cards.tscn"], "Story Mode returns to Hero Cards")
+	_check(story.current_panel_index == 1 and requested.is_empty(), "Story Mode Next advances within the five-panel story")
+	story.back_button.pressed.emit()
+	_check(requested == ["res://hero_cards.tscn"], "Back to Hero Card returns from Story Mode")
 	story.queue_free(); await process_frame; progress.free()
 
 func _wait_state(game: Node, expected: int, frames: int = 600) -> bool:
