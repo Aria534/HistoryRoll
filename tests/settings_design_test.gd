@@ -34,7 +34,7 @@ func _capture(viewport_size: Vector2i, filename: String) -> void:
 	await process_frame
 
 	var frame := settings.get_node("%SettingsFrame") as TextureRect
-	_check(frame.texture != null and frame.texture.resource_path.ends_with("settings_frame_filipino_v3.png"), "%s uses the flower-free Filipino parchment Settings frame" % viewport_size)
+	_check(frame.texture != null and frame.texture.resource_path.ends_with("settings_frame_filipino_no_foliage.png"), "%s uses the foliage-free Filipino parchment Settings frame" % viewport_size)
 	_check(settings.music_state_label.text == "MUSIC: ON", "%s displays Music ON" % viewport_size)
 	_check(settings.sfx_state_label.text == "SOUND EFFECTS: ON", "%s displays Sound Effects ON" % viewport_size)
 	_check(not settings.help_button.text.contains("?"), "%s How to Play has no question-mark prefix" % viewport_size)

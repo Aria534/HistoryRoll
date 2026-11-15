@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://settings.gd" id="1_settings"]
 [ext_resource type="Texture2D" path="res://assets/background/Pastel Castle Overlook by the Sea.png" id="2_background"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/settings_frame_filipino_v3.png" id="3_frame"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/settings_frame_filipino_no_foliage.png" id="3_frame"]
 [ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="4_title_font"]
 [ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="5_body_font"]
 [ext_resource type="Texture2D" path="res://assets/level selection buttons/back_arrow.png" id="6_back_icon"]
