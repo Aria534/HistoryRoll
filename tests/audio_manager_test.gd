@@ -26,6 +26,13 @@ func _run() -> void:
 	_check(AudioServer.get_bus_index("Music") >= 0, "Music bus is available")
 	_check(manager.get_child_count() == 1 and manager.get_child(0) is AudioStreamPlayer, "one global music player is created")
 	_check(manager.is_music_enabled(), "music defaults to enabled when no setting exists")
+	var fallback_started: bool = manager.play_music(AudioManagerScript.MAIN_MENU_TRACK, 0.0)
+	_check(fallback_started and manager.is_using_fallback_music(), "missing OGG files use audible built-in fallback music")
+	_check(manager.is_music_playing(), "fallback music starts when Music is ON")
+	var fallback_peak := 0.0
+	for sample_index: int in range(400):
+		fallback_peak = maxf(fallback_peak, absf(manager._sample_fallback_music(float(sample_index) / 200.0, "main_menu")))
+	_check(fallback_peak >= 0.10 and fallback_peak <= 0.28, "fallback music has a clear but clipping-safe output level")
 
 	var first_started: bool = manager.play_music(TEST_TRACK_A, 0.0)
 	_check(first_started and manager.get_current_track_path() == TEST_TRACK_A, "a requested track starts")

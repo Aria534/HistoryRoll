@@ -12,3 +12,7 @@ from the corresponding story data as `res://assets/audio/music/<name>.ogg`.
 
 The global `AudioManager` enables looping at runtime, so the imported files do
 not need scene-local `AudioStreamPlayer` nodes.
+
+Until a listed `.ogg` is installed, `AudioManager` plays a lightweight built-in
+instrumental fallback for that role. A matching `.ogg` automatically replaces
+the fallback on the next run; no script or scene changes are required.
