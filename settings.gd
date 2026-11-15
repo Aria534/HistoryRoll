@@ -106,6 +106,7 @@ func _connect_once(signal_value: Signal, callback: Callable) -> void:
 
 func _on_music_toggled(enabled: bool) -> void:
 	music_enabled = enabled
+	_sync_audio_manager_music_setting()
 	_apply_bus_setting("Music", music_enabled)
 	_save_settings()
 	_refresh_controls()
@@ -155,8 +156,17 @@ func _update_switch_visual(track: Panel, knob: PanelContainer, enabled: bool) ->
 
 
 func _apply_audio_settings() -> void:
+	_sync_audio_manager_music_setting()
 	_apply_bus_setting("Music", music_enabled)
 	_apply_bus_setting("SFX", sfx_enabled)
+
+
+func _sync_audio_manager_music_setting() -> void:
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("set_music_enabled"):
+		# Settings owns the combined Music/SFX config write. The manager only
+		# applies the live global music state here, avoiding duplicate saves.
+		audio_manager.call("set_music_enabled", music_enabled, false)
 
 
 func _apply_bus_setting(bus_name: String, enabled: bool) -> void:

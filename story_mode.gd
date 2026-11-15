@@ -66,6 +66,12 @@ var procedural_environment := "ambient"
 
 
 func _ready() -> void:
+	# Story Mode owns its hero score player. Stop the global scene soundtrack
+	# first so procedural or hero-specific story music cannot overlap it.
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("stop_music"):
+		audio_manager.call("stop_music", 0.35)
+		await get_tree().create_timer(0.35).timeout
 	if progress_manager == null:
 		progress_manager = get_node("/root/ProgressManager")
 	voice_player.bus = "Master"

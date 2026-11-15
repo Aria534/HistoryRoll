@@ -25,6 +25,7 @@ var quit_handler: Callable
 
 
 func _ready() -> void:
+	_request_music("res://assets/audio/music/main_menu.ogg")
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
@@ -34,6 +35,12 @@ func _ready() -> void:
 	_setup_button(hero_cards_button, _on_hero_cards_pressed)
 	_setup_button(settings_button, _on_settings_pressed)
 	_setup_button(quit_button, _on_quit_pressed)
+
+
+func _request_music(track_path: String) -> void:
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("play_music"):
+		audio_manager.call("play_music", track_path, 0.6)
 
 
 func _validate_required_buttons() -> bool:

@@ -31,6 +31,7 @@ var scene_transition_pending := false
 
 
 func _ready() -> void:
+	_request_music("res://assets/audio/music/level_select.ogg")
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	if progress_manager == null:
@@ -53,6 +54,12 @@ func _ready() -> void:
 		_connect_button_once(button, _on_level_pressed.bind(level_id))
 		_setup_animated_button(button)
 	_refresh_levels()
+
+
+func _request_music(track_path: String) -> void:
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("play_music"):
+		audio_manager.call("play_music", track_path, 0.6)
 
 
 func _apply_responsive_layout() -> void:

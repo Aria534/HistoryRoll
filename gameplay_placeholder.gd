@@ -89,6 +89,7 @@ var quiz_session = QuizSession.new()
 
 
 func _ready() -> void:
+	_request_music("res://assets/audio/music/gameplay.ogg")
 	dice_roller = DiceRoller.new(0, enable_test_dice_controls and OS.is_debug_build())
 	if progress_manager == null:
 		progress_manager = get_node("/root/ProgressManager")
@@ -100,6 +101,12 @@ func _ready() -> void:
 	back_button.pressed.connect(_on_back_pressed)
 	return_button.pressed.connect(_on_return_pressed)
 	_initialize_gameplay()
+
+
+func _request_music(track_path: String) -> void:
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("play_music"):
+		audio_manager.call("play_music", track_path, 0.6)
 
 
 func set_controlled_dice_results(results: Array[int]) -> void:
@@ -400,6 +407,7 @@ func _begin_next_turn(message: String) -> void:
 
 func _complete_level() -> void:
 	_set_state(GameplayState.LEVEL_COMPLETE)
+	_request_music("res://assets/audio/music/victory.ogg")
 	if not completion_recorded:
 		completion_recorded = true
 		progress_manager.record_board_completion(level_id, score, get_gameplay_statistics())
