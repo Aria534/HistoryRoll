@@ -14,7 +14,7 @@ const DESIGN_SIZE := Vector2(1024.0, 1536.0)
 @onready var level_buttons_area: Control = %LevelButtonsArea
 @onready var ui_root: Control = %UIRoot
 @onready var title_banner: Control = %TitleBanner
-@onready var selection_label: Label = %SelectionLabel
+@onready var selection_label := get_node_or_null("%SelectionLabel") as Label
 @onready var back_button: TextureButton = %BackButton
 @onready var help_button: TextureButton = %HelpButton
 @onready var help_overlay: Control = %HelpOverlay
@@ -28,6 +28,7 @@ var hovered_buttons: Dictionary = {}
 var progress_manager: Node
 var scene_change_handler: Callable
 var scene_transition_pending := false
+var selection_message := ""
 
 
 func _ready() -> void:
@@ -88,8 +89,6 @@ func _validate_required_nodes() -> bool:
 		missing_nodes.append("LevelButtonsArea")
 	if title_banner == null:
 		missing_nodes.append("TitleBanner")
-	if selection_label == null:
-		missing_nodes.append("SelectionLabel")
 	if back_button == null:
 		missing_nodes.append("BackButton")
 	if help_button == null:
@@ -132,7 +131,7 @@ func _refresh_levels() -> void:
 		_select_level(1)
 	else:
 		selected_level_id = 0
-		selection_label.text = "Select an unlocked level"
+		_set_selection_message("Select an unlocked level")
 		play_button.disabled = true
 		play_button.tooltip_text = "Select an unlocked level first"
 
@@ -158,7 +157,7 @@ func _connect_button_once(button: BaseButton, callback: Callable) -> void:
 
 func _on_level_pressed(level_id: int) -> void:
 	if not progress_manager.is_level_unlocked(level_id):
-		selection_label.text = "That level is still locked."
+		_set_selection_message("That level is still locked.")
 		return
 	_select_level(level_id)
 
@@ -171,7 +170,7 @@ func _select_level(level_id: int) -> void:
 	var playable := LevelCatalog.is_level_playable(level_id)
 	play_button.disabled = not pending and not playable
 	play_button.tooltip_text = "Continue Level %d progression" % level_id if pending else "Play Level %d" % level_id
-	selection_label.text = (
+	_set_selection_message(
 		"Selected: Level %d" % level_id
 		if playable or pending
 		else "Level %d is unlocked, but its gameplay content is still pending." % level_id
@@ -184,7 +183,7 @@ func _select_level(level_id: int) -> void:
 
 func _on_play_pressed() -> void:
 	if selected_level_id < 1 or not progress_manager.is_level_unlocked(selected_level_id):
-		selection_label.text = "Select an unlocked level first."
+		_set_selection_message("Select an unlocked level first.")
 		play_button.disabled = true
 		return
 	if progress_manager.has_pending_progression(selected_level_id):
@@ -198,15 +197,21 @@ func _on_play_pressed() -> void:
 				_change_scene(CHARACTER_UNLOCK_SCENE)
 		return
 	if not LevelCatalog.is_level_playable(selected_level_id):
-		selection_label.text = "Level %d is unlocked, but its gameplay content is not implemented yet." % selected_level_id
+		_set_selection_message("Level %d is unlocked, but its gameplay content is not implemented yet." % selected_level_id)
 		play_button.disabled = true
 		return
 	var gameplay_scene := get_gameplay_scene_for_level(selected_level_id)
 	if gameplay_scene.is_empty() or not ResourceLoader.exists(gameplay_scene):
-		selection_label.text = "Level %d gameplay is unavailable." % selected_level_id
+		_set_selection_message("Level %d gameplay is unavailable." % selected_level_id)
 		push_error("Gameplay scene is missing for Level %d: %s" % [selected_level_id, gameplay_scene])
 		return
 	_change_scene(gameplay_scene)
+
+
+func _set_selection_message(message: String) -> void:
+	selection_message = message
+	if selection_label != null:
+		selection_label.text = message
 
 
 func get_gameplay_scene_for_level(level_id: int) -> String:

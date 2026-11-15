@@ -150,7 +150,7 @@ func _test_fresh_level_selection() -> void:
 	await process_frame
 
 	var selection_label := screen.get_node_or_null("%SelectionLabel")
-	_check(selection_label is Label, "SelectionLabel exists and resolves as a unique Label")
+	_check(selection_label == null, "removed SelectionLabel remains optional")
 	_check(screen._validate_required_nodes(), "required-node validation succeeds")
 	_check(screen.level_buttons.size() == 6, "all six permanent custom level buttons are cached")
 	_check(screen.level_buttons_area.get_child_count() == 6, "runtime does not create duplicate level buttons")
@@ -186,15 +186,14 @@ func _test_fresh_level_selection() -> void:
 		_check(not level_button.tooltip_text.contains(["", "LAPU-LAPU", "BONIFACIO", "RIZAL", "LUNA", "AQUINO", "MABINI"][level_id]), "Level %d locked tooltip does not reveal its hero name" % level_id)
 	_check(locked_texture_count == 5, "fresh-player Level Selection displays exactly five locked PNGs")
 	_check(screen.selected_level_id == 1, "saved default Level 1 selection is restored")
-	_check(selection_label.text == "Selected: Level 1", "selected-level message updates without a null error")
-	_check(not selection_label.get_parent().visible, "selected-level status panel is hidden without removing its label")
+	_check(screen.selection_message == "Selected: Level 1", "selected-level state updates without a visual label")
 	_check(not screen.play_button.disabled, "Play is enabled for the selected playable level")
 
 	screen._on_level_pressed(2)
-	_check(selection_label.text == "That level is still locked.", "locked-level selection displays its status message")
+	_check(screen.selection_message == "That level is still locked.", "locked-level selection records its status message")
 	screen.selected_level_id = 0
 	screen._on_play_pressed()
-	_check(selection_label.text == "Select an unlocked level first.", "Play rejects an unavailable selection clearly")
+	_check(screen.selection_message == "Select an unlocked level first.", "Play rejects an unavailable selection clearly")
 	_check(screen.play_button.disabled, "Play disables itself when the current selection is unavailable")
 
 	screen._select_level(1)

@@ -42,7 +42,7 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 	_check(screen.level_buttons.size() == 6, "%s shows all six level controls" % size_label)
 	_check(screen.level_buttons_area.get_child_count() == 6, "%s does not create duplicate runtime buttons" % size_label)
 	_check(not screen.level_buttons_area is Container, "%s keeps level cards independently positionable in the 2D Editor" % size_label)
-	_check(screen.selection_label.visible, "%s keeps the selected-level status readable" % size_label)
+	_check(screen.selection_label == null, "%s preserves the intentionally removed selected-level label" % size_label)
 	_check(_rect_is_inside(screen.title_banner.get_global_rect(), viewport_size), "%s title banner stays on-screen" % size_label)
 	_check(screen.back_button.visible and screen.help_button.visible, "%s top controls remain visible beside the transparent banner" % size_label)
 	_check(_rect_is_inside(screen.back_button.get_global_rect(), viewport_size), "%s Back Arrow stays on-screen" % size_label)
