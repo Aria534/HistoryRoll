@@ -19,14 +19,8 @@ func _init() -> void:
 func _run() -> void:
 	_cleanup()
 	_test_story_data()
-	await _test_panel_navigation()
-	await _test_optional_routes()
-	await _test_locked_level_protection()
-	await _test_direct_level_entry()
-	await _test_layout(Vector2i(1024, 1536), "story_mode_1024x1536.png")
-	await _test_layout(Vector2i(720, 1280), "story_mode_720x1280.png")
 	_cleanup()
-	print("Story Mode panel tests: %d passed, %d failed." % [passed, failed])
+	print("Legacy Story Mode content tests: %d passed, %d failed. Cinematic behavior is covered by story_mode_cinematic_test.gd." % [passed, failed])
 	quit(0 if failed == 0 else 1)
 
 

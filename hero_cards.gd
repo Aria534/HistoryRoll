@@ -89,7 +89,8 @@ func _build_hero_card(character: Dictionary) -> Button:
 	button.set_meta("source_level", level_id)
 	button.custom_minimum_size = Vector2(0, 400 if compact else 354)
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.disabled = not unlocked
+	# Story films remain available while the associated gameplay token is locked.
+	button.disabled = false
 	button.focus_mode = Control.FOCUS_ALL
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	button.clip_contents = true
@@ -206,7 +207,7 @@ func _build_status_badges(unlocked: bool, compact: bool, horizontal: bool) -> Bo
 	badges.alignment = BoxContainer.ALIGNMENT_CENTER
 	badges.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var story_badge := _make_badge("STORY\nAVAILABLE", GREEN, GOLD, compact)
+	var story_badge := _make_badge("WATCH\nSTORY", GREEN, GOLD, compact)
 	story_badge.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	badges.add_child(story_badge)
 
@@ -249,7 +250,7 @@ func _make_label(text_value: String, font_size: int, color: Color, font: Font) -
 
 
 func _get_accessible_card_text(character: Dictionary, unlocked: bool) -> String:
-	var collection_status := "UNLOCKED" if unlocked else "STORY AVAILABLE — GAMEPLAY TOKEN LOCKED"
+	var collection_status := "UNLOCKED" if unlocked else "WATCH STORY - GAMEPLAY TOKEN LOCKED"
 	return "%s\nLevel %d — %s\n%s\n%s\nKey contribution (%s): %s\nDeath: %s — %s\nLegacy: %s" % [
 		str(character.get("name", "Hero")),
 		int(character.get("source_level", 0)),

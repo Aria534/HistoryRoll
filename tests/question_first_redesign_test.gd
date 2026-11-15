@@ -165,8 +165,11 @@ func _test_story_entry() -> void:
 	requested.clear(); story.scene_change_handler = func(path: String): requested.append(path)
 	get_root().add_child(story); await process_frame
 	_check(story.hero_name_label.text.to_lower().contains("antonio luna"), "Story Mode displays the selected hero")
-	story.continue_button.pressed.emit()
-	_check(story.current_panel_index == 1 and requested.is_empty(), "Story Mode Next advances within the five-panel story")
+	story._on_scene_timeout()
+	story.transition_tween.custom_step(0.5)
+	await process_frame
+	_check(story.current_scene_index == 1 and requested.is_empty(), "Story Mode timer advances within the six-scene short film")
+	story._show_ending(false)
 	story.back_button.pressed.emit()
 	_check(requested == ["res://hero_cards.tscn"], "Back to Hero Card returns from Story Mode")
 	story.queue_free(); await process_frame; progress.free()

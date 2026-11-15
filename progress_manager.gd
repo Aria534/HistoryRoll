@@ -16,6 +16,7 @@ var highest_unlocked_level: int = 1
 var completed_levels: Array[int] = []
 var board_completed_levels: Array[int] = []
 var completed_story_chapters: Array[int] = []
+var watched_story_chapters: Array[int] = []
 var unlocked_characters: Array[String] = [DEFAULT_HERO_ID]
 var claimed_character_rewards: Array[int] = []
 var selected_hero: String = DEFAULT_HERO_ID
@@ -46,6 +47,21 @@ func is_board_completed(level_id: int) -> bool:
 
 func is_story_completed(level_id: int) -> bool:
 	return completed_story_chapters.has(level_id)
+
+
+func is_story_watched(level_id: int) -> bool:
+	return watched_story_chapters.has(level_id)
+
+
+func mark_story_watched(level_id: int) -> bool:
+	if not LevelCatalog.has_level(level_id):
+		return false
+	if watched_story_chapters.has(level_id):
+		return true
+	_add_unique_int(watched_story_chapters, level_id)
+	save_progress()
+	progress_changed.emit()
+	return true
 
 
 func is_character_unlocked(character_id: String) -> bool:
@@ -220,6 +236,7 @@ func save_progress() -> bool:
 		"completed_levels": completed_levels,
 		"board_completed_levels": board_completed_levels,
 		"completed_story_chapters": completed_story_chapters,
+		"watched_story_chapters": watched_story_chapters,
 		"unlocked_characters": unlocked_characters,
 		"claimed_character_rewards": claimed_character_rewards,
 		"selected_hero": selected_hero,
@@ -286,6 +303,7 @@ func _load_version_two(data: Dictionary) -> void:
 	_load_level_array(data.get("completed_levels", []), completed_levels)
 	_load_level_array(data.get("board_completed_levels", []), board_completed_levels)
 	_load_level_array(data.get("completed_story_chapters", []), completed_story_chapters)
+	_load_level_array(data.get("watched_story_chapters", []), watched_story_chapters)
 	_load_level_array(data.get("claimed_character_rewards", []), claimed_character_rewards)
 	var saved_characters: Variant = data.get("unlocked_characters", [])
 	if saved_characters is Array:
@@ -377,6 +395,7 @@ func _reset_to_defaults() -> void:
 	completed_levels.clear()
 	board_completed_levels.clear()
 	completed_story_chapters.clear()
+	watched_story_chapters.clear()
 	unlocked_characters = [DEFAULT_HERO_ID]
 	claimed_character_rewards.clear()
 	selected_hero = DEFAULT_HERO_ID

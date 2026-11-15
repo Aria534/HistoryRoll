@@ -1,74 +1,72 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
-[ext_resource type="Script" path="res://story_mode.gd" id="1_story"]
-[ext_resource type="Texture2D" path="res://assets/background/Pastel Castle Overlook by the Sea.png" id="2_background"]
-[ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="3_title_font"]
-[ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="4_body_font"]
+[ext_resource type="Script" path="res://story_mode.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/background/Dreamy Philippine Bay Boardwalk.png" id="2"]
+[ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="3"]
+[ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="4"]
 
-[sub_resource type="StyleBoxFlat" id="StoryPanel"]
-bg_color = Color(0.10, 0.055, 0.025, 0.96)
+[sub_resource type="StyleBoxFlat" id="Subtitle"]
+bg_color = Color(0.01, 0.01, 0.012, 0.62)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="RedButton"]
+bg_color = Color(0.48, 0.12, 0.07, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.96, 0.66, 0.18, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="GreenButton"]
+bg_color = Color(0.08, 0.40, 0.16, 0.98)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.71, 0.18, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="Ending"]
+bg_color = Color(0.08, 0.035, 0.018, 0.97)
 border_width_left = 7
 border_width_top = 7
 border_width_right = 7
 border_width_bottom = 7
-border_color = Color(0.96, 0.67, 0.18, 1)
-corner_radius_top_left = 30
-corner_radius_top_right = 30
-corner_radius_bottom_right = 30
-corner_radius_bottom_left = 30
-shadow_color = Color(0.03, 0.01, 0, 0.80)
-shadow_size = 14
+border_color = Color(0.98, 0.67, 0.18, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0, 0, 0, 0.75)
+shadow_size = 16
 
-[sub_resource type="StyleBoxFlat" id="PortraitPanel"]
-bg_color = Color(0.09, 0.18, 0.21, 0.98)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0.91, 0.63, 0.18, 1)
-corner_radius_top_left = 22
-corner_radius_top_right = 22
-corner_radius_bottom_right = 22
-corner_radius_bottom_left = 22
+[sub_resource type="Animation" id="Reset"]
+resource_name = "RESET"
+length = 0.0
 
-[sub_resource type="StyleBoxFlat" id="RedButton"]
-bg_color = Color(0.53, 0.13, 0.08, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.96, 0.68, 0.20, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-shadow_color = Color(0.06, 0.01, 0, 0.65)
-shadow_size = 6
+[sub_resource type="AnimationLibrary" id="Library"]
+_data = {&"RESET": SubResource("Reset")}
 
-[sub_resource type="StyleBoxFlat" id="GreenButton"]
-bg_color = Color(0.10, 0.47, 0.12, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(1, 0.73, 0.20, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-shadow_color = Color(0.03, 0.08, 0.01, 0.70)
-shadow_size = 6
-
-[node name="StoryMode" type="Control"]
+[node name="StoryPlayer" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_story")
+script = ExtResource("1")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="BackgroundContainer" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -76,11 +74,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_background")
+clip_contents = true
+
+[node name="BackgroundLayer" type="TextureRect" parent="BackgroundContainer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Overlay" type="ColorRect" parent="."]
+[node name="MidgroundLayer" type="TextureRect" parent="BackgroundContainer"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -88,203 +98,319 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.025, 0.012, 0.006, 0.55)
+expand_mode = 1
+stretch_mode = 6
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="ForegroundLayer" type="TextureRect" parent="BackgroundContainer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -260.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CharacterLayer" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
-offset_top = 32.0
-offset_right = -32.0
-offset_bottom = -32.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="StoryPanel" type="PanelContainer" parent="MarginContainer"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StoryPanel")
-
-[node name="ContentMargin" type="MarginContainer" parent="MarginContainer/StoryPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 28
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 28
-theme_override_constants/margin_bottom = 24
-
-[node name="Content" type="VBoxContainer" parent="MarginContainer/StoryPanel/ContentMargin"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="LevelLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+[node name="CharacterSprite" type="TextureRect" parent="CharacterLayer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 38)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.77, 0.25, 1)
-theme_override_colors/font_outline_color = Color(0.16, 0.045, 0.015, 1)
-theme_override_constants/outline_size = 4
-theme_override_fonts/font = ExtResource("3_title_font")
-theme_override_font_sizes/font_size = 27
-text = "LEVEL 1"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HeroNameLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 54)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.95, 0.78, 1)
-theme_override_colors/font_outline_color = Color(0.15, 0.035, 0.015, 1)
-theme_override_constants/outline_size = 6
-theme_override_fonts/font = ExtResource("3_title_font")
-theme_override_font_sizes/font_size = 40
-text = "FILIPINO HERO"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="StoryTitleLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.99, 0.74, 0.27, 1)
-theme_override_fonts/font = ExtResource("4_body_font")
-theme_override_font_sizes/font_size = 28
-text = "Story Title"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="PortraitFrame" type="PanelContainer" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
-custom_minimum_size = Vector2(0, 330)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("PortraitPanel")
-
-[node name="Portrait" type="TextureRect" parent="MarginContainer/StoryPanel/ContentMargin/Content/PortraitFrame"]
-unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -880.0
+offset_right = 250.0
+offset_bottom = -300.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
 texture_filter = 1
 expand_mode = 1
 stretch_mode = 5
 
-[node name="PortraitPlaceholderLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content/PortraitFrame"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.84, 0.82, 1)
-theme_override_fonts/font = ExtResource("4_body_font")
-theme_override_font_sizes/font_size = 24
-text = "ILLUSTRATION PLACEHOLDER"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="EffectsLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="PanelTitleLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+[node name="EffectsTexture" type="TextureRect" parent="EffectsLayer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 45)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="AmbientLight" type="ColorRect" parent="EffectsLayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 0.73, 0.28, 0.045)
+
+[node name="BattleFlash" type="ColorRect" parent="EffectsLayer"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 0.58, 0.22, 0)
+
+[node name="DarkOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="StoryUI" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopMargin" type="MarginContainer" parent="StoryUI"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 28.0
+offset_top = 28.0
+offset_right = -28.0
+offset_bottom = 124.0
+grow_horizontal = 2
+
+[node name="TopRow" type="HBoxContainer" parent="StoryUI/TopMargin"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.88, 0.55, 1)
-theme_override_colors/font_outline_color = Color(0.15, 0.035, 0.015, 1)
+theme_override_constants/separation = 12
+
+[node name="TitleStack" type="VBoxContainer" parent="StoryUI/TopMargin/TopRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HeroNameLabel" type="Label" parent="StoryUI/TopMargin/TopRow/TitleStack"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.87, 0.48, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.035, 0.01, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 34
+text = "FILIPINO HERO"
+autowrap_mode = 2
+
+[node name="SceneTitleLabel" type="Label" parent="StoryUI/TopMargin/TopRow/TitleStack"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.84, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.025, 0.01, 1)
 theme_override_constants/outline_size = 4
-theme_override_fonts/font = ExtResource("3_title_font")
-theme_override_font_sizes/font_size = 27
-text = "Panel Title"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 24
+text = "Scene title"
 autowrap_mode = 2
 
-[node name="StoryText" type="RichTextLabel" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
+[node name="PauseButton" type="Button" parent="StoryUI/TopMargin/TopRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 170)
-layout_mode = 2
-theme_override_colors/default_color = Color(0.97, 0.94, 0.84, 1)
-theme_override_fonts/normal_font = ExtResource("4_body_font")
-theme_override_font_sizes/normal_font_size = 24
-bbcode_enabled = false
-fit_content = false
-scroll_active = true
-
-[node name="VisualCaption" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 58)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.76, 0.58, 1)
-theme_override_fonts/font = ExtResource("4_body_font")
-theme_override_font_sizes/font_size = 18
-text = "Illustration description"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-
-[node name="DestinationNavigation" type="HBoxContainer" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
-layout_mode = 2
-theme_override_constants/separation = 16
-alignment = 1
-
-[node name="PreviousButton" type="Button" parent="MarginContainer/StoryPanel/ContentMargin/Content/DestinationNavigation"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(215, 78)
+custom_minimum_size = Vector2(138, 72)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
-theme_override_fonts/font = ExtResource("3_title_font")
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("RedButton")
+theme_override_styles/hover = SubResource("GreenButton")
+text = "PAUSE"
+
+[node name="SkipButton" type="Button" parent="StoryUI/TopMargin/TopRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 72)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("RedButton")
+theme_override_styles/hover = SubResource("GreenButton")
+text = "SKIP"
+
+[node name="SubtitlePanel" type="PanelContainer" parent="StoryUI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 34.0
+offset_top = -185.0
+offset_right = -34.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("Subtitle")
+
+[node name="Margin" type="MarginContainer" parent="StoryUI/SubtitlePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 12
+
+[node name="Content" type="VBoxContainer" parent="StoryUI/SubtitlePanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SubtitleLabel" type="Label" parent="StoryUI/SubtitlePanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 105)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 0.98, 0.91, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 24
+text = "Synchronized narration subtitle appears here."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+max_lines_visible = 2
+
+[node name="ProgressIndicator" type="Label" parent="StoryUI/SubtitlePanel/Margin/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.72, 0.25, 1)
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 18
+text = "SCENE 1 OF 6"
+horizontal_alignment = 1
+
+[node name="EndingPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -270.0
+offset_right = 390.0
+offset_bottom = 270.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("Ending")
+
+[node name="Margin" type="MarginContainer" parent="EndingPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 38
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 38
+
+[node name="Content" type="VBoxContainer" parent="EndingPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 22
+alignment = 1
+
+[node name="EndingTitle" type="Label" parent="EndingPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.87, 0.49, 1)
+theme_override_colors/font_outline_color = Color(0.13, 0.03, 0.01, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 36
+text = "HERO STORY"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="ReplayButton" type="Button" parent="EndingPanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3")
 theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("RedButton")
 theme_override_styles/hover = SubResource("GreenButton")
-theme_override_styles/pressed = SubResource("RedButton")
-text = "< PREVIOUS"
+text = "REPLAY STORY"
 
-[node name="PanelCounterLabel" type="Label" parent="MarginContainer/StoryPanel/ContentMargin/Content/DestinationNavigation"]
+[node name="PlayLevelButton" type="Button" parent="EndingPanel/Margin/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(105, 0)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.80, 0.30, 1)
-theme_override_fonts/font = ExtResource("3_title_font")
-theme_override_font_sizes/font_size = 24
-text = "1 / 5"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ContinueButton" type="Button" parent="MarginContainer/StoryPanel/ContentMargin/Content/DestinationNavigation"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(215, 78)
-layout_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
-theme_override_fonts/font = ExtResource("3_title_font")
+theme_override_fonts/font = ExtResource("3")
 theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("GreenButton")
 theme_override_styles/hover = SubResource("RedButton")
-theme_override_styles/pressed = SubResource("GreenButton")
-text = "NEXT >"
+text = "PLAY LEVEL"
 
-[node name="SecondaryNavigation" type="HBoxContainer" parent="MarginContainer/StoryPanel/ContentMargin/Content"]
-layout_mode = 2
-theme_override_constants/separation = 16
-alignment = 1
-
-[node name="SkipButton" type="Button" parent="MarginContainer/StoryPanel/ContentMargin/Content/SecondaryNavigation"]
+[node name="BackButton" type="Button" parent="EndingPanel/Margin/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 68)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
-theme_override_fonts/font = ExtResource("4_body_font")
-theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("RedButton")
 theme_override_styles/hover = SubResource("GreenButton")
-theme_override_styles/pressed = SubResource("RedButton")
-text = "SKIP STORY"
+text = "BACK TO HERO CARDS"
 
-[node name="BackButton" type="Button" parent="MarginContainer/StoryPanel/ContentMargin/Content/SecondaryNavigation"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {&"": SubResource("Library")}
+
+[node name="VoicePlayer" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 68)
-layout_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
-theme_override_fonts/font = ExtResource("4_body_font")
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("RedButton")
-theme_override_styles/hover = SubResource("GreenButton")
-theme_override_styles/pressed = SubResource("RedButton")
-text = "BACK TO HERO CARD"
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+volume_db = -10.0
+
+[node name="SFXPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+volume_db = -7.0
+
+[node name="SceneTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 9.0
+one_shot = true
+
+[node name="SubtitleTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 4.5

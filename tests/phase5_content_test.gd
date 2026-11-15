@@ -106,7 +106,7 @@ func _test_collection_and_selection() -> void:
 	get_root().add_child(collection)
 	await process_frame
 	var locked_lapulapu := _find_character_button(collection, "lapulapu")
-	_check(locked_lapulapu != null and locked_lapulapu.disabled, "Hero Cards displays Lapulapu as locked initially")
+	_check(locked_lapulapu != null and not locked_lapulapu.disabled, "Hero Cards keeps Lapulapu Story available while gameplay is locked")
 
 	_check(progress.record_board_completion(1, 100, {"position": 100}), "Level 1 board completion is accepted")
 	_check(progress.begin_post_level_story(1), "Level 1 advances to post-game story")
