@@ -33,13 +33,29 @@ func _test_story_data() -> void:
 		var scenes: Array = story.get("scenes", [])
 		_check(not story.is_empty(), "Level %d has cinematic story data" % level_id)
 		_check(scenes.size() == 6, "Level %d has exactly six cinematic scenes" % level_id)
-		_check(StoryData.get_total_duration(level_id) >= 50.0 and StoryData.get_total_duration(level_id) <= 70.0, "Level %d duration is 50-70 seconds" % level_id)
+		_check(StoryData.get_total_duration(level_id) >= 45.0 and StoryData.get_total_duration(level_id) <= 60.0, "Level %d duration is 45-60 seconds" % level_id)
 		for scene: Dictionary in scenes:
 			_check(not str(scene.get("subtitle", "")).is_empty(), "Level %d scene has synchronized subtitle text" % level_id)
 			_check(not str(scene.get("motion", "")).is_empty(), "Level %d scene has motion direction" % level_id)
-			_check(str(scene.get("background_path", "")).contains("Philippine Bay"), "Level %d scene avoids the retired fantasy-castle placeholder" % level_id)
+			_check(not str(scene.get("background_path", "")).to_lower().contains("fantasy"), "Level %d scene avoids the retired fantasy-castle placeholder" % level_id)
 			_check(scene.has("midground_path") and scene.has("foreground_path") and scene.has("effects_path"), "Level %d scene exposes replaceable cinematic layer paths" % level_id)
-		_check(str((scenes[5] as Dictionary).get("subtitle", "")).to_lower().contains("contribution"), "Level %d final scene clearly states the hero's contribution" % level_id)
+			_check(ResourceLoader.exists(str(scene.get("background_path", ""))), "Level %d scene artwork exists" % level_id)
+			_check(ResourceLoader.exists(str(scene.get("voice_path", ""))), "Level %d scene narration exists" % level_id)
+			_check(not bool(scene.get("placeholder_visual", true)), "Level %d scene no longer uses placeholder artwork" % level_id)
+		var final_scene: Dictionary = scenes[5]
+		var final_message := str(final_scene.get("narration", final_scene.get("subtitle", ""))).to_lower()
+		_check(final_message.contains("contribution"), "Level %d final scene clearly states the hero's contribution" % level_id)
+		_check(not str(story.get("ending_contribution", "")).is_empty(), "Level %d ending card states the hero's contribution" % level_id)
+	var lapulapu_story := StoryData.get_story(1)
+	var lapulapu_scenes: Array = lapulapu_story.get("scenes", [])
+	_check(is_equal_approx(StoryData.get_total_duration(1), 54.0), "Lapulapu cinematic follows the 54-second six-shot timeline")
+	_check(str((lapulapu_scenes[3] as Dictionary).get("subtitle", "")) == "April 27, 1521 - Battle of Mactan", "Battle subtitle shows the verified date")
+	_check(str((lapulapu_scenes[4] as Dictionary).get("narration", "")).contains("Magellan was killed"), "Retreat narration states Magellan's death without graphic staging")
+	_check(not str(lapulapu_story.get("ending_contribution", "")).is_empty(), "Lapulapu ending card states his contribution")
+	for scene: Dictionary in lapulapu_scenes:
+		_check(ResourceLoader.exists(str(scene.get("background_path", ""))), "Lapulapu shot artwork exists: %s" % scene.get("title", "shot"))
+		_check(ResourceLoader.exists(str(scene.get("voice_path", ""))), "Lapulapu shot narration exists: %s" % scene.get("title", "shot"))
+		_check(not bool(scene.get("placeholder_visual", true)), "Lapulapu shot uses final cinematic artwork")
 
 
 func _test_all_hero_card_routes() -> void:
@@ -74,10 +90,13 @@ func _test_player_controls_and_save() -> void:
 	get_root().add_child(story)
 	await process_frame
 	_check(story.current_scene_index == 0 and story.scenes.size() == 6, "Story begins at scene 1 of 6")
+	_check(not story.character_sprite.visible, "establishing shot does not duplicate the hero over the village artwork")
 	_check(story.story_text.max_lines_visible == 2, "mobile subtitles are limited to two lines")
 	_check(not story.progress_indicator.visible, "internal sequence numbers are never shown to the player")
 	_check(story.midground_layer is TextureRect and story.foreground_layer is TextureRect, "StoryPlayer uses replaceable texture layers instead of color-only fake layers")
 	_check(story.voice_player.bus == "Master" and story.music_player.bus == "Music" and story.sfx_player.bus == "SFX", "narration, music, and SFX use separate audio buses")
+	_check(story.voice_player.playing, "Lapulapu narration starts with the cinematic shot")
+	_check(story.music_player.playing and story.procedural_music_playback != null, "offline procedural score starts with the cinematic")
 	var character_start: Vector2 = story.character_sprite.position
 	var camera_start: Vector2 = story.background_layer.position
 	story.motion_tween.custom_step(0.7)

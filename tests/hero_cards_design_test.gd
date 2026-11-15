@@ -60,6 +60,7 @@ func _capture(viewport_size: Vector2i, filename: String) -> void:
 		if child is Button:
 			var button := child as Button
 			_check(not button.disabled, "%s keeps WATCH STORY available independently of gameplay unlocks" % button.name)
+			_check(not button.text.contains("GAMEPLAY TOKEN"), "%s removes the gameplay-token status text" % button.name)
 			_check(button.get_meta("character_id", "") != "", "%s preserves its hero ID" % button.name)
 			_check(_has_loaded_portrait(button), "%s displays its existing chibi portrait" % button.name)
 

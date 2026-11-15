@@ -2,6 +2,8 @@ extends Control
 
 const HERO_CARDS_SCENE := "res://hero_cards.tscn"
 const SETTINGS_PATH := "user://historyroll_settings.cfg"
+const SCORE_MIX_RATE := 22050.0
+const SCORE_NOTES := [220.0, 247.0, 293.66, 329.63, 392.0]
 const LevelCatalog = preload("res://level_catalog.gd")
 const StoryData = preload("res://story_data.gd")
 
@@ -58,6 +60,9 @@ var transition_tween: Tween
 var transition_in_progress := false
 var subtitle_cues: Array[String] = []
 var subtitle_cue_index := 0
+var procedural_music_playback: AudioStreamGeneratorPlayback
+var procedural_music_time := 0.0
+var procedural_environment := "ambient"
 
 
 func _ready() -> void:
@@ -66,6 +71,7 @@ func _ready() -> void:
 	voice_player.bus = "Master"
 	music_player.bus = "Music"
 	sfx_player.bus = "SFX"
+	music_player.volume_db = -16.0
 	_apply_saved_audio_settings()
 	_connect_once(scene_timer.timeout, _on_scene_timeout)
 	_connect_once(subtitle_timer.timeout, _on_subtitle_timeout)
@@ -130,10 +136,15 @@ func _start_scene(index: int, show_opening := false) -> void:
 	_load_layer_texture(foreground_layer, str(scene.get("foreground_path", "")))
 	_load_layer_texture(effects_texture, str(scene.get("effects_path", "")))
 	var character_path := str(scene.get("character_path", ""))
-	_set_character_texture(character_path if not character_path.is_empty() else str(story.get("portrait_path", "")))
+	var show_character := bool(scene.get("show_character", true))
+	var resolved_character_path := character_path if not character_path.is_empty() else str(story.get("portrait_path", ""))
+	_set_character_texture(resolved_character_path if show_character else "")
 	_play_optional_audio(voice_player, str(scene.get("voice_path", "")), false)
 	_play_optional_audio(sfx_player, str(scene.get("sfx_path", "")), false)
-	_play_optional_audio(music_player, str(scene.get("music_path", "")), true)
+	var music_path := str(scene.get("music_path", ""))
+	_play_optional_audio(music_player, music_path, true)
+	if music_path.is_empty():
+		_start_procedural_score(str(scene.get("environment", "ambient")))
 	_apply_motion(str(scene.get("motion", "pan_right")), bool(scene.get("shake", false)), float(scene.get("duration", 9.0)))
 	_apply_environment_motion(str(scene.get("environment", "ambient")), bool(scene.get("shake", false)))
 	_fade_from_black()
@@ -287,6 +298,38 @@ func _play_optional_audio(player: AudioStreamPlayer, path: String, keep_existing
 	player.play()
 
 
+func _start_procedural_score(environment: String) -> void:
+	procedural_environment = environment
+	procedural_music_time = 0.0
+	var generator := AudioStreamGenerator.new()
+	generator.mix_rate = SCORE_MIX_RATE
+	generator.buffer_length = 0.5
+	music_player.stream = generator
+	music_player.play()
+	procedural_music_playback = music_player.get_stream_playback() as AudioStreamGeneratorPlayback
+
+
+func _process(_delta: float) -> void:
+	if procedural_music_playback == null:
+		return
+	var frames := mini(procedural_music_playback.get_frames_available(), 2048)
+	for _frame: int in range(frames):
+		var time := procedural_music_time
+		var note_time := fmod(time, 0.8)
+		var note_index := int(time / 0.8) % SCORE_NOTES.size()
+		var bell_envelope := exp(-note_time * 4.8)
+		var sample := sin(TAU * 110.0 * time) * 0.012
+		sample += sin(TAU * float(SCORE_NOTES[note_index]) * time) * bell_envelope * 0.038
+		if procedural_environment == "ocean":
+			sample += sin(TAU * 55.0 * time) * 0.008
+		elif procedural_environment == "battle":
+			var drum_time := fmod(time, 0.55)
+			var drum_frequency := lerpf(82.0, 48.0, drum_time / 0.55)
+			sample += sin(TAU * drum_frequency * time) * exp(-drum_time * 12.0) * 0.075
+		procedural_music_playback.push_frame(Vector2(sample, sample))
+		procedural_music_time += 1.0 / SCORE_MIX_RATE
+
+
 func _on_scene_timeout() -> void:
 	if current_scene_index + 1 < scenes.size():
 		_transition_to_scene(current_scene_index + 1)
@@ -367,6 +410,9 @@ func _show_ending(mark_watched: bool) -> void:
 	transition_in_progress = false
 	ending_visible = true
 	ending_title.text = str(story.get("title", "HERO STORY"))
+	var contribution := str(story.get("ending_contribution", ""))
+	if not contribution.is_empty():
+		ending_title.text += "\n\nContribution to the Philippines:\n%s" % contribution
 	ending_panel.show()
 	skip_button.hide()
 	pause_button.hide()

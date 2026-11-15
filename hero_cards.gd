@@ -196,7 +196,7 @@ func _build_portrait(character: Dictionary, unlocked: bool, compact: bool) -> Pa
 	return portrait_frame
 
 
-func _build_status_badges(unlocked: bool, compact: bool, horizontal: bool) -> BoxContainer:
+func _build_status_badges(_unlocked: bool, compact: bool, horizontal: bool) -> BoxContainer:
 	var badges: BoxContainer
 	if horizontal:
 		badges = HBoxContainer.new()
@@ -210,13 +210,6 @@ func _build_status_badges(unlocked: bool, compact: bool, horizontal: bool) -> Bo
 	var story_badge := _make_badge("WATCH\nSTORY", GREEN, GOLD, compact)
 	story_badge.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	badges.add_child(story_badge)
-
-	var token_text := "GAMEPLAY\nTOKEN UNLOCKED" if unlocked else "GAMEPLAY\nTOKEN LOCKED"
-	var token_color := GREEN if unlocked else LOCKED_GRAY
-	var token_border := GOLD if unlocked else Color("A7A7A7")
-	var token_badge := _make_badge(token_text, token_color, token_border, compact)
-	token_badge.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	badges.add_child(token_badge)
 	return badges
 
 
@@ -250,7 +243,7 @@ func _make_label(text_value: String, font_size: int, color: Color, font: Font) -
 
 
 func _get_accessible_card_text(character: Dictionary, unlocked: bool) -> String:
-	var collection_status := "UNLOCKED" if unlocked else "WATCH STORY - GAMEPLAY TOKEN LOCKED"
+	var collection_status := "WATCH STORY"
 	return "%s\nLevel %d — %s\n%s\n%s\nKey contribution (%s): %s\nDeath: %s — %s\nLegacy: %s" % [
 		str(character.get("name", "Hero")),
 		int(character.get("source_level", 0)),
