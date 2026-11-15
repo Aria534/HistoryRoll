@@ -1,6 +1,7 @@
 extends Control
 
 const BoardRules = preload("res://board_rules.gd")
+const BOARD_FONT: FontFile = preload("res://assets/fonts/TitanOne-Regular.ttf")
 
 class BoardDie:
 	extends Control
@@ -43,7 +44,7 @@ class BoardDie:
 		for normalized_position: Vector2 in pip_positions:
 			draw_circle(normalized_position * size, pip_radius, Color("#352A2A"))
 
-const FRAME_WIDTH: float = 12.0
+const FRAME_WIDTH: float = 16.0
 const TILE_PALETTE: Array[Color] = [
 	Color("#F7D77C"), Color("#F6E7C5"), Color("#A9D3C2"),
 	Color("#EFA99F"), Color("#A9D5EA"),
@@ -233,8 +234,7 @@ func _draw() -> void:
 	for tile: int in range(1, tile_count + 1):
 		var cell := BoardRules.tile_to_visual_cell(tile, columns, rows)
 		var tile_rect := Rect2(board_rect.position + Vector2(cell.x, cell.y) * cell_size, cell_size)
-		draw_rect(tile_rect.grow(-0.8), _get_tile_color(tile, cell), true)
-		draw_rect(tile_rect, Color("#76513A"), false, maxf(1.2, minf(cell_size.x, cell_size.y) * 0.018), true)
+		_draw_tile_surface(tile, tile_rect, cell)
 
 	for raw_start: Variant in board_config.get("ladders", {}):
 		var start := int(raw_start)
@@ -256,16 +256,40 @@ func _draw() -> void:
 
 func _draw_wooden_frame(board_rect: Rect2) -> void:
 	var outer := board_rect.grow(FRAME_WIDTH)
-	draw_rect(outer, Color("#4B2B1D"), true)
-	draw_rect(outer.grow(-3.0), Color("#B86F32"), true)
-	draw_rect(outer.grow(-6.0), Color("#E3A54D"), true)
-	draw_rect(board_rect.grow(2.0), Color("#5B3525"), false, 4.0, true)
-	draw_line(outer.position + Vector2(8, 7), Vector2(outer.end.x - 8, outer.position.y + 7), Color("#F5C86A"), 2.0, true)
-	draw_line(Vector2(outer.position.x + 7, outer.end.y - 6), outer.end - Vector2(7, 6), Color("#7E421F"), 2.0, true)
+	draw_rect(outer.grow(3.0), Color(0.08, 0.035, 0.015, 0.42), true)
+	draw_rect(outer, Color("#3A1C11"), true)
+	draw_rect(outer.grow(-3.0), Color("#8B431E"), true)
+	draw_rect(outer.grow(-6.0), Color("#D88832"), true)
+	draw_rect(outer.grow(-9.0), Color("#F2B84E"), true)
+	draw_rect(board_rect.grow(3.0), Color("#552B19"), true)
+	draw_rect(board_rect.grow(1.0), Color("#FFE08A"), false, 2.0, true)
+	draw_line(outer.position + Vector2(10, 8), Vector2(outer.end.x - 10, outer.position.y + 8), Color("#FFE18A"), 2.5, true)
+	draw_line(Vector2(outer.position.x + 9, outer.end.y - 7), outer.end - Vector2(9, 7), Color("#642C18"), 3.0, true)
 	var corner_size := FRAME_WIDTH * 1.4
 	for corner: Vector2 in [outer.position, Vector2(outer.end.x, outer.position.y), outer.end, Vector2(outer.position.x, outer.end.y)]:
-		draw_circle(corner, corner_size * 0.55, Color("#6E3D22"))
-		draw_circle(corner, corner_size * 0.34, Color("#D9933F"))
+		draw_circle(corner, corner_size * 0.58, Color("#4A2416"))
+		draw_circle(corner, corner_size * 0.42, Color("#D08030"))
+		draw_circle(corner, corner_size * 0.23, Color("#FFD469"))
+		draw_circle(corner - Vector2(1.5, 1.5), corner_size * 0.09, Color("#FFF0A8"))
+
+
+func _draw_tile_surface(tile: int, tile_rect: Rect2, cell: Vector2i) -> void:
+	var minimum_side := minf(tile_rect.size.x, tile_rect.size.y)
+	var inset := maxf(0.9, minimum_side * 0.012)
+	var inner := tile_rect.grow(-inset)
+	draw_rect(inner, _get_tile_color(tile, cell), true)
+	# Soft inset shading adds depth while keeping the tile numbers readable.
+	draw_rect(inner.grow(-minimum_side * 0.035), Color(1.0, 0.96, 0.82, 0.065), true)
+	var highlight := Color(1.0, 0.94, 0.72, 0.72)
+	var shadow := Color(0.25, 0.12, 0.07, 0.42)
+	var bevel_width := clampf(minimum_side * 0.022, 1.2, 3.0)
+	draw_line(inner.position, Vector2(inner.end.x, inner.position.y), highlight, bevel_width, true)
+	draw_line(inner.position, Vector2(inner.position.x, inner.end.y), highlight, bevel_width, true)
+	draw_line(Vector2(inner.position.x, inner.end.y), inner.end, shadow, bevel_width, true)
+	draw_line(Vector2(inner.end.x, inner.position.y), inner.end, shadow, bevel_width, true)
+	draw_rect(tile_rect, Color("#68412B"), false, maxf(1.4, minimum_side * 0.018), true)
+	if tile == 1 or tile == columns * rows:
+		draw_rect(inner.grow(-minimum_side * 0.055), Color("#B8661F"), false, maxf(2.0, minimum_side * 0.028), true)
 
 
 func _get_tile_color(tile: int, cell: Vector2i) -> Color:
@@ -286,10 +310,10 @@ func _get_tile_color(tile: int, cell: Vector2i) -> Color:
 
 func _draw_tile_content(tile: int, tile_rect: Rect2) -> void:
 	var minimum_side: float = minf(tile_rect.size.x, tile_rect.size.y)
-	var number_size := clampi(int(minimum_side * 0.25), 12, 29)
-	var number_position := tile_rect.position + Vector2(maxf(3.0, minimum_side * 0.06), number_size + maxf(2.0, minimum_side * 0.03))
-	draw_string(ThemeDB.fallback_font, number_position + Vector2(1.3, 1.3), str(tile), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x - 6.0, number_size, Color("#F4DDAF"))
-	draw_string(ThemeDB.fallback_font, number_position, str(tile), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x - 6.0, number_size, Color("#30251F"))
+	var number_size := clampi(int(minimum_side * 0.22), 13, 28)
+	var number_position := tile_rect.position + Vector2(maxf(5.0, minimum_side * 0.075), number_size + maxf(3.0, minimum_side * 0.045))
+	draw_string(BOARD_FONT, number_position + Vector2(1.6, 2.0), str(tile), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x - 8.0, number_size, Color(1.0, 0.91, 0.70, 0.88))
+	draw_string(BOARD_FONT, number_position, str(tile), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x - 8.0, number_size, Color("#3D271C"))
 
 	if BoardRules.is_question_tile(board_config, tile):
 		var icon_size := clampi(int(minimum_side * 0.42), 20, 36)
@@ -306,9 +330,12 @@ func _draw_special_icon(tile_type: String, tile_rect: Rect2, minimum_side: float
 	var radius := minimum_side * 0.22
 	match tile_type:
 		"bonus":
+			draw_circle(center + Vector2(2.0, 3.0), radius * 1.18, Color(0.30, 0.13, 0.03, 0.22))
+			draw_circle(center, radius * 1.12, Color("#FFF1A0"))
 			var star := _make_star(center, radius, radius * 0.45)
-			draw_colored_polygon(star, Color("#C58B24"))
-			draw_polyline(star + PackedVector2Array([star[0]]), Color("#7B4A19"), 2.0, true)
+			draw_colored_polygon(star, Color("#F6B92C"))
+			draw_polyline(star + PackedVector2Array([star[0]]), Color("#874913"), 2.5, true)
+			draw_line(center - Vector2(radius * 0.18, radius * 0.48), center - Vector2(radius * 0.42, radius * 0.08), Color("#FFF1A0"), 2.0, true)
 		"shield":
 			var shield_points := PackedVector2Array([
 				center + Vector2(-radius * 0.75, -radius * 0.7),
@@ -317,8 +344,13 @@ func _draw_special_icon(tile_type: String, tile_rect: Rect2, minimum_side: float
 				center + Vector2(0.0, radius),
 				center + Vector2(-radius * 0.62, radius * 0.35),
 			])
-			draw_colored_polygon(shield_points, Color("#4C78A3"))
-			draw_polyline(shield_points + PackedVector2Array([shield_points[0]]), Color("#315574"), 2.0, true)
+			var shield_shadow := PackedVector2Array()
+			for point: Vector2 in shield_points:
+				shield_shadow.append(point + Vector2(2.0, 3.0))
+			draw_colored_polygon(shield_shadow, Color(0.12, 0.20, 0.28, 0.32))
+			draw_colored_polygon(shield_points, Color("#397CB6"))
+			draw_polyline(shield_points + PackedVector2Array([shield_points[0]]), Color("#244965"), 2.5, true)
+			draw_line(center + Vector2(0.0, -radius * 0.6), center + Vector2(0.0, radius * 0.58), Color("#8BC8EE"), 2.0, true)
 
 
 func _make_star(center: Vector2, outer_radius: float, inner_radius: float) -> PackedVector2Array:
@@ -340,13 +372,17 @@ func _draw_ladder(start: Vector2, destination: Vector2, cell_size: Vector2) -> v
 		return
 	var scale_factor := clampf(minf(cell_size.x, cell_size.y) / 70.0, 0.55, 1.25)
 	var perpendicular := direction.normalized().orthogonal() * 8.0 * scale_factor
+	var shadow_offset := Vector2(3.0, 5.0) * scale_factor
 	for side: float in [-1.0, 1.0]:
-		draw_line(start + perpendicular * side, destination + perpendicular * side, Color("#5A321D"), 8.0 * scale_factor, true)
-		draw_line(start + perpendicular * side, destination + perpendicular * side, Color("#D58B3C"), 4.5 * scale_factor, true)
+		draw_line(start + perpendicular * side + shadow_offset, destination + perpendicular * side + shadow_offset, Color(0.20, 0.09, 0.03, 0.30), 10.0 * scale_factor, true)
+	for side: float in [-1.0, 1.0]:
+		draw_line(start + perpendicular * side, destination + perpendicular * side, Color("#4A2818"), 9.0 * scale_factor, true)
+		draw_line(start + perpendicular * side, destination + perpendicular * side, Color("#D88732"), 5.4 * scale_factor, true)
+		draw_line(start + perpendicular * side - perpendicular.normalized() * 1.0, destination + perpendicular * side - perpendicular.normalized() * 1.0, Color("#F5BD5D"), 1.4 * scale_factor, true)
 	for step: int in range(1, 8):
 		var point := start.lerp(destination, step / 8.0)
-		draw_line(point - perpendicular, point + perpendicular, Color("#5A321D"), 6.0 * scale_factor, true)
-		draw_line(point - perpendicular, point + perpendicular, Color("#E4A451"), 3.2 * scale_factor, true)
+		draw_line(point - perpendicular, point + perpendicular, Color("#4A2818"), 6.5 * scale_factor, true)
+		draw_line(point - perpendicular, point + perpendicular, Color("#E7A348"), 3.6 * scale_factor, true)
 
 
 func _draw_snake(start: Vector2, destination: Vector2, cell_size: Vector2, snake_index: int) -> void:
@@ -369,6 +405,10 @@ func _draw_snake(start: Vector2, destination: Vector2, cell_size: Vector2, snake
 		var point := start.lerp(destination, progress) + perpendicular_direction * wave_offset
 		points.append(point)
 	var colors: Array = SNAKE_PALETTES[snake_index % SNAKE_PALETTES.size()]
+	var shadow_points := PackedVector2Array()
+	for point: Vector2 in points:
+		shadow_points.append(point + Vector2(3.0, 5.0) * scale_factor)
+	draw_polyline(shadow_points, Color(0.18, 0.06, 0.04, 0.30), body_width + 7.0 * scale_factor, true)
 	draw_polyline(points, colors[0], body_width + 5.0 * scale_factor, true)
 	draw_polyline(points, colors[1], body_width, true)
 	draw_polyline(points, colors[2], maxf(1.4, body_width * 0.18), true)
