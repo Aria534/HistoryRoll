@@ -360,6 +360,7 @@ vertical_alignment = 1
 
 [node name="BackButton" type="Button" parent="MarginContainer/Content/Header"]
 unique_name_in_owner = true
+z_index = 30
 custom_minimum_size = Vector2(250, 64)
 layout_mode = 1
 anchor_left = 0.7
@@ -505,23 +506,83 @@ text = "Loading"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="QuizPanel" type="PanelContainer" parent="MarginContainer/Content/BodyCenter/Body"]
-custom_minimum_size = Vector2(0, 230)
-layout_mode = 2
+[node name="BottomRollArea" type="Control" parent="."]
+z_index = 10
+layout_mode = 1
+anchor_left = 0.22
+anchor_top = 0.97
+anchor_right = 0.78
+anchor_bottom = 0.97
+offset_top = -96.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="RollButton" type="Button" parent="BottomRollArea"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.22, 0.09, 0.025, 1)
+theme_override_colors/font_disabled_color = Color(0.86, 0.83, 0.75, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBox_roll")
+theme_override_styles/hover = SubResource("StyleBox_roll_hover")
+theme_override_styles/pressed = SubResource("StyleBox_roll")
+theme_override_styles/disabled = SubResource("StyleBox_disabled")
+text = "Roll Dice"
+
+[node name="QuestionPopupLayer" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="ModalDim" type="ColorRect" parent="QuestionPopupLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.008, 0.024, 0.04, 0.58)
+
+[node name="QuizPanel" type="PanelContainer" parent="QuestionPopupLayer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 520)
+layout_mode = 1
+anchor_left = 0.04
+anchor_top = 0.5
+anchor_right = 0.96
+anchor_bottom = 0.5
+offset_top = -260.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBox_quiz")
 
-[node name="QuizMargin" type="MarginContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel"]
+[node name="QuizMargin" type="MarginContainer" parent="QuestionPopupLayer/QuizPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="QuizContent" type="VBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin"]
+[node name="QuizContent" type="VBoxContainer" parent="QuestionPopupLayer/QuizPanel/QuizMargin"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="FixtureNotice" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
+[node name="FixtureNotice" type="Label" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -530,7 +591,7 @@ theme_override_font_sizes/font_size = 19
 text = "SOURCE-REVIEWED FILIPINO HISTORY QUESTION"
 horizontal_alignment = 1
 
-[node name="QuestionLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
+[node name="QuestionLabel" type="Label" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 70)
@@ -545,14 +606,14 @@ horizontal_alignment = 1
 vertical_alignment = 2
 autowrap_mode = 2
 
-[node name="Answers" type="GridContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
+[node name="Answers" type="GridContainer" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent"]
 visible = false
 layout_mode = 2
 theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 10
 columns = 2
 
-[node name="AnswerButton0" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers"]
+[node name="AnswerButton0" type="Button" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -568,7 +629,7 @@ theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 1"
 autowrap_mode = 2
 
-[node name="AnswerButton1" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers"]
+[node name="AnswerButton1" type="Button" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -584,7 +645,7 @@ theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 2"
 autowrap_mode = 2
 
-[node name="AnswerButton2" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers"]
+[node name="AnswerButton2" type="Button" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -600,7 +661,7 @@ theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 3"
 autowrap_mode = 2
 
-[node name="AnswerButton3" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers"]
+[node name="AnswerButton3" type="Button" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/Answers"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -616,8 +677,9 @@ theme_override_styles/disabled = SubResource("StyleBox_disabled")
 text = "Answer 4"
 autowrap_mode = 2
 
-[node name="TurnMessageLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
+[node name="TurnMessageLabel" type="Label" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.25, 0.1, 0.025, 1)
@@ -628,8 +690,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="FeedbackLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
+[node name="FeedbackLabel" type="Label" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.19, 0.08, 0.025, 1)
@@ -642,7 +705,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="ReactionLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
+[node name="ReactionLabel" type="Label" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 52)
@@ -654,39 +717,42 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="TurnControls" type="HBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent"]
+[node name="TurnControls" type="HBoxContainer" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent"]
+unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(0, 82)
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="DiceCard" type="PanelContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+[node name="DiceCard" type="PanelContainer" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+visible = false
 custom_minimum_size = Vector2(0, 78)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.9
 theme_override_styles/panel = SubResource("StyleBox_die_card")
 
-[node name="DiceCardRow" type="HBoxContainer" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard"]
+[node name="DiceCardRow" type="HBoxContainer" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard"]
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="DiceIcon" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
+[node name="DiceIcon" type="Label" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.43, 0.16, 0.07, 1)
 theme_override_font_sizes/font_size = 38
 text = "⚄"
 vertical_alignment = 1
 
-[node name="DiceTitle" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
+[node name="DiceTitle" type="Label" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.25, 0.1, 0.025, 1)
 theme_override_font_sizes/font_size = 22
 text = "Die Result:"
 vertical_alignment = 1
 
-[node name="DiceLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
+[node name="DiceLabel" type="Label" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls/DiceCard/DiceCardRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(74, 58)
 layout_mode = 2
@@ -696,27 +762,13 @@ text = "—"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ControlDivider" type="VSeparator" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+[node name="ControlDivider" type="VSeparator" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+visible = false
 custom_minimum_size = Vector2(8, 70)
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBox_control_divider")
 
-[node name="RollButton" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 78)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 1.1
-theme_override_colors/font_color = Color(0.22, 0.09, 0.025, 1)
-theme_override_colors/font_disabled_color = Color(0.86, 0.83, 0.75, 1)
-theme_override_font_sizes/font_size = 26
-theme_override_styles/normal = SubResource("StyleBox_roll")
-theme_override_styles/hover = SubResource("StyleBox_roll_hover")
-theme_override_styles/pressed = SubResource("StyleBox_roll")
-theme_override_styles/disabled = SubResource("StyleBox_disabled")
-text = "Roll Die"
-
-[node name="NextTurnButton" type="Button" parent="MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls"]
+[node name="NextTurnButton" type="Button" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(300, 76)
@@ -727,6 +779,7 @@ text = "Continue"
 [node name="ResultsPanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
+z_index = 40
 layout_mode = 0
 offset_left = 122.0
 offset_top = 478.0

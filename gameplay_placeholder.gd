@@ -34,10 +34,11 @@ const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 @onready var score_label: Label = %ScoreLabel
 @onready var power_status_label: Label = %PowerStatusLabel
 @onready var state_label: Label = %StateLabel
-@onready var quiz_panel: PanelContainer = $MarginContainer/Content/BodyCenter/Body/QuizPanel
+@onready var question_popup_layer: Control = %QuestionPopupLayer
+@onready var quiz_panel: PanelContainer = %QuizPanel
 @onready var fixture_notice: Label = %FixtureNotice
 @onready var question_label: Label = %QuestionLabel
-@onready var answers_grid: GridContainer = $MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/Answers
+@onready var answers_grid: GridContainer = $QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/Answers
 @onready var turn_message_label: Label = %TurnMessageLabel
 @onready var feedback_label: Label = %FeedbackLabel
 @onready var reaction_label: Label = %ReactionLabel
@@ -86,6 +87,7 @@ var scene_change_handler: Callable
 var results_transition_started: bool = false
 var dice_roller
 var quiz_session = QuizSession.new()
+var question_popup_tween: Tween
 
 
 func _ready() -> void:
@@ -198,7 +200,8 @@ func _begin_question(question_type: String) -> void:
 	fixture_notice.visible = question_label.text.begins_with("DEVELOPMENT PLACEHOLDER")
 	fixture_notice.text = "DEVELOPMENT QUESTION FIXTURE — NOT FINAL CONTENT"
 	reaction_label.hide()
-	turn_message_label.show()
+	turn_message_label.hide()
+	feedback_label.hide()
 	question_label.show()
 	answer_buttons[0].get_parent().show()
 	var choices: Array = current_question.get("choices", [])
@@ -215,11 +218,12 @@ func _begin_question(question_type: String) -> void:
 		answer_button.text = str(choices[index]) if answer_button.visible else ""
 		answer_button.custom_minimum_size.y = 72.0 if choices.size() <= 3 else 60.0
 		answer_button.modulate = Color.WHITE
-	feedback_label.text = "Answer first. Correct: +%d. Incorrect: -%d. Both outcomes allow one roll." % [correct_answer_points, incorrect_answer_penalty]
+	feedback_label.text = ""
 	next_turn_button.hide()
 	next_turn_button.text = "Continue"
 	_set_quiz_panel_height(true)
 	_set_state(GameplayState.QUESTION)
+	_show_question_popup()
 
 
 func _apply_question_typography(choices: Array) -> void:
@@ -262,7 +266,6 @@ func _on_answer_pressed(choice_index: int) -> void:
 		return
 	_set_state(GameplayState.ANSWER_FEEDBACK)
 	var is_correct := bool(result.get("correct", false))
-	var explanation := str(result.get("explanation", ""))
 	var correct_index := int(result.get("correct_index", -1))
 	if correct_index >= 0 and correct_index < answer_buttons.size():
 		answer_buttons[correct_index].modulate = Color("#a8df9f")
@@ -272,23 +275,29 @@ func _on_answer_pressed(choice_index: int) -> void:
 	if is_correct:
 		correct_answers += 1
 		score += correct_answer_points
-		feedback_label.text = "Correct! +%d points. %s Roll the die." % [correct_answer_points, explanation]
+		feedback_label.text = "Correct! +%d points." % correct_answer_points
 		_show_chibi_reaction(true, correct_answer_points)
 	else:
 		incorrect_answers += 1
 		score -= incorrect_answer_penalty
 		if not allow_negative_score:
 			score = maxi(0, score)
-		feedback_label.text = "Not quite. -%d points. %s Roll the die." % [incorrect_answer_penalty, explanation]
+		feedback_label.text = "Incorrect. -%d points." % incorrect_answer_penalty
 		_show_chibi_reaction(false, incorrect_answer_penalty)
+	feedback_label.show()
+	_set_popup_height(520.0)
 	_update_status_labels()
 	_set_state(GameplayState.READY_TO_ROLL)
+	await get_tree().create_timer(0.55).timeout
+	if state == GameplayState.READY_TO_ROLL:
+		await _hide_question_popup()
 
 
 func _on_roll_pressed() -> void:
 	if state != GameplayState.READY_TO_ROLL:
 		return
 	_set_state(GameplayState.DICE_ROLLING)
+	await _hide_question_popup()
 	landing_effect_resolved = false
 	resolved_tiles_this_turn.clear()
 	var dice_result: int = dice_roller.roll()
@@ -407,6 +416,7 @@ func _begin_next_turn(message: String) -> void:
 
 func _complete_level() -> void:
 	_set_state(GameplayState.LEVEL_COMPLETE)
+	question_popup_layer.hide()
 	_request_music("res://assets/audio/music/victory.ogg")
 	if not completion_recorded:
 		completion_recorded = true
@@ -472,16 +482,18 @@ func _set_state(new_state: GameplayState) -> void:
 	state_label.text = "?  %s" % GameplayState.keys()[state].capitalize()
 	for button: Button in answer_buttons:
 		button.disabled = state != GameplayState.QUESTION or not button.visible
-	roll_button.disabled = state != GameplayState.READY_TO_ROLL
+	var roll_is_ready := state == GameplayState.READY_TO_ROLL
+	roll_button.disabled = not roll_is_ready
+	roll_button.visible = true
 	if state == GameplayState.QUESTION:
-		roll_button.text = "Answer First"
+		roll_button.text = "Roll Dice"
 		roll_button.tooltip_text = "Choose an answer before rolling the die."
 	elif state == GameplayState.READY_TO_ROLL:
-		roll_button.text = "Roll Die"
+		roll_button.text = "Roll Dice"
 		roll_button.tooltip_text = "Roll the die and move your hero."
 		roll_button.grab_focus()
 	else:
-		roll_button.text = "Rolling..." if state == GameplayState.DICE_ROLLING else "Roll Die"
+		roll_button.text = "Rolling..." if state == GameplayState.DICE_ROLLING else "Roll Dice"
 		roll_button.tooltip_text = "Please wait for the current turn to finish."
 	back_button.disabled = state in [
 		GameplayState.DICE_ROLLING,
@@ -512,23 +524,61 @@ func _update_status_labels() -> void:
 	power_status_label.text = "◆  Shield: %d" % shield_charges
 
 
-func _set_quiz_panel_height(quiz_active: bool) -> void:
+func _set_quiz_panel_height(_quiz_active: bool) -> void:
 	var viewport_size := get_viewport_rect().size
 	var viewport_height := viewport_size.y
 	gameplay_body.custom_minimum_size.x = maxf(1.0, viewport_size.x - 52.0)
-	quiz_panel.custom_minimum_size.y = clampf(viewport_height * 0.32, 480.0, 560.0) if quiz_active else 230.0
+	var choice_count := int(current_question.get("choices", []).size())
+	var popup_height := 450.0 if choice_count >= 4 else 390.0
+	popup_height = minf(popup_height, viewport_height - 100.0)
+	_set_popup_height(popup_height)
 	var horizontal_board_height := (
 		maxf(1.0, viewport_size.x - 52.0)
 		* float(board_view.rows)
 		/ float(board_view.columns)
 		+ 56.0
 	)
-	var responsive_board_height := clampf(horizontal_board_height, 520.0, minf(900.0, viewport_height * 0.48))
-	board_panel.custom_minimum_size.y = responsive_board_height if quiz_active else minf(720.0, viewport_height * 0.58)
+	var responsive_board_height := clampf(horizontal_board_height, 520.0, minf(1000.0, viewport_height * 0.68))
+	board_panel.custom_minimum_size.y = responsive_board_height
+
+
+func _set_popup_height(popup_height: float) -> void:
+	quiz_panel.custom_minimum_size.y = popup_height
+	quiz_panel.offset_top = -popup_height * 0.5
+	quiz_panel.offset_bottom = popup_height * 0.5
+
+
+func _show_question_popup() -> void:
+	if question_popup_tween != null and question_popup_tween.is_valid():
+		question_popup_tween.kill()
+	question_popup_layer.show()
+	question_popup_layer.modulate.a = 0.0
+	quiz_panel.pivot_offset = quiz_panel.size * 0.5
+	quiz_panel.scale = Vector2(0.88, 0.88)
+	question_popup_tween = create_tween().set_parallel(true)
+	question_popup_tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	question_popup_tween.tween_property(question_popup_layer, "modulate:a", 1.0, 0.22)
+	question_popup_tween.tween_property(quiz_panel, "scale", Vector2.ONE, 0.26)
+
+
+func _hide_question_popup() -> void:
+	if not question_popup_layer.visible:
+		return
+	if question_popup_tween != null and question_popup_tween.is_valid():
+		question_popup_tween.kill()
+	question_popup_tween = create_tween().set_parallel(true)
+	question_popup_tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	question_popup_tween.tween_property(question_popup_layer, "modulate:a", 0.0, 0.16)
+	question_popup_tween.tween_property(quiz_panel, "scale", Vector2(0.94, 0.94), 0.16)
+	await question_popup_tween.finished
+	question_popup_layer.hide()
+	question_popup_layer.modulate.a = 1.0
+	quiz_panel.scale = Vector2.ONE
 
 
 func _show_fatal_error(message: String) -> void:
 	fatal_error_active = true
+	question_popup_layer.hide()
 	feedback_label.text = message
 	question_label.text = "Gameplay cannot start."
 	_set_state(GameplayState.LEVEL_COMPLETE)
