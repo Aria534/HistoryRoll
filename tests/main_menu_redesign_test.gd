@@ -38,15 +38,21 @@ func _test_main_menu_viewport(viewport_size: Vector2i, capture_name: String) -> 
 	_check(not menu.has_node("HistoryRollLogo"), "%s has no duplicate logo node" % label)
 	var background := menu.get_node("LiveBackground") as AnimatedSprite2D
 	var background_texture := background.sprite_frames.get_frame_texture("default", 0)
-	_check(background_texture.resource_path.ends_with("main_menu_complete_reference_v7_natural_board.png"), "%s uses the natural integrated 25-tile board artwork" % label)
+	_check(background_texture.resource_path.ends_with("main_menu_background_clean_buttons_v8.png"), "%s uses the clean scenery with no baked duplicate buttons" % label)
 	_check(menu.get_node("AnimatedPlants").self_modulate.a <= 0.15, "%s keeps foliage motion subtle over the complete artwork" % label)
+	var backdrop := menu.get_node("ButtonBackdrop") as Panel
+	_check(backdrop != null and backdrop.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s decorative button backdrop cannot block input" % label)
 	var buttons: Array[TextureButton] = [menu.start_button, menu.hero_cards_button, menu.settings_button, menu.quit_button]
 	var previous_rect := Rect2()
+	var reference_size := Vector2.ZERO
 	for index: int in buttons.size():
 		var button := buttons[index]
 		var rect := button.get_global_rect()
+		if index == 0:
+			reference_size = rect.size
 		_check(_rect_inside(rect, viewport_size), "%s button %d stays on-screen" % [label, index + 1])
 		_check(rect.size.y >= 90.0, "%s button %d remains touch-friendly" % [label, index + 1])
+		_check(rect.size.is_equal_approx(reference_size), "%s button %d uses the consistent menu size" % [label, index + 1])
 		if index > 0:
 			_check(not previous_rect.intersects(rect), "%s buttons %d and %d do not overlap" % [label, index, index + 1])
 			_check(rect.position.y - previous_rect.end.y >= viewport_size.y * 0.015, "%s buttons %d and %d have a clear vertical gap" % [label, index, index + 1])
