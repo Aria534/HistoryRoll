@@ -35,8 +35,11 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	var game = GameplayScene.instantiate(); game.progress_manager = progress; game.shuffle_questions = false
 	viewport.add_child(game); await process_frame; await process_frame
 	_check(game.question_label.visible, "Level %d question is visible before rolling at %s" % [level_id, viewport_size])
-	_check(game.roll_button.disabled, "Level %d dice is initially disabled" % level_id)
-	_check(game.turn_message_label.visible, "Level %d displays the dedicated event banner" % level_id)
+	_check(game.question_popup_layer.visible, "Level %d question opens in a modal popup" % level_id)
+	_check(game.question_popup_layer.z_index > game.board_panel.z_index, "Level %d question popup appears above the board" % level_id)
+	_check(game.roll_button.visible and game.roll_button.disabled, "Level %d bottom Roll Dice is initially visible and disabled" % level_id)
+	_check(_rect_inside(game.roll_button.get_global_rect(), viewport_size), "Level %d bottom Roll Dice stays within the portrait safe area" % level_id)
+	_check(not game.turn_message_label.visible and not game.feedback_label.visible, "Level %d removes the old instruction descriptions" % level_id)
 	if level_id == 1:
 		_check(game.background.texture.resource_path.ends_with("Dreamy Philippine Bay Boardwalk.png"), "Level 1 uses the Philippine coastal background")
 		var quiz_style := game.quiz_panel.get_theme_stylebox("panel") as StyleBoxTexture
@@ -45,7 +48,7 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 			"Level 1 uses the Filipino bamboo-and-parchment quiz frame"
 		)
 		_check(game.get_node("%DiceLabel").get_parent().has_node("DiceIcon"), "Die Result card includes its decorative die icon")
-		_check(game.get_node("MarginContainer/Content/BodyCenter/Body/QuizPanel/QuizMargin/QuizContent/TurnControls/ControlDivider").visible, "quiz lower controls retain the gold divider")
+		_check(not game.get_node("QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls/ControlDivider").visible, "quiz popup removes the old divider")
 	var choice_count: int = game.current_question.get("choices", []).size()
 	var expected_columns: int = choice_count if choice_count <= 3 else 2
 	_check(game.answers_grid.columns == expected_columns, "Level %d balances its %d answer choices across the quiz row" % [level_id, choice_count])
@@ -58,15 +61,16 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	var expected_board_height := clampf(
 		(float(viewport_size.x) - 52.0) * float(game.board_view.rows) / float(game.board_view.columns) + 56.0,
 		520.0,
-		minf(900.0, float(viewport_size.y) * 0.48)
+		minf(1000.0, float(viewport_size.y) * 0.68)
 	)
 	_check(game.board_panel.size.y >= expected_board_height - 0.1, "Level %d board preserves its responsive aspect-based height" % level_id)
-	_check(game.quiz_panel.size.y >= 480.0, "Level %d reference-style quiz panel has sufficient vertical space" % level_id)
+	_check(game.quiz_panel.size.y >= 390.0, "Level %d compact popup has sufficient vertical space" % level_id)
 	_check(_rect_inside(back_button.get_global_rect(), viewport_size), "Level %d Back button respects portrait safe bounds" % level_id)
 	_check(_rect_inside(game.board_panel.get_global_rect(), viewport_size), "Level %d board remains fully visible" % level_id)
 	_check(_rect_inside(game.quiz_panel.get_global_rect(), viewport_size), "Level %d question controls remain fully visible" % level_id)
 	_check(game.board_view.get_board_rect().size.x <= game.board_view.size.x + 0.1, "Level %d board fits horizontally" % level_id)
 	_check(game.board_view.player_sprite.texture != null and game.board_view.player_sprite.visible, "Level %d current hero chibi is visible" % level_id)
+	_check(game.board_view.player_sprite.texture is AtlasTexture, "Level %d start token uses a cropped face portrait" % level_id)
 	_check(game.board_view.player_token_label.visible == false, "Level %d no longer shows start initials over the chibi" % level_id)
 	var player_center: Vector2 = game.board_view.player_token.position + game.board_view.player_token.size / 2.0
 	_check(player_center.distance_to(game.board_view.get_tile_center(1)) < 1.0, "Level %d current hero starts on Tile 1" % level_id)
@@ -84,7 +88,9 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	_check(finish_center.distance_to(game.board_view.get_tile_center(game.tile_count)) < 1.0, "Level %d finish marker is centered on the final tile" % level_id)
 	if level_id < 6:
 		_check(game.board_view.waiting_hero_sprite.texture != null and game.board_view.waiting_hero_sprite.visible, "Level %d next unlock hero chibi is visible at the finish" % level_id)
-		_check(game.board_view.waiting_hero_sprite.texture.resource_path.ends_with("_wave.png"), "Level %d finish hero uses its waving pose" % level_id)
+		var waiting_portrait := game.board_view.waiting_hero_sprite.texture as AtlasTexture
+		_check(waiting_portrait != null and waiting_portrait.atlas.resource_path.ends_with("_chibi.png"), "Level %d finish face portrait excludes the full-body waving pose" % level_id)
+		_check(waiting_portrait != null and is_equal_approx(waiting_portrait.region.size.x, waiting_portrait.region.size.y), "Level %d finish token uses a square face crop" % level_id)
 		_check(game.board_view.waiting_hero_label.visible == false, "Level %d next hero chibi replaces finish initials" % level_id)
 		if level_id == 1:
 			var wave_rotation_before: float = game.board_view.waiting_hero_sprite.rotation

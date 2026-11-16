@@ -116,15 +116,14 @@ func set_hero_tokens(
 	if waiting_hero_sprite == null:
 		waiting_hero_sprite = _ensure_token_sprite(waiting_hero_token, "WaitingHeroSprite")
 
-	player_token.tooltip_text = "%s board chibi" % player_name
-	player_sprite.texture = _load_token_texture(player_portrait_path)
+	player_token.tooltip_text = "%s face portrait" % player_name
+	player_sprite.texture = _load_face_texture(player_portrait_path)
 	player_sprite.visible = player_sprite.texture != null
 	player_token_label.text = _initials(player_name)
 	player_token_label.visible = not player_sprite.visible
 
-	waiting_hero_token.tooltip_text = "%s next hero" % waiting_name
-	var waiting_display_path := _get_wave_variant_path(waiting_portrait_path)
-	waiting_hero_sprite.texture = _load_token_texture(waiting_display_path)
+	waiting_hero_token.tooltip_text = "%s next hero face portrait" % waiting_name
+	waiting_hero_sprite.texture = _load_face_texture(waiting_portrait_path)
 	waiting_hero_sprite.visible = waiting_hero_sprite.texture != null and not final_marker
 	waiting_hero_label.text = "TROPHY" if final_marker else _initials(waiting_name)
 	waiting_hero_label.visible = not waiting_hero_sprite.visible
@@ -504,6 +503,25 @@ func _load_token_texture(path: String) -> Texture2D:
 	if path.is_empty() or not ResourceLoader.exists(path):
 		return null
 	return load(path) as Texture2D
+
+
+func _load_face_texture(path: String) -> Texture2D:
+	var source := _load_token_texture(path)
+	if source == null:
+		return null
+	var source_size := source.get_size()
+	if source_size.x <= 0.0 or source_size.y <= 0.0:
+		return source
+	# Every gameplay portrait is a tall chibi sheet. Present only the upper head
+	# and shoulder area on board tiles so the token reads as a face portrait.
+	var crop_size := floorf(minf(source_size.x * 0.68, source_size.y * 0.40))
+	var crop_x := floorf((source_size.x - crop_size) * 0.5)
+	var crop_y := floorf(source_size.y * 0.018)
+	var portrait := AtlasTexture.new()
+	portrait.atlas = source
+	portrait.region = Rect2(crop_x, crop_y, crop_size, crop_size)
+	portrait.filter_clip = true
+	return portrait
 
 
 func _get_wave_variant_path(path: String) -> String:
