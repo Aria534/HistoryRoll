@@ -1,7 +1,8 @@
 extends Control
 
 const MAIN_MENU_SCENE: String = "res://main_menu_tscn.tscn"
-const STORY_MODE_SCENE: String = "res://story_mode.tscn"
+const STORY_MODE_SCENE: String = "res://hero_story_video_player.tscn"
+const HERO_CARDS_MUSIC: String = "res://assets/audio/music/main_menu.ogg"
 const LevelCatalog = preload("res://level_catalog.gd")
 const TITLE_FONT = preload("res://assets/fonts/TitanOne-Regular.ttf")
 const BODY_FONT = preload("res://assets/fonts/Roboto-Variable.ttf")
@@ -19,6 +20,7 @@ const LOCKED_GRAY := Color("55575A")
 @onready var wood_frame: PanelContainer = %WoodFrame
 @onready var title_label: Label = %TitleLabel
 @onready var hero_list: VBoxContainer = %HeroList
+@onready var scroll_container: ScrollContainer = $SafeArea/WoodFrame/FrameMargin/Content/ScrollContainer
 @onready var status_label: Label = %StatusLabel
 @onready var back_button: Button = %BackButton
 
@@ -32,6 +34,7 @@ func _ready() -> void:
 	_apply_scene_theme()
 	back_button.pressed.connect(_on_back_pressed)
 	progress_manager.progress_changed.connect(_refresh_collection)
+	_play_background_music()
 	_refresh_collection()
 
 
@@ -75,6 +78,7 @@ func _refresh_collection() -> void:
 		hero_list.add_child(_build_hero_card(character))
 
 	status_label.text = "Selected Hero: %s" % _get_selected_hero_name()
+	call_deferred("_focus_selected_story_card")
 
 
 func _build_hero_card(character: Dictionary) -> Button:
@@ -151,7 +155,7 @@ func _build_hero_card(character: Dictionary) -> Button:
 	theme_label.add_theme_stylebox_override("normal", _make_style(Color("E7B755"), Color("B87520"), 2, 9))
 	details.add_child(theme_label)
 	if compact:
-		details.add_child(_build_status_badges(unlocked, true, true))
+		details.add_child(_build_status_badges(unlocked, true, true, level_id))
 
 	details.add_child(_fact_label(str(character.get("description", "")), compact, true))
 	details.add_child(_fact_label(
@@ -169,7 +173,7 @@ func _build_hero_card(character: Dictionary) -> Button:
 	details.add_child(_fact_label("LEGACY: %s" % str(character.get("historical_legacy", "")), compact))
 
 	if not compact:
-		row.add_child(_build_status_badges(unlocked, false, false))
+		row.add_child(_build_status_badges(unlocked, false, false, level_id))
 	button.pressed.connect(_on_character_pressed.bind(level_id, character_id))
 	return button
 
@@ -196,7 +200,7 @@ func _build_portrait(character: Dictionary, unlocked: bool, compact: bool) -> Pa
 	return portrait_frame
 
 
-func _build_status_badges(_unlocked: bool, compact: bool, horizontal: bool) -> BoxContainer:
+func _build_status_badges(_unlocked: bool, compact: bool, horizontal: bool, level_id: int) -> BoxContainer:
 	var badges: BoxContainer
 	if horizontal:
 		badges = HBoxContainer.new()
@@ -207,7 +211,8 @@ func _build_status_badges(_unlocked: bool, compact: bool, horizontal: bool) -> B
 	badges.alignment = BoxContainer.ALIGNMENT_CENTER
 	badges.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var story_badge := _make_badge("WATCH\nSTORY", GREEN, GOLD, compact)
+	var watched: bool = progress_manager.has_method("is_story_watched") and bool(progress_manager.is_story_watched(level_id))
+	var story_badge := _make_badge("STORY\nWATCHED" if watched else "WATCH\nSTORY", GREEN, GOLD, compact)
 	story_badge.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	badges.add_child(story_badge)
 	return badges
@@ -291,6 +296,22 @@ func _get_selected_hero_name() -> String:
 		if str(character.get("id", "")) == progress_manager.selected_hero:
 			return str(character.get("name", "Hero"))
 	return "HistoryRoll Explorer"
+
+
+func _focus_selected_story_card() -> void:
+	if progress_manager == null or hero_list.get_child_count() == 0:
+		return
+	var index := clampi(int(progress_manager.selected_story_level) - 1, 0, hero_list.get_child_count() - 1)
+	var card := hero_list.get_child(index) as Control
+	if card != null:
+		scroll_container.ensure_control_visible(card)
+		card.grab_focus()
+
+
+func _play_background_music() -> void:
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("play_music"):
+		audio_manager.play_music(HERO_CARDS_MUSIC, 0.45)
 
 
 func _on_character_pressed(source_level: int, character_id: String) -> void:
