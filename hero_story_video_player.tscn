@@ -1,0 +1,357 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://hero_story_video_player.gd" id="1_script"]
+[ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="2_title"]
+[ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="3_body"]
+
+[sub_resource type="StyleBoxFlat" id="Style_control_button"]
+bg_color = Color(0.17, 0.075, 0.035, 0.92)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.94, 0.63, 0.2, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="Style_control_hover"]
+bg_color = Color(0.32, 0.13, 0.055, 0.98)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 0.77, 0.33, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="Style_ending"]
+bg_color = Color(0.105, 0.045, 0.02, 0.97)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.96, 0.65, 0.2, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0, 0, 0, 0.65)
+shadow_size = 14
+
+[sub_resource type="StyleBoxFlat" id="Style_play"]
+bg_color = Color(0.13, 0.48, 0.12, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.91, 0.7, 0.19, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="Style_play_hover"]
+bg_color = Color(0.2, 0.62, 0.17, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(1, 0.83, 0.32, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="Style_disabled"]
+bg_color = Color(0.3, 0.3, 0.3, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.55, 0.55, 0.55, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+
+[sub_resource type="StyleBoxFlat" id="Style_progress_bg"]
+bg_color = Color(0.05, 0.05, 0.05, 0.8)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[sub_resource type="StyleBoxFlat" id="Style_progress_fill"]
+bg_color = Color(0.96, 0.64, 0.17, 1)
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[node name="HeroStoryVideoPlayer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.012, 0.012, 0.018, 1)
+
+[node name="VideoAspect" type="AspectRatioContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+ratio = 0.5625
+stretch_mode = 2
+
+[node name="VideoPlayer" type="VideoStreamPlayer" parent="VideoAspect"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+expand = true
+bus = &"SFX"
+
+[node name="VideoStatusLabel" type="Label" parent="."]
+unique_name_in_owner = true
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 52.0
+offset_top = 220.0
+offset_right = -52.0
+offset_bottom = -360.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.68, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.03, 0.015, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_body")
+theme_override_font_sizes/font_size = 27
+text = "STORY VIDEO COMING SOON"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="FadeOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+z_index = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ControlsLayer" type="Control" parent="."]
+unique_name_in_owner = true
+z_index = 4
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SafeArea" type="MarginContainer" parent="ControlsLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 28.0
+offset_right = -24.0
+offset_bottom = -34.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ControlColumn" type="VBoxContainer" parent="ControlsLayer/SafeArea"]
+layout_mode = 2
+
+[node name="TopControls" type="HBoxContainer" parent="ControlsLayer/SafeArea/ControlColumn"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 2
+
+[node name="PauseResumeButton" type="Button" parent="ControlsLayer/SafeArea/ControlColumn/TopControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(178, 72)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.82, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.15, 0.05, 0.02, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("2_title")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("Style_control_button")
+theme_override_styles/hover = SubResource("Style_control_hover")
+theme_override_styles/pressed = SubResource("Style_control_button")
+text = "PAUSE"
+
+[node name="SkipButton" type="Button" parent="ControlsLayer/SafeArea/ControlColumn/TopControls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(156, 72)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.82, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.15, 0.05, 0.02, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("2_title")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("Style_control_button")
+theme_override_styles/hover = SubResource("Style_control_hover")
+theme_override_styles/pressed = SubResource("Style_control_button")
+text = "SKIP"
+
+[node name="Spacer" type="Control" parent="ControlsLayer/SafeArea/ControlColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VideoProgress" type="ProgressBar" parent="ControlsLayer/SafeArea/ControlColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("Style_progress_bg")
+theme_override_styles/fill = SubResource("Style_progress_fill")
+show_percentage = false
+
+[node name="EndingPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 3
+layout_mode = 1
+anchor_left = 0.08
+anchor_top = 0.23
+anchor_right = 0.92
+anchor_bottom = 0.77
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("Style_ending")
+
+[node name="EndingMargin" type="MarginContainer" parent="EndingPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 34
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 34
+theme_override_constants/margin_bottom = 34
+
+[node name="EndingContent" type="VBoxContainer" parent="EndingPanel/EndingMargin"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="EndingStatusLabel" type="Label" parent="EndingPanel/EndingMargin/EndingContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.72, 0.26, 1)
+theme_override_fonts/font = ExtResource("3_body")
+theme_override_font_sizes/font_size = 19
+text = "OPTIONAL HERO STORY"
+horizontal_alignment = 1
+
+[node name="HeroNameLabel" type="Label" parent="EndingPanel/EndingMargin/EndingContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.94, 0.73, 1)
+theme_override_colors/font_outline_color = Color(0.15, 0.045, 0.015, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("2_title")
+theme_override_font_sizes/font_size = 40
+text = "FILIPINO HERO"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HeroTitleLabel" type="Label" parent="EndingPanel/EndingMargin/EndingContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.69, 0.25, 1)
+theme_override_fonts/font = ExtResource("3_body")
+theme_override_font_sizes/font_size = 23
+text = "HERO STORY"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ContributionLabel" type="Label" parent="EndingPanel/EndingMargin/EndingContent"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 0.96, 0.86, 1)
+theme_override_fonts/font = ExtResource("3_body")
+theme_override_font_sizes/font_size = 24
+text = "Hero contribution"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="PlayLevelButton" type="Button" parent="EndingPanel/EndingMargin/EndingContent"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 78)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 1, 0.9, 1)
+theme_override_colors/font_disabled_color = Color(0.78, 0.78, 0.76, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.16, 0.025, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("2_title")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("Style_play")
+theme_override_styles/hover = SubResource("Style_play_hover")
+theme_override_styles/pressed = SubResource("Style_play")
+theme_override_styles/disabled = SubResource("Style_disabled")
+text = "PLAY LEVEL"
+
+[node name="ReplayButton" type="Button" parent="EndingPanel/EndingMargin/EndingContent"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.82, 1)
+theme_override_colors/font_disabled_color = Color(0.65, 0.65, 0.65, 1)
+theme_override_colors/font_outline_color = Color(0.15, 0.05, 0.02, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("2_title")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("Style_control_button")
+theme_override_styles/hover = SubResource("Style_control_hover")
+theme_override_styles/pressed = SubResource("Style_control_button")
+theme_override_styles/disabled = SubResource("Style_disabled")
+text = "REPLAY STORY"
+
+[node name="BackButton" type="Button" parent="EndingPanel/EndingMargin/EndingContent"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0.15, 0.05, 0.02, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("2_title")
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("Style_control_button")
+theme_override_styles/hover = SubResource("Style_control_hover")
+theme_override_styles/pressed = SubResource("Style_control_button")
+text = "BACK TO HERO CARD"
