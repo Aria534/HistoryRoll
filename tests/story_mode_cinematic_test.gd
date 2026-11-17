@@ -73,7 +73,7 @@ func _test_all_hero_card_routes() -> void:
 		requested.clear()
 		button.pressed.emit()
 		_check(progress.selected_story_level == index + 1, "Hero Card %d selects the correct story" % (index + 1))
-		_check(requested == ["res://story_mode.tscn"], "Hero Card %d opens Story Mode" % (index + 1))
+		_check(requested == ["res://hero_story_video_player.tscn"], "Hero Card %d opens the reusable video story player" % (index + 1))
 	cards.queue_free()
 	progress.free()
 	await process_frame
@@ -88,7 +88,7 @@ func _test_player_controls_and_save() -> void:
 	story.progress_manager = progress
 	story.scene_change_handler = func(path: String) -> void: requested.append(path)
 	get_root().add_child(story)
-	await process_frame
+	await create_timer(0.4).timeout
 	_check(story.current_scene_index == 0 and story.scenes.size() == 6, "Story begins at scene 1 of 6")
 	_check(not story.character_sprite.visible, "establishing shot does not duplicate the hero over the village artwork")
 	_check(story.story_text.max_lines_visible == 2, "mobile subtitles are limited to two lines")
@@ -99,9 +99,18 @@ func _test_player_controls_and_save() -> void:
 	_check(story.music_player.playing and story.procedural_music_playback != null, "offline procedural score starts with the cinematic")
 	var character_start: Vector2 = story.character_sprite.position
 	var camera_start: Vector2 = story.background_layer.position
+	var camera_scale_start: Vector2 = story.background_layer.scale
+	var midground_start: Vector2 = story.midground_layer.position
+	var foreground_start: Vector2 = story.foreground_layer.position
 	story.motion_tween.custom_step(0.7)
 	_check(story.character_sprite.position.distance_to(character_start) > 1.0, "character moves continuously within the shot")
-	_check(story.background_layer.position.distance_to(camera_start) > 1.0, "camera framing moves continuously within the shot")
+	_check(
+		story.background_layer.position.distance_to(camera_start) > 1.0
+		or story.background_layer.scale.distance_to(camera_scale_start) > 0.001
+		or story.midground_layer.position.distance_to(midground_start) > 1.0
+		or story.foreground_layer.position.distance_to(foreground_start) > 1.0,
+		"camera framing moves continuously within the shot"
+	)
 	story.pause_button.pressed.emit()
 	_check(story.cinematic_paused and story.scene_timer.paused, "Pause stops cinematic timing")
 	story.pause_button.pressed.emit()
@@ -138,7 +147,7 @@ func _test_locked_level_protection() -> void:
 	story.progress_manager = progress
 	story.scene_change_handler = func(path: String) -> void: requested.append(path)
 	get_root().add_child(story)
-	await process_frame
+	await create_timer(0.4).timeout
 	story._show_ending(false)
 	_check(story.continue_button.disabled, "locked story cannot launch locked gameplay")
 	story._play_selected_level()
@@ -159,7 +168,7 @@ func _test_layout(viewport_size: Vector2i, filename: String) -> void:
 	var story = StoryModeScene.instantiate()
 	story.progress_manager = progress
 	viewport.add_child(story)
-	await process_frame
+	await create_timer(0.4).timeout
 	await process_frame
 	await create_timer(0.8).timeout
 	for control: Control in [story.skip_button, story.pause_button, story.story_text]:

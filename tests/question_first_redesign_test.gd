@@ -165,18 +165,14 @@ func _test_story_entry() -> void:
 	get_root().add_child(cards); await process_frame
 	var hero_button := cards.hero_list.get_child(3) as Button
 	hero_button.pressed.emit()
-	_check(requested == ["res://story_mode.tscn"], "Hero Cards opens standalone Story Mode")
+	_check(requested == ["res://hero_story_video_player.tscn"], "Hero Cards opens the reusable video story player")
 	_check(progress.selected_story_level == 4, "Hero Cards passes the selected hero story")
 	cards.queue_free(); await process_frame
-	var story = load("res://story_mode.tscn").instantiate(); story.progress_manager = progress
+	var story = load("res://hero_story_video_player.tscn").instantiate(); story.progress_manager = progress
 	requested.clear(); story.scene_change_handler = func(path: String): requested.append(path)
 	get_root().add_child(story); await process_frame
 	_check(story.hero_name_label.text.to_lower().contains("antonio luna"), "Story Mode displays the selected hero")
-	story._on_scene_timeout()
-	story.transition_tween.custom_step(0.5)
-	await process_frame
-	_check(story.current_scene_index == 1 and requested.is_empty(), "Story Mode timer advances within the six-scene short film")
-	story._show_ending(false)
+	_check(story.video_path.ends_with("antonio_luna_story.ogv"), "Story Mode selects the hero's finished video path")
 	story.back_button.pressed.emit()
 	_check(requested == ["res://hero_cards.tscn"], "Back to Hero Card returns from Story Mode")
 	story.queue_free(); await process_frame; progress.free()
