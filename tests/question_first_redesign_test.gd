@@ -51,6 +51,10 @@ func _test_catalog_and_boards() -> void:
 		_check(board.get("ladders", {}).size() == expected_ladders[level_id - 1], "Level %d has the intended ladder count" % level_id)
 		_check(board.get("question_tiles", []).is_empty(), "Level %d has no Question Mark tiles" % level_id)
 		_check(str(level.get("hero_id", "")) == expected_heroes[level_id - 1], "Level %d uses the approved hero" % level_id)
+		var hero_asset_id := str(level.get("portrait_path", "")).get_file().trim_suffix("_chibi.png")
+		for expression: String in ["happy", "sad"]:
+			var reaction_path := "res://assets/gameplay_chibis/reactions/%s_%s.png" % [hero_asset_id, expression]
+			_check(ResourceLoader.exists(reaction_path, "Texture2D"), "Level %d has its %s chibi face" % [level_id, expression])
 		var cells := {}
 		for tile: int in range(1, expected_tiles[level_id - 1] + 1):
 			cells[BoardRules.tile_to_visual_cell(tile, int(board.columns), int(board.rows))] = true
@@ -117,7 +121,9 @@ func _test_question_first_gameplay() -> void:
 	_check(game.score == 10, "correct answer awards 10 points")
 	_check(game.state == GameplayScript.GameplayState.READY_TO_ROLL, "answer enables exactly one dice roll")
 	_check(not game.roll_button.disabled and game.roll_button.visible and game.roll_button.text == "Roll Dice", "answer reveals and enables the Roll Dice button")
-	_check(game.reaction_label.text.contains("HAPPY"), "correct answer shows the happy chibi placeholder")
+	_check(game.reaction_popup.visible and game.reaction_title.text == "HOORAY!", "correct answer shows the happy chibi score popup")
+	_check(game.reaction_score.text == "+10 POINTS", "correct reaction displays the awarded score")
+	_check(game.reaction_face.texture.resource_path.ends_with("lapulapu_happy.png"), "correct reaction uses the hero's actual happy-face portrait")
 	game.answer_buttons[correct].pressed.emit()
 	_check(game.score == 10, "duplicate answer cannot duplicate score")
 	var roll_one: Array[int] = [1]
@@ -132,7 +138,8 @@ func _test_question_first_gameplay() -> void:
 	game.answer_buttons[wrong].pressed.emit()
 	_check(game.score == 8, "wrong answer deducts 2 points")
 	_check(not game.roll_button.disabled, "wrong answer still allows a dice roll")
-	_check(game.reaction_label.text.contains("SAD"), "wrong answer shows the sad chibi placeholder")
+	_check(game.reaction_popup.visible and game.reaction_title.text == "OH NO!", "wrong answer shows the sad chibi popup")
+	_check(game.reaction_face.texture.resource_path.ends_with("lapulapu_sad.png"), "wrong reaction uses the hero's actual sad-face portrait")
 	game.player_position = 14; game.board_view.set_player_position_immediate(14)
 	game.set_controlled_dice_results(roll_one); game.roll_button.pressed.emit()
 	_check(await _wait_state(game, GameplayScript.GameplayState.QUESTION), "Shield Tile resolves before next question")

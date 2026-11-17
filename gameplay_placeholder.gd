@@ -41,7 +41,10 @@ const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 @onready var answers_grid: GridContainer = $QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/Answers
 @onready var turn_message_label: Label = %TurnMessageLabel
 @onready var feedback_label: Label = %FeedbackLabel
-@onready var reaction_label: Label = %ReactionLabel
+@onready var reaction_popup: PanelContainer = %ReactionPopup
+@onready var reaction_face: TextureRect = %ReactionFace
+@onready var reaction_title: Label = %ReactionTitle
+@onready var reaction_score: Label = %ReactionScore
 @onready var dice_label: Label = %DiceLabel
 @onready var roll_button: Button = %RollButton
 @onready var next_turn_button: Button = %NextTurnButton
@@ -88,6 +91,7 @@ var results_transition_started: bool = false
 var dice_roller
 var quiz_session = QuizSession.new()
 var question_popup_tween: Tween
+var reaction_tween: Tween
 
 
 func _ready() -> void:
@@ -199,7 +203,7 @@ func _begin_question(question_type: String) -> void:
 	question_label.text = str(current_question.get("question_text", ""))
 	fixture_notice.visible = question_label.text.begins_with("DEVELOPMENT PLACEHOLDER")
 	fixture_notice.text = "DEVELOPMENT QUESTION FIXTURE — NOT FINAL CONTENT"
-	reaction_label.hide()
+	reaction_popup.hide()
 	turn_message_label.hide()
 	feedback_label.hide()
 	question_label.show()
@@ -288,8 +292,9 @@ func _on_answer_pressed(choice_index: int) -> void:
 	_set_popup_height(520.0)
 	_update_status_labels()
 	_set_state(GameplayState.READY_TO_ROLL)
-	await get_tree().create_timer(0.55).timeout
+	await get_tree().create_timer(0.95).timeout
 	if state == GameplayState.READY_TO_ROLL:
+		reaction_popup.hide()
 		await _hide_question_popup()
 
 
@@ -506,16 +511,56 @@ func _set_state(new_state: GameplayState) -> void:
 
 
 func _show_chibi_reaction(correct: bool, points: int) -> void:
-	var hero_name := str(level_data.get("hero_name", "Hero"))
-	turn_message_label.hide()
-	reaction_label.text = "%s CHIBI PLACEHOLDER — %s — %s%d POINTS" % [
-		"HAPPY" if correct else "SAD", hero_name, "+" if correct else "-", points,
-	]
-	reaction_label.modulate = Color("#2f7d45") if correct else Color("#9b4a4a")
-	reaction_label.show()
-	reaction_label.scale = Vector2(0.85, 0.85)
-	var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(reaction_label, "scale", Vector2.ONE, 0.2)
+	if reaction_tween != null and reaction_tween.is_valid():
+		reaction_tween.kill()
+	reaction_face.texture = _get_reaction_face_texture(correct)
+	reaction_face.modulate = Color.WHITE
+	reaction_title.text = "HOORAY!" if correct else "OH NO!"
+	reaction_score.text = "%s%d POINTS" % ["+" if correct else "-", points]
+	reaction_popup.add_theme_stylebox_override("panel", _make_reaction_style(correct))
+	reaction_popup.show()
+	reaction_popup.pivot_offset = reaction_popup.size * 0.5
+	reaction_popup.scale = Vector2(0.62, 0.62)
+	reaction_popup.modulate.a = 0.0
+	reaction_face.rotation = -0.08 if correct else 0.06
+	reaction_face.position.y = 0.0
+	reaction_tween = create_tween().set_parallel(true)
+	reaction_tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	reaction_tween.tween_property(reaction_popup, "scale", Vector2.ONE, 0.28)
+	reaction_tween.tween_property(reaction_popup, "modulate:a", 1.0, 0.18)
+	reaction_tween.tween_property(reaction_face, "rotation", 0.08 if correct else -0.035, 0.32)
+	if correct:
+		reaction_tween.tween_property(reaction_face, "position:y", -7.0, 0.25)
+	else:
+		reaction_tween.tween_property(reaction_face, "position:y", 7.0, 0.32)
+
+
+func _get_reaction_face_texture(correct: bool) -> Texture2D:
+	var portrait_path := str(level_data.get("portrait_path", ""))
+	var hero_asset_id := portrait_path.get_file().trim_suffix("_chibi.png").to_lower()
+	if hero_asset_id.is_empty():
+		hero_asset_id = str(level_data.get("hero_id", "")).strip_edges().to_lower()
+	var expression := "happy" if correct else "sad"
+	var expression_path := "res://assets/gameplay_chibis/reactions/%s_%s.png" % [hero_asset_id, expression]
+	if not hero_asset_id.is_empty() and ResourceLoader.exists(expression_path, "Texture2D"):
+		return load(expression_path) as Texture2D
+	# Keep gameplay functional if a future level has no expression art yet.
+	return board_view.player_sprite.texture
+
+
+func _make_reaction_style(correct: bool) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#176B38") if correct else Color("#743242")
+	style.border_color = Color("#FFD45A") if correct else Color("#E6A56C")
+	style.set_border_width_all(6)
+	style.set_corner_radius_all(28)
+	style.shadow_color = Color(0.05, 0.02, 0.01, 0.62)
+	style.shadow_size = 12
+	style.content_margin_left = 28.0
+	style.content_margin_top = 22.0
+	style.content_margin_right = 28.0
+	style.content_margin_bottom = 22.0
+	return style
 
 
 func _update_status_labels() -> void:
@@ -572,6 +617,7 @@ func _hide_question_popup() -> void:
 	question_popup_tween.tween_property(quiz_panel, "scale", Vector2(0.94, 0.94), 0.16)
 	await question_popup_tween.finished
 	question_popup_layer.hide()
+	reaction_popup.hide()
 	question_popup_layer.modulate.a = 1.0
 	quiz_panel.scale = Vector2.ONE
 

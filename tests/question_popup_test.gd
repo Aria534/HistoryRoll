@@ -44,7 +44,8 @@ func _run() -> void:
 	game.answer_buttons[correct_index].pressed.emit()
 	_check(game.question_popup_layer.visible, "popup briefly remains open to present answer feedback")
 	_check(not game.roll_button.disabled, "answer enables the bottom Roll Dice button")
-	await create_timer(0.8).timeout
+	_check(game.reaction_popup.visible and game.reaction_title.text == "HOORAY!", "correct answer displays the hero score reaction")
+	await create_timer(1.3).timeout
 	_check(not game.question_popup_layer.visible, "question popup closes after answer feedback")
 
 	var controlled_roll: Array[int] = [1]

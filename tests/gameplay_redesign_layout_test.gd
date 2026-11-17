@@ -156,7 +156,10 @@ func _capture_reaction(correct: bool, filename: String) -> void:
 	var index := int(game.current_question.correct_index)
 	if not correct: index = (index + 1) % 4
 	game.answer_buttons[index].pressed.emit(); await process_frame
-	_check(game.reaction_label.visible, "%s chibi reaction is visible" % ("happy" if correct else "sad"))
+	_check(game.reaction_popup.visible, "%s chibi score popup is visible" % ("happy" if correct else "sad"))
+	_check(game.reaction_face.texture != null, "%s chibi popup uses the current hero face" % ("happy" if correct else "sad"))
+	_check(game.reaction_face.texture.resource_path.ends_with("lapulapu_%s.png" % ("happy" if correct else "sad")), "%s popup changes the actual chibi facial expression" % ("happy" if correct else "sad"))
+	_check(game.reaction_title.text == ("HOORAY!" if correct else "OH NO!"), "%s reaction title is correct" % ("happy" if correct else "sad"))
 	var image: Image = viewport.get_texture().get_image()
 	_check(image != null and not image.is_empty() and image.save_png(ProjectSettings.globalize_path("user://%s" % filename)) == OK, "%s is saved" % filename)
 	game.progress_manager = null; game.queue_free(); viewport.queue_free(); await process_frame; progress.free()
