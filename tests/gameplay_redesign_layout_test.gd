@@ -76,8 +76,10 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	_check(player_center.distance_to(game.board_view.get_tile_center(1)) < 1.0, "Level %d current hero starts on Tile 1" % level_id)
 	var board_rect: Rect2 = game.board_view.get_board_rect()
 	var cell_size := Vector2(board_rect.size.x / game.board_view.columns, board_rect.size.y / game.board_view.rows)
-	var previous_token_size := clampf(minf(cell_size.x, cell_size.y) * 0.86, 38.0, 96.0)
-	_check(game.board_view.player_token.size.x >= previous_token_size + 4.0, "Level %d current hero chibi is enlarged" % level_id)
+	var natural_token_size := clampf(minf(cell_size.x, cell_size.y) * 0.88, 44.0, 124.0)
+	_check(is_equal_approx(game.board_view.player_token.size.x, natural_token_size), "Level %d current hero portrait keeps natural tile padding" % level_id)
+	var token_style := game.board_view.player_token.get_theme_stylebox("panel") as StyleBoxFlat
+	_check(token_style != null and is_zero_approx(token_style.bg_color.a), "Level %d hero portrait has no colored backing box" % level_id)
 	if level_id == 1:
 		var player_rotation_before: float = game.board_view.player_sprite.rotation
 		var player_position_before: Vector2 = game.board_view.player_sprite.position

@@ -512,11 +512,12 @@ func _load_face_texture(path: String) -> Texture2D:
 	var source_size := source.get_size()
 	if source_size.x <= 0.0 or source_size.y <= 0.0:
 		return source
-	# Every gameplay portrait is a tall chibi sheet. Present only the upper head
-	# and shoulder area on board tiles so the token reads as a face portrait.
-	var crop_size := floorf(minf(source_size.x * 0.68, source_size.y * 0.40))
+	# Keep the hero recognizable as a face portrait without cropping tightly
+	# around the cheeks. The wider head-and-shoulder crop gives the hair,
+	# headwear, and costume neckline natural breathing room on the board tile.
+	var crop_size := floorf(minf(source_size.x * 0.82, source_size.y * 0.50))
 	var crop_x := floorf((source_size.x - crop_size) * 0.5)
-	var crop_y := floorf(source_size.y * 0.018)
+	var crop_y := floorf(source_size.y * 0.006)
 	var portrait := AtlasTexture.new()
 	portrait.atlas = source
 	portrait.region = Rect2(crop_x, crop_y, crop_size, crop_size)
@@ -537,7 +538,7 @@ func _position_tokens() -> void:
 		return
 	var board_rect := get_board_rect()
 	var cell_size := Vector2(board_rect.size.x / columns, board_rect.size.y / rows)
-	var token_size := clampf(minf(cell_size.x, cell_size.y) * 0.98, 44.0, 136.0)
+	var token_size := clampf(minf(cell_size.x, cell_size.y) * 0.88, 44.0, 124.0)
 	player_token.size = Vector2(token_size, token_size)
 	waiting_hero_token.size = Vector2(token_size, token_size)
 	player_token.position = _get_token_top_left(displayed_position, player_token)
@@ -573,27 +574,27 @@ func _restart_idle_animations() -> void:
 	if player_sprite != null and player_sprite.visible:
 		player_sprite.rotation = -0.025
 		player_sprite.position = Vector2.ZERO
-		player_sprite.scale = Vector2(1.12, 1.12)
+		player_sprite.scale = Vector2.ONE
 		player_idle_tween = create_tween().set_loops()
 		player_idle_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		player_idle_tween.tween_property(player_sprite, "rotation", 0.025, 0.68)
-		player_idle_tween.parallel().tween_property(player_sprite, "scale", Vector2(1.17, 1.08), 0.68)
-		player_idle_tween.parallel().tween_property(player_sprite, "position", Vector2(0.0, -5.0), 0.68)
+		player_idle_tween.parallel().tween_property(player_sprite, "scale", Vector2(1.05, 0.98), 0.68)
+		player_idle_tween.parallel().tween_property(player_sprite, "position", Vector2(0.0, -3.0), 0.68)
 		player_idle_tween.tween_property(player_sprite, "rotation", -0.025, 0.68)
-		player_idle_tween.parallel().tween_property(player_sprite, "scale", Vector2(1.12, 1.12), 0.68)
+		player_idle_tween.parallel().tween_property(player_sprite, "scale", Vector2.ONE, 0.68)
 		player_idle_tween.parallel().tween_property(player_sprite, "position", Vector2.ZERO, 0.68)
 	if waiting_hero_sprite != null and waiting_hero_sprite.visible:
 		waiting_animation_active = true
 		waiting_hero_sprite.rotation = -0.085
 		waiting_hero_sprite.position = Vector2.ZERO
-		waiting_hero_sprite.scale = Vector2(1.1, 1.1)
+		waiting_hero_sprite.scale = Vector2.ONE
 		waiting_idle_tween = create_tween().set_loops()
 		waiting_idle_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		waiting_idle_tween.tween_property(waiting_hero_sprite, "rotation", 0.085, 0.42)
-		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "scale", Vector2(1.15, 1.08), 0.42)
-		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "position", Vector2(0.0, -4.0), 0.42)
+		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "scale", Vector2(1.06, 0.99), 0.42)
+		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "position", Vector2(0.0, -3.0), 0.42)
 		waiting_idle_tween.tween_property(waiting_hero_sprite, "rotation", -0.085, 0.42)
-		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "scale", Vector2(1.1, 1.1), 0.42)
+		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "scale", Vector2.ONE, 0.42)
 		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "position", Vector2.ZERO, 0.42)
 
 
