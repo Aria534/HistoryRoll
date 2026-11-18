@@ -270,6 +270,7 @@ func _on_answer_pressed(choice_index: int) -> void:
 		return
 	_set_state(GameplayState.ANSWER_FEEDBACK)
 	var is_correct := bool(result.get("correct", false))
+	_play_answer_sound(is_correct)
 	var correct_index := int(result.get("correct_index", -1))
 	if correct_index >= 0 and correct_index < answer_buttons.size():
 		answer_buttons[correct_index].modulate = Color("#a8df9f")
@@ -296,6 +297,15 @@ func _on_answer_pressed(choice_index: int) -> void:
 	if state == GameplayState.READY_TO_ROLL:
 		reaction_popup.hide()
 		await _hide_question_popup()
+
+
+func _play_answer_sound(is_correct: bool) -> void:
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager == null:
+		return
+	var method := "play_correct_answer" if is_correct else "play_incorrect_answer"
+	if audio_manager.has_method(method):
+		audio_manager.call(method)
 
 
 func _on_roll_pressed() -> void:

@@ -101,6 +101,9 @@ func _test_legacy_save_migration() -> void:
 		if FileAccess.file_exists(path): DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 func _test_question_first_gameplay() -> void:
+	var audio_manager: Node = get_root().get_node_or_null("AudioManager")
+	if audio_manager != null and audio_manager.has_method("set_sfx_enabled"):
+		audio_manager.set_sfx_enabled(true, false)
 	var progress := MockProgress.new()
 	var game = GameplayScene.instantiate()
 	game.progress_manager = progress
@@ -119,6 +122,7 @@ func _test_question_first_gameplay() -> void:
 	var correct := int(game.current_question.correct_index)
 	game.answer_buttons[correct].pressed.emit()
 	_check(game.score == 10, "correct answer awards 10 points")
+	_check(audio_manager == null or audio_manager.get_last_sfx_role() == "correct", "correct answer plays the positive feedback sound")
 	_check(game.state == GameplayScript.GameplayState.READY_TO_ROLL, "answer enables exactly one dice roll")
 	_check(not game.roll_button.disabled and game.roll_button.visible and game.roll_button.text == "Roll Dice", "answer reveals and enables the Roll Dice button")
 	_check(game.reaction_popup.visible and game.reaction_title.text == "HOORAY!", "correct answer shows the happy chibi score popup")
@@ -137,6 +141,7 @@ func _test_question_first_gameplay() -> void:
 	var wrong: int = (int(game.current_question.correct_index) + 1) % game.current_question.choices.size()
 	game.answer_buttons[wrong].pressed.emit()
 	_check(game.score == 8, "wrong answer deducts 2 points")
+	_check(audio_manager == null or audio_manager.get_last_sfx_role() == "incorrect", "wrong answer plays the negative feedback sound")
 	_check(not game.roll_button.disabled, "wrong answer still allows a dice roll")
 	_check(game.reaction_popup.visible and game.reaction_title.text == "OH NO!", "wrong answer shows the sad chibi popup")
 	_check(game.reaction_face.texture.resource_path.ends_with("lapulapu_sad.png"), "wrong reaction uses the hero's actual sad-face portrait")
