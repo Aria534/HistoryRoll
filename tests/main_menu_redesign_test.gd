@@ -14,6 +14,9 @@ func _init() -> void:
 
 func _run() -> void:
 	_cleanup_settings()
+	var audio_manager: Node = get_root().get_node_or_null("AudioManager")
+	if audio_manager != null and audio_manager.has_method("set_music_enabled"):
+		audio_manager.set_music_enabled(true, false)
 	await _test_main_menu_viewport(Vector2i(1024, 1536), "main_menu_1024x1536.png")
 	await _test_main_menu_viewport(Vector2i(720, 1280), "main_menu_720x1280.png")
 	await _test_settings()
@@ -33,7 +36,10 @@ func _test_main_menu_viewport(viewport_size: Vector2i, capture_name: String) -> 
 	viewport.add_child(menu)
 	await process_frame
 	await process_frame
+	var audio_manager: Node = get_root().get_node_or_null("AudioManager")
 	var label := "%dx%d" % [viewport_size.x, viewport_size.y]
+	_check(audio_manager != null and str(audio_manager.call("get_current_track_path")) == "res://assets/audio/music/main_menu.ogg", "%s Main Menu requests its looping music track" % label)
+	_check(audio_manager != null and bool(audio_manager.call("is_music_playing")), "%s Main Menu music is audible when Music is ON" % label)
 	_check(menu.size.round() == Vector2(viewport_size), "%s Main Menu fills viewport" % label)
 	_check(not menu.has_node("HistoryRollLogo"), "%s has no duplicate logo node" % label)
 	var background := menu.get_node("LiveBackground") as AnimatedSprite2D

@@ -10,9 +10,12 @@ const MAIN_MENU_TRACK := "res://assets/audio/music/main_menu.ogg"
 const LEVEL_SELECT_TRACK := "res://assets/audio/music/level_select.ogg"
 const GAMEPLAY_TRACK := "res://assets/audio/music/gameplay.ogg"
 const VICTORY_TRACK := "res://assets/audio/music/victory.ogg"
+const CORRECT_ANSWER_SFX := "res://assets/audio/sfx/correct_answer.ogg"
+const INCORRECT_ANSWER_SFX := "res://assets/audio/sfx/incorrect_answer.ogg"
 const SILENCE_DB := -60.0
 const FALLBACK_MIX_RATE := 22050.0
 const FALLBACK_GAIN := 2.6
+const SFX_POOL_SIZE := 4
 const FALLBACK_MELODIES := {
 	"main_menu": [72, 76, 79, 76, 74, 77, 81, 79, 72, 76, 79, 84, 81, 79, 77, 74],
 	"level_select": [76, 79, 81, 84, 81, 79, 77, 79, 76, 81, 84, 86, 84, 81, 79, 77],
@@ -33,28 +36,40 @@ const FALLBACK_TEMPO := {
 }
 
 @export_range(-40.0, 6.0, 0.5) var music_volume_db := -8.0
+@export_range(-40.0, 6.0, 0.5) var sfx_volume_db := -3.0
 
 var settings_path := DEFAULT_SETTINGS_PATH
 var music_enabled := true
+var sfx_enabled := true
 var current_track_path := ""
+var last_sfx_role := ""
 
 var _player: AudioStreamPlayer
+var _sfx_players: Array[AudioStreamPlayer] = []
 var _fade_tween: Tween
 var _transition_serial := 0
 var _reported_missing_tracks: Dictionary = {}
 var _fallback_playback: AudioStreamGeneratorPlayback
 var _fallback_role := ""
 var _fallback_time := 0.0
+var _fallback_sfx_cache: Dictionary = {}
 
 
 func _ready() -> void:
-	_ensure_music_bus()
+	_ensure_audio_buses()
 	_player = AudioStreamPlayer.new()
 	_player.name = "MusicPlayer"
 	_player.bus = "Music"
 	_player.volume_db = SILENCE_DB
 	add_child(_player)
-	_load_music_setting()
+	for index: int in range(SFX_POOL_SIZE):
+		var sfx_player := AudioStreamPlayer.new()
+		sfx_player.name = "SFXPlayer%d" % (index + 1)
+		sfx_player.bus = "SFX"
+		sfx_player.volume_db = sfx_volume_db
+		add_child(sfx_player)
+		_sfx_players.append(sfx_player)
+	_load_audio_settings()
 	_apply_bus_mute()
 
 
@@ -160,6 +175,54 @@ func get_current_track_path() -> String:
 	return current_track_path
 
 
+func play_correct_answer() -> bool:
+	return play_sfx(CORRECT_ANSWER_SFX, "correct")
+
+
+func play_incorrect_answer() -> bool:
+	return play_sfx(INCORRECT_ANSWER_SFX, "incorrect")
+
+
+func play_sfx(stream_path: String, fallback_role := "") -> bool:
+	if not sfx_enabled or _sfx_players.is_empty():
+		return false
+	var stream: AudioStream
+	if ResourceLoader.exists(stream_path, "AudioStream"):
+		stream = load(stream_path) as AudioStream
+	elif not fallback_role.is_empty():
+		stream = _get_fallback_sfx(fallback_role)
+	if stream == null:
+		push_warning("Sound effect could not be loaded: %s" % stream_path)
+		return false
+	var player := _get_available_sfx_player()
+	player.stop()
+	player.stream = stream
+	player.volume_db = sfx_volume_db
+	player.play()
+	last_sfx_role = fallback_role if not fallback_role.is_empty() else stream_path.get_file().get_basename()
+	return true
+
+
+func set_sfx_enabled(enabled: bool, save_setting := true) -> void:
+	sfx_enabled = enabled
+	var bus_index := AudioServer.get_bus_index("SFX")
+	if bus_index >= 0:
+		AudioServer.set_bus_mute(bus_index, not sfx_enabled)
+	if not sfx_enabled:
+		for sfx_player: AudioStreamPlayer in _sfx_players:
+			sfx_player.stop()
+	if save_setting:
+		_save_sfx_setting()
+
+
+func is_sfx_enabled() -> bool:
+	return sfx_enabled
+
+
+func get_last_sfx_role() -> String:
+	return last_sfx_role
+
+
 func is_using_fallback_music() -> bool:
 	return _player != null and _player.stream is AudioStreamGenerator
 
@@ -195,6 +258,54 @@ func _create_fallback_stream() -> AudioStreamGenerator:
 	generator.mix_rate = FALLBACK_MIX_RATE
 	generator.buffer_length = 0.5
 	return generator
+
+
+func _get_available_sfx_player() -> AudioStreamPlayer:
+	for sfx_player: AudioStreamPlayer in _sfx_players:
+		if not sfx_player.playing:
+			return sfx_player
+	return _sfx_players[0]
+
+
+func _get_fallback_sfx(role: String) -> AudioStreamWAV:
+	if _fallback_sfx_cache.has(role):
+		return _fallback_sfx_cache[role] as AudioStreamWAV
+	var stream := _create_fallback_sfx(role)
+	_fallback_sfx_cache[role] = stream
+	return stream
+
+
+func _create_fallback_sfx(role: String) -> AudioStreamWAV:
+	var sample_rate := 22050
+	var duration := 0.58 if role == "correct" else 0.46
+	var frame_count := int(sample_rate * duration)
+	var pcm := PackedByteArray()
+	pcm.resize(frame_count * 2)
+	for frame: int in range(frame_count):
+		var time := float(frame) / float(sample_rate)
+		var progress := time / duration
+		var frequency := 330.0
+		if role == "correct":
+			var notes := [523.25, 659.25, 783.99]
+			frequency = float(notes[mini(int(time / 0.17), notes.size() - 1)])
+		else:
+			frequency = 293.66 if time < duration * 0.48 else 220.0
+		var attack := minf(time / 0.018, 1.0)
+		var release := pow(maxf(0.0, 1.0 - progress), 1.6)
+		var envelope := attack * release
+		var sample := sin(TAU * frequency * time) * 0.46
+		sample += sin(TAU * frequency * 2.0 * time) * (0.12 if role == "correct" else 0.07)
+		if role != "correct":
+			sample += sin(TAU * 74.0 * time) * 0.06
+		var encoded := clampi(int(sample * envelope * 32767.0), -32768, 32767)
+		pcm.encode_s16(frame * 2, encoded)
+	var stream := AudioStreamWAV.new()
+	stream.format = AudioStreamWAV.FORMAT_16_BITS
+	stream.mix_rate = sample_rate
+	stream.stereo = false
+	stream.loop_mode = AudioStreamWAV.LOOP_DISABLED
+	stream.data = pcm
+	return stream
 
 
 func _get_track_role(track_path: String) -> String:
@@ -244,26 +355,32 @@ func _has_property(object: Object, property_name: StringName) -> bool:
 	return false
 
 
-func _ensure_music_bus() -> void:
-	if AudioServer.get_bus_index("Music") >= 0:
-		return
-	AudioServer.add_bus()
-	var bus_index := AudioServer.get_bus_count() - 1
-	AudioServer.set_bus_name(bus_index, "Music")
+func _ensure_audio_buses() -> void:
+	for bus_name: String in ["Music", "SFX"]:
+		if AudioServer.get_bus_index(bus_name) >= 0:
+			continue
+		AudioServer.add_bus()
+		var bus_index := AudioServer.get_bus_count() - 1
+		AudioServer.set_bus_name(bus_index, bus_name)
 
 
 func _apply_bus_mute() -> void:
 	var bus_index := AudioServer.get_bus_index("Music")
 	if bus_index >= 0:
 		AudioServer.set_bus_mute(bus_index, not music_enabled)
+	bus_index = AudioServer.get_bus_index("SFX")
+	if bus_index >= 0:
+		AudioServer.set_bus_mute(bus_index, not sfx_enabled)
 
 
-func _load_music_setting() -> void:
+func _load_audio_settings() -> void:
 	var config := ConfigFile.new()
 	if config.load(settings_path) != OK:
 		music_enabled = true
+		sfx_enabled = true
 		return
 	music_enabled = bool(config.get_value("audio", "music_enabled", true))
+	sfx_enabled = bool(config.get_value("audio", "sfx_enabled", true))
 
 
 func _save_music_setting() -> bool:
@@ -275,3 +392,27 @@ func _save_music_setting() -> bool:
 		push_warning("Unable to save HistoryRoll music setting: %s" % error_string(error))
 		return false
 	return true
+
+
+func _save_sfx_setting() -> bool:
+	var config := ConfigFile.new()
+	config.load(settings_path)
+	config.set_value("audio", "sfx_enabled", sfx_enabled)
+	var error := config.save(settings_path)
+	if error != OK:
+		push_warning("Unable to save HistoryRoll SFX setting: %s" % error_string(error))
+		return false
+	return true
+
+
+func _exit_tree() -> void:
+	_kill_fade()
+	if _player != null:
+		_player.stop()
+		_player.stream = null
+	for sfx_player: AudioStreamPlayer in _sfx_players:
+		sfx_player.stop()
+		sfx_player.stream = null
+	_sfx_players.clear()
+	_fallback_sfx_cache.clear()
+	_fallback_playback = null

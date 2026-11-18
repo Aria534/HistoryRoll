@@ -167,6 +167,8 @@ func _sync_audio_manager_music_setting() -> void:
 		# Settings owns the combined Music/SFX config write. The manager only
 		# applies the live global music state here, avoiding duplicate saves.
 		audio_manager.call("set_music_enabled", music_enabled, false)
+	if audio_manager != null and audio_manager.has_method("set_sfx_enabled"):
+		audio_manager.call("set_sfx_enabled", sfx_enabled, false)
 
 
 func _apply_bus_setting(bus_name: String, enabled: bool) -> void:
