@@ -23,6 +23,7 @@ func _run() -> void:
 	await _test_main_menu_viewport(Vector2i(1080, 2340))
 	await _test_main_menu_viewport(Vector2i(1080, 2400))
 	await _test_main_menu_viewport(Vector2i(1024, 1536))
+	await _test_main_menu_viewport(Vector2i(1086, 1448))
 	await _test_touch_entry()
 	await _test_settings()
 	audio_manager.set_music_enabled(saved_music, false)
@@ -54,15 +55,18 @@ func _test_main_menu_viewport(viewport_size: Vector2i) -> void:
 	_check(audio_manager._player.stream == music_stream, "%s the same music stream is retained" % label)
 	_check(menu.size.round() == Vector2(viewport_size), "%s menu fills the portrait viewport" % label)
 	_check(_rect_inside(menu.menu_logo.get_global_rect(), viewport_size), "%s independent logo stays on-screen" % label)
-	_check(is_equal_approx(menu.menu_logo.size.x / menu.menu_logo.size.y, 3.0), "%s logo keeps its source aspect ratio" % label)
+	_check(is_equal_approx(menu.menu_logo.size.aspect(), menu.menu_logo.texture.get_size().aspect()), "%s logo keeps its source aspect ratio" % label)
 	_check(not menu.get_node("AnimatedPlants").visible and not menu.get_node("BoardDecoration").visible, "%s retired decorations do not cover the approved scenery" % label)
 	var background: AnimatedSprite2D = menu.get_node("LiveBackground")
 	var texture := background.sprite_frames.get_frame_texture("default", 0)
-	_check(texture.resource_path.ends_with("tropical_background_v1.png"), "%s uses the separated scenery" % label)
+	_check(texture.resource_path.ends_with("forest_story/background.png"), "%s uses the separated forest scenery" % label)
 	_check(is_equal_approx(background.scale.x, background.scale.y), "%s scenery is not stretched" % label)
-	_check(is_equal_approx(texture.get_width() * background.scale.x, viewport_size.x), "%s preserves scenery across both edges" % label)
-	_check(is_equal_approx(background.position.y + texture.get_height() * background.scale.y * 0.5, viewport_size.y), "%s grass platform stays at the bottom" % label)
-	_check(menu.get_node("SkyFill").size == Vector2(viewport_size), "%s extended sky prevents black bars" % label)
+	var background_size := texture.get_size() * background.scale
+	_check(background_size.x >= viewport_size.x and background_size.y >= viewport_size.y, "%s scenery covers the viewport without black bars" % label)
+	_check(background.position.is_equal_approx(Vector2(viewport_size) * 0.5), "%s scenery remains centered" % label)
+	_check(not menu.get_node("SkyFill").visible, "%s retired blue sky strip is hidden" % label)
+	_check(menu.menu_explorers.visible and _rect_inside(menu.menu_explorers.get_global_rect(), viewport_size), "%s both explorers and the lantern stay inside the screen" % label)
+	_check(menu.menu_explorers.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s explorer art cannot consume menu input" % label)
 	_check(menu.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "%s menu uses nearest filtering" % label)
 	var buttons: Array[TextureButton] = [menu.start_button, menu.hero_cards_button, menu.settings_button, menu.quit_button]
 	var previous_rect := Rect2()
@@ -75,7 +79,10 @@ func _test_main_menu_viewport(viewport_size: Vector2i) -> void:
 		_check(_rect_inside(rect, viewport_size) and rect.size.y >= 64.0, "%s button %d stays visible and touch-friendly" % [label, index + 1])
 		_check(rect.size.is_equal_approx(buttons[0].size), "%s button %d has the same dimensions" % [label, index + 1])
 		_check(caption.text == menu.BUTTON_LABELS[index], "%s button %d has the approved wording" % [label, index + 1])
-		_check(text_size.x < rect.size.x * 0.9 and text_size.y < rect.size.y, "%s button %d text fits its navy plaque" % [label, index + 1])
+		_check(text_size.x <= caption.size.x and text_size.y < rect.size.y, "%s button %d lettering fits its wooden sign" % [label, index + 1])
+		var icon := button.get_node("ActionIcon") as TextureRect
+		_check(icon.texture != null and icon.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s button %d icon preserves pointer input" % [label, index + 1])
+		_check(icon.get_global_rect().end.x < caption.get_global_rect().position.x, "%s button %d icon and lettering do not overlap" % [label, index + 1])
 		if index > 0:
 			var current_gap := rect.position.y - previous_rect.end.y
 			if gap < 0.0:
@@ -84,9 +91,10 @@ func _test_main_menu_viewport(viewport_size: Vector2i) -> void:
 			_check(is_equal_approx(gap, current_gap), "%s button rows have equal spacing" % label)
 		previous_rect = rect
 	_check(menu.menu_logo.get_global_rect().end.y < buttons[0].position.y, "%s logo and controls are separated" % label)
+	_check(buttons[3].get_global_rect().end.y < menu.menu_explorers.get_global_rect().position.y, "%s Quit remains above the explorer artwork" % label)
 	menu._on_button_mouse_entered(buttons[2])
 	await create_timer(menu.anim_time + 0.03).timeout
-	_check(menu._selected_button == buttons[2] and menu.selection_arrow.position.y > buttons[1].position.y, "%s selection arrow follows hover" % label)
+	_check(menu._selected_button == buttons[2] and buttons[2].scale.x > 1.0 and not menu.selection_arrow.visible, "%s the hovered sign enlarges without an extra external arrow" % label)
 	var rest: Vector2 = menu._button_rest_positions[buttons[2]]
 	menu._on_button_down(buttons[2])
 	await create_timer(menu.anim_time + 0.03).timeout
@@ -118,10 +126,15 @@ func _test_main_menu_viewport(viewport_size: Vector2i) -> void:
 		buttons[index].pressed.emit()
 		buttons[index].pressed.emit()
 		_check(requested == [routes[index]], "%s %s navigates once" % [label, menu.BUTTON_LABELS[index]])
+		menu._scene_transition_pending = false
+		menu._set_buttons_disabled(false)
+		requested.clear()
+		_click(viewport, buttons[index].get_node("ActionIcon").get_global_rect().get_center())
+		_check(requested == [routes[index]], "%s clicking the %s icon opens the correct screen" % [label, menu.BUTTON_LABELS[index]])
 	menu._scene_transition_pending = false
 	menu._set_buttons_disabled(false)
-	menu.quit_button.pressed.emit()
-	_check(bool(exit_state["requested"]), "%s EXIT requests quit" % label)
+	_click(viewport, menu.quit_button.get_node("ActionIcon").get_global_rect().get_center())
+	_check(bool(exit_state["requested"]), "%s Quit icon requests quit" % label)
 	menu._scene_transition_pending = false
 	menu._set_buttons_disabled(false)
 	menu._on_button_mouse_exited(buttons[0])
@@ -201,6 +214,17 @@ func _test_settings() -> void:
 
 func _rect_inside(rect: Rect2, viewport_size: Vector2i) -> bool:
 	return rect.position.x >= 0.0 and rect.position.y >= 0.0 and rect.end.x <= viewport_size.x and rect.end.y <= viewport_size.y
+
+
+func _click(viewport: SubViewport, point: Vector2) -> void:
+	var press := InputEventMouseButton.new()
+	press.position = point
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	viewport.push_input(press, true)
+	var release := press.duplicate() as InputEventMouseButton
+	release.pressed = false
+	viewport.push_input(release, true)
 
 
 func _cleanup_settings() -> void:
