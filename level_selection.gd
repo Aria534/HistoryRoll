@@ -77,8 +77,8 @@ func _apply_responsive_layout() -> void:
 	ui_root.size = safe_rect.size / layout_scale
 	ui_root.position = safe_rect.position
 	var background := get_node("Background") as TextureRect
-	background.size = Vector2(size.x, size.x * background.texture.get_height() / background.texture.get_width())
-	background.position = Vector2(0, size.y - background.size.y)
+	background.size = size
+	background.position = Vector2.ZERO
 
 
 func _cache_level_buttons() -> void:
