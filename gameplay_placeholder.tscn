@@ -1,23 +1,28 @@
-[gd_scene load_steps=30 format=3]
+[gd_scene load_steps=40 format=3]
 
 [ext_resource type="Script" path="res://gameplay_placeholder.gd" id="1_gameplay"]
-[ext_resource type="Texture2D" uid="uid://dii48lafhmts6" path="res://assets/background/Dreamy Philippine Bay Boardwalk.png" id="2_background"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/background.png" id="2_background"]
 [ext_resource type="Script" path="res://board_view.gd" id="3_board"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/historyroll_sign.png" id="4_logo"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/logo.png" id="4_logo"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/level_parchment.png" id="5_level_banner"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/quiz_frame_filipino_v2.png" id="6_quiz_scroll"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/board_frame.png" id="7_board_frame"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/roll_base.svg" id="8_roll"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/status_base.svg" id="9_status"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/back.svg" id="10_back"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/die.svg" id="11_die"]
+[ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="12_font"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/person.svg" id="13_person"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/trophy.svg" id="14_trophy"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/shield.svg" id="15_shield"]
+[ext_resource type="FontFile" path="res://assets/fonts/Lora-Italic.ttf" id="16_serif"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_main"]
-texture = ExtResource("7_board_frame")
-texture_margin_left = 145.0
-texture_margin_top = 145.0
-texture_margin_right = 145.0
-texture_margin_bottom = 145.0
-content_margin_left = 25.0
-content_margin_top = 25.0
-content_margin_right = 25.0
-content_margin_bottom = 25.0
+[sub_resource type="FontVariation" id="Font_reference"]
+base_font = ExtResource("16_serif")
+variation_opentype = {"wght": 700.0}
+variation_embolden = 0.6
+
+[sub_resource type="StyleBoxEmpty" id="StyleBox_main"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_quiz"]
 texture = ExtResource("6_quiz_scroll")
@@ -66,53 +71,26 @@ content_margin_top = 14.0
 content_margin_right = 62.0
 content_margin_bottom = 14.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_brown_button"]
-bg_color = Color(0.48, 0.2, 0.08, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.86, 0.49, 0.17, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="StyleBoxEmpty" id="StyleBox_brown_button"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_brown_hover"]
-bg_color = Color(0.61, 0.278, 0.102, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(1, 0.69, 0.25, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="StyleBoxEmpty" id="StyleBox_brown_hover"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_status"]
-bg_color = Color(0.29, 0.105, 0.035, 0.97)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.95, 0.62, 0.19, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-content_margin_left = 10.0
-content_margin_top = 4.0
-content_margin_right = 10.0
-content_margin_bottom = 4.0
-shadow_color = Color(0.08, 0.025, 0.008, 0.5)
-shadow_size = 5
+[sub_resource type="StyleBoxTexture" id="StyleBox_status"]
+texture = ExtResource("9_status")
+texture_margin_left = 52.0
+texture_margin_top = 40.0
+texture_margin_right = 52.0
+texture_margin_bottom = 40.0
+content_margin_left = 22.0
+content_margin_top = 12.0
+content_margin_right = 22.0
+content_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_status_item"]
 bg_color = Color(0, 0, 0, 0)
 border_width_left = 2
 border_color = Color(0.94, 0.64, 0.24, 0.85)
-content_margin_left = 10.0
+content_margin_left = 38.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_answer"]
 bg_color = Color(0.12, 0.43, 0.045, 1)
@@ -216,29 +194,28 @@ border_color = Color(0.44, 0.2, 0.04, 1)
 content_margin_left = 3.0
 content_margin_right = 3.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_roll"]
-bg_color = Color(0.91, 0.56, 0.12, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.46, 0.22, 0.055, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="StyleBoxTexture" id="StyleBox_roll"]
+texture = ExtResource("8_roll")
+texture_margin_left = 110.0
+texture_margin_top = 42.0
+texture_margin_right = 110.0
+texture_margin_bottom = 42.0
+content_margin_left = 36.0
+content_margin_top = 18.0
+content_margin_right = 36.0
+content_margin_bottom = 18.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_roll_hover"]
-bg_color = Color(1, 0.69, 0.18, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0.58, 0.29, 0.07, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="StyleBoxTexture" id="StyleBox_roll_hover"]
+texture = ExtResource("8_roll")
+modulate_color = Color(1.12, 1.12, 1.08, 1)
+texture_margin_left = 110.0
+texture_margin_top = 42.0
+texture_margin_right = 110.0
+texture_margin_bottom = 42.0
+content_margin_left = 36.0
+content_margin_top = 18.0
+content_margin_right = 36.0
+content_margin_bottom = 18.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_token"]
 bg_color = Color(0, 0, 0, 0)
@@ -291,6 +268,7 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="Overlay" type="ColorRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -317,16 +295,16 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="HistoryRollBrand" type="TextureRect" parent="MarginContainer/Content"]
-visible = false
-custom_minimum_size = Vector2(0, 0)
+custom_minimum_size = Vector2(760, 240)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 texture = ExtResource("4_logo")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Header" type="Control" parent="MarginContainer/Content"]
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 0)
 layout_mode = 2
 
 [node name="LevelBannerBackground" type="TextureRect" parent="MarginContainer/Content/Header"]
@@ -366,11 +344,10 @@ vertical_alignment = 1
 [node name="BackButton" type="Button" parent="MarginContainer/Content/Header"]
 unique_name_in_owner = true
 z_index = 30
-custom_minimum_size = Vector2(250, 64)
+custom_minimum_size = Vector2(84, 84)
 layout_mode = 1
-anchor_left = 0.7
-anchor_right = 1.0
-anchor_bottom = 1.0
+offset_right = 84.0
+offset_bottom = 84.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
@@ -381,7 +358,10 @@ theme_override_styles/normal = SubResource("StyleBox_brown_button")
 theme_override_styles/hover = SubResource("StyleBox_brown_hover")
 theme_override_styles/pressed = SubResource("StyleBox_brown_button")
 theme_override_styles/disabled = SubResource("StyleBox_brown_button")
-text = "‹  Back to Levels"
+icon = ExtResource("10_back")
+expand_icon = true
+icon_alignment = 1
+tooltip_text = "Back to Levels"
 
 [node name="BodyCenter" type="CenterContainer" parent="MarginContainer/Content"]
 layout_mode = 2
@@ -400,10 +380,10 @@ theme_override_styles/panel = SubResource("StyleBox_main")
 
 [node name="BoardMargin" type="MarginContainer" parent="MarginContainer/Content/BodyCenter/Body/BoardPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 14
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="BoardView" type="Control" parent="MarginContainer/Content/BodyCenter/Body/BoardPanel/BoardMargin"]
 unique_name_in_owner = true
@@ -474,9 +454,24 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.96, 0.97, 1, 1)
 theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = SubResource("Font_reference")
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
+theme_override_styles/normal = SubResource("StyleBox_status_item")
 text = "Position: 1 / 100"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="PositionIcon" type="TextureRect" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems/PositionLabel"]
+layout_mode = 1
+anchor_top = 0.1
+anchor_bottom = 0.9
+offset_left = 6.0
+offset_right = 40.0
+mouse_filter = 2
+texture = ExtResource("13_person")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="ScoreLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems"]
 unique_name_in_owner = true
@@ -484,10 +479,24 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
 theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = SubResource("Font_reference")
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
 theme_override_styles/normal = SubResource("StyleBox_status_item")
 text = "Score: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ScoreIcon" type="TextureRect" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems/ScoreLabel"]
+layout_mode = 1
+anchor_top = 0.1
+anchor_bottom = 0.9
+offset_left = 6.0
+offset_right = 40.0
+mouse_filter = 2
+texture = ExtResource("14_trophy")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="PowerStatusLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems"]
 unique_name_in_owner = true
@@ -495,12 +504,27 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.72, 0.86, 0.96, 1)
 theme_override_font_sizes/font_size = 21
+theme_override_fonts/font = SubResource("Font_reference")
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
 theme_override_styles/normal = SubResource("StyleBox_status_item")
 text = "1x  |  Shield: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ShieldIcon" type="TextureRect" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems/PowerStatusLabel"]
+layout_mode = 1
+anchor_top = 0.1
+anchor_bottom = 0.9
+offset_left = 6.0
+offset_right = 40.0
+mouse_filter = 2
+texture = ExtResource("15_shield")
+expand_mode = 1
+stretch_mode = 5
+
 [node name="StateLabel" type="Label" parent="MarginContainer/Content/BodyCenter/Body/StatusRow/StatusItems"]
+visible = false
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -514,11 +538,10 @@ vertical_alignment = 1
 [node name="BottomRollArea" type="Control" parent="."]
 z_index = 10
 layout_mode = 1
-anchor_left = 0.22
-anchor_top = 0.97
-anchor_right = 0.78
-anchor_bottom = 0.97
-offset_top = -96.0
+anchor_left = 0.20
+anchor_top = 0.81
+anchor_right = 0.80
+anchor_bottom = 0.93
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -531,14 +554,54 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.22, 0.09, 0.025, 1)
-theme_override_colors/font_disabled_color = Color(0.86, 0.83, 0.75, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 0)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 0)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 0)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 0)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 0)
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 0)
 theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = SubResource("Font_reference")
+theme_override_constants/outline_size = 0
+theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
+theme_override_constants/h_separation = 16
+theme_override_styles/focus = SubResource("StyleBox_main")
 theme_override_styles/normal = SubResource("StyleBox_roll")
 theme_override_styles/hover = SubResource("StyleBox_roll_hover")
 theme_override_styles/pressed = SubResource("StyleBox_roll")
-theme_override_styles/disabled = SubResource("StyleBox_disabled")
+theme_override_styles/disabled = SubResource("StyleBox_roll")
 text = "Roll Dice"
+
+[node name="RollVisual" type="CenterContainer" parent="BottomRollArea/RollButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="RollContents" type="HBoxContainer" parent="BottomRollArea/RollButton/RollVisual"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="DieIcon" type="TextureRect" parent="BottomRollArea/RollButton/RollVisual/RollContents"]
+custom_minimum_size = Vector2(90, 90)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("11_die")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RollTitle" type="Label" parent="BottomRollArea/RollButton/RollVisual/RollContents"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_fonts/font = SubResource("Font_reference")
+theme_override_colors/font_color = Color(1, 0.96, 0.82, 1)
+theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 72
+text = "Roll Dice"
+vertical_alignment = 1
 
 [node name="QuestionPopupLayer" type="Control" parent="."]
 unique_name_in_owner = true

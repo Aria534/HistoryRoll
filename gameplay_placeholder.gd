@@ -17,6 +17,7 @@ const BoardRules = preload("res://board_rules.gd")
 const DiceRoller = preload("res://dice_roller.gd")
 const QuizSession = preload("res://quiz_session.gd")
 const QuizQuestionBank = preload("res://quiz_question_bank.gd")
+const TERRACE_BACKGROUND: Texture2D = preload("res://assets/gameplay_ui/terrace_blue/background.png")
 
 @export var shuffle_questions: bool = true
 @export var dice_animation_steps: int = 8
@@ -106,7 +107,9 @@ func _ready() -> void:
 	next_turn_button.pressed.connect(_on_next_turn_pressed)
 	back_button.pressed.connect(_on_back_pressed)
 	return_button.pressed.connect(_on_return_pressed)
+	resized.connect(_update_gameplay_layout)
 	_initialize_gameplay()
+	_update_gameplay_layout.call_deferred()
 
 
 func _request_music(track_path: String) -> void:
@@ -183,15 +186,8 @@ func _initialize_gameplay() -> void:
 
 
 func _apply_level_background() -> void:
-	var background_path := str(level_data.get("background_path", ""))
-	if background_path.is_empty():
-		return
-	if not ResourceLoader.exists(background_path, "Texture2D"):
-		push_warning("Gameplay background was not found: %s" % background_path)
-		return
-	var level_background := load(background_path) as Texture2D
-	if level_background != null:
-		background.texture = level_background
+	# The shared gameplay skin changes scenery only, never level rules/content.
+	background.texture = TERRACE_BACKGROUND
 
 
 func _begin_question(question_type: String) -> void:
@@ -518,6 +514,9 @@ func _set_state(new_state: GameplayState) -> void:
 	]
 	if state != GameplayState.ANSWER_FEEDBACK:
 		next_turn_button.hide()
+	var roll_title: Label = $BottomRollArea/RollButton/RollVisual/RollContents/RollTitle
+	roll_title.text = roll_button.text
+	roll_title.modulate = Color("#C9DDE5") if roll_button.disabled else Color.WHITE
 
 
 func _show_chibi_reaction(correct: bool, points: int) -> void:
@@ -574,27 +573,61 @@ func _make_reaction_style(correct: bool) -> StyleBoxFlat:
 
 
 func _update_status_labels() -> void:
-	position_label.text = "●  Position: %d / %d" % [player_position, tile_count]
-	score_label.text = "★  Score: %d" % score
-	power_status_label.text = "◆  Shield: %d" % shield_charges
+	position_label.text = "Position: %d/%d" % [player_position, tile_count]
+	score_label.text = "Score: %d" % score
+	power_status_label.text = "Shield: %d" % shield_charges
 
 
 func _set_quiz_panel_height(_quiz_active: bool) -> void:
 	var viewport_size := get_viewport_rect().size
 	var viewport_height := viewport_size.y
-	gameplay_body.custom_minimum_size.x = maxf(1.0, viewport_size.x - 52.0)
 	var choice_count := int(current_question.get("choices", []).size())
 	var popup_height := 450.0 if choice_count >= 4 else 390.0
 	popup_height = minf(popup_height, viewport_height - 100.0)
 	_set_popup_height(popup_height)
-	var horizontal_board_height := (
-		maxf(1.0, viewport_size.x - 52.0)
-		* float(board_view.rows)
-		/ float(board_view.columns)
-		+ 56.0
-	)
-	var responsive_board_height := clampf(horizontal_board_height, 520.0, minf(1000.0, viewport_height * 0.68))
-	board_panel.custom_minimum_size.y = responsive_board_height
+	_update_gameplay_layout()
+
+
+func _update_gameplay_layout() -> void:
+	if not is_node_ready() or board_view.columns <= 0 or board_view.rows <= 0:
+		return
+	var screen_size := get_viewport_rect().size
+	var margin := clampf(screen_size.x * 0.045, 18.0, 52.0)
+	var content_margin: MarginContainer = $MarginContainer
+	content_margin.offset_left = margin
+	content_margin.offset_right = -margin
+	content_margin.offset_top = screen_size.y * 0.025
+	content_margin.offset_bottom = -screen_size.y * 0.205
+	var width := screen_size.x - margin * 2.0
+	var logo: TextureRect = $MarginContainer/Content/HistoryRollBrand
+	var logo_height := width * 0.255
+	logo.custom_minimum_size = Vector2(width * 0.82, logo_height)
+	var gap := clampi(int(screen_size.y * 0.012), 12, 24)
+	$MarginContainer/Content.add_theme_constant_override("separation", gap)
+	gameplay_body.add_theme_constant_override("separation", gap)
+	gameplay_body.custom_minimum_size.x = width
+	var status_height := clampf(width * 0.09, 84.0, 100.0)
+	$MarginContainer/Content/BodyCenter/Body/StatusRow.custom_minimum_size.y = status_height
+	# Shrink taller boards while retaining square, aligned cells.
+	var available_height := screen_size.y * 0.77 - logo_height - status_height - gap * 3.0
+	var board_height := (width - 32.0) * float(board_view.rows) / float(board_view.columns) + 32.0
+	board_panel.custom_minimum_size.y = minf(board_height, available_height)
+	var back_side := clampf(width * 0.105, 64.0, 112.0)
+	back_button.custom_minimum_size = Vector2.ONE * back_side
+	back_button.size = Vector2.ONE * back_side
+	back_button.position = Vector2(-margin * 0.2, -logo_height - gap)
+	back_button.add_theme_constant_override("icon_max_width", int(back_side))
+	var label_size := clampi(int(width * 0.029), 16, 30)
+	for label: Label in [position_label, score_label, power_status_label]:
+		label.size_flags_vertical = Control.SIZE_FILL
+		label.add_theme_font_size_override("font_size", label_size)
+		label.add_theme_color_override("font_color", Color("#FFF1C4"))
+		var icon := label.get_child(0) as TextureRect
+		icon.offset_right = status_height * 0.43
+	var roll_height := screen_size.y * 0.12
+	var roll_title: Label = $BottomRollArea/RollButton/RollVisual/RollContents/RollTitle
+	roll_title.add_theme_font_size_override("font_size", clampi(int(width * 0.078), 36, 80))
+	$BottomRollArea/RollButton/RollVisual/RollContents/DieIcon.custom_minimum_size = Vector2.ONE * roll_height * 0.58
 
 
 func _set_popup_height(popup_height: float) -> void:
