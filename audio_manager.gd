@@ -277,7 +277,7 @@ func _get_fallback_sfx(role: String) -> AudioStreamWAV:
 
 func _create_fallback_sfx(role: String) -> AudioStreamWAV:
 	var sample_rate := 22050
-	var duration := 0.58 if role == "correct" else 0.46
+	var duration := 0.58 if role == "correct" else (0.07 if role == "menu_press" else 0.46)
 	var frame_count := int(sample_rate * duration)
 	var pcm := PackedByteArray()
 	pcm.resize(frame_count * 2)
@@ -285,7 +285,9 @@ func _create_fallback_sfx(role: String) -> AudioStreamWAV:
 		var time := float(frame) / float(sample_rate)
 		var progress := time / duration
 		var frequency := 330.0
-		if role == "correct":
+		if role == "menu_press":
+			frequency = lerpf(760.0, 540.0, progress)
+		elif role == "correct":
 			var notes := [523.25, 659.25, 783.99]
 			frequency = float(notes[mini(int(time / 0.17), notes.size() - 1)])
 		else:
@@ -295,7 +297,7 @@ func _create_fallback_sfx(role: String) -> AudioStreamWAV:
 		var envelope := attack * release
 		var sample := sin(TAU * frequency * time) * 0.46
 		sample += sin(TAU * frequency * 2.0 * time) * (0.12 if role == "correct" else 0.07)
-		if role != "correct":
+		if role == "incorrect":
 			sample += sin(TAU * 74.0 * time) * 0.06
 		var encoded := clampi(int(sample * envelope * 32767.0), -32768, 32767)
 		pcm.encode_s16(frame * 2, encoded)
