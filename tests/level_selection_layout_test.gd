@@ -23,6 +23,7 @@ func _run() -> void:
 	_cleanup_save()
 	await _test_returning_player_capture()
 	_cleanup_save()
+	await _test_main_menu_entry()
 	print("Level Selection layout tests: %d passed, %d failed." % [_passed, _failed])
 	quit(0 if _failed == 0 else 1)
 
@@ -53,7 +54,7 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 	_check(screen.back_button.visible and screen.help_button.visible, "%s top controls remain visible beside the transparent banner" % size_label)
 	_check(_rect_is_inside(screen.back_button.get_global_rect(), viewport_size), "%s Back Arrow stays on-screen" % size_label)
 	_check(_rect_is_inside(screen.help_button.get_global_rect(), viewport_size), "%s Help icon stays on-screen" % size_label)
-	_check(screen.help_button.texture_normal.resource_path.ends_with("navy_gold/icon_base.svg"), "%s Help uses the matching navy icon" % size_label)
+	_check(screen.help_button.texture_normal.resource_path.ends_with("parchment_forest/icon_base.svg"), "%s Help uses the matching wooden icon" % size_label)
 	_check(_rect_is_inside(screen.play_button.get_global_rect(), viewport_size), "%s PLAY stays on-screen" % size_label)
 	var instructions: Label = screen.get_node("UIRoot/HelpOverlay/Panel/Margin/Content/Instructions")
 	_check(instructions.text.contains("Earn 10 points"), "%s Help explains correct-answer scoring" % size_label)
@@ -66,8 +67,13 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 		var button: LevelSelectionRow = screen.level_buttons[level_id]
 		var button_rect := button.get_global_rect()
 		_check(_rect_is_inside(button_rect, viewport_size), "%s Level %d stays on-screen" % [size_label, level_id])
-		_check(not button.name_label.visible and not button.portrait_rect.visible, "%s Level %d avoids duplicate text or portraits over the reference artwork" % [size_label, level_id])
-		_check(button.frame_rect.texture == button.row_texture, "%s Level %d keeps the same gold typography when locked or unlocked" % [size_label, level_id])
+		_check(button.name_label.visible and button.portrait_rect.visible, "%s Level %d displays its separate portrait and complete name" % [size_label, level_id])
+		_check(button.frame_rect.texture == button.row_texture, "%s Level %d keeps its shared parchment frame when unlocked" % [size_label, level_id])
+		var font := button.name_label.get_theme_font("font")
+		var lettering := font.get_string_size(button.level_title, HORIZONTAL_ALIGNMENT_LEFT, -1, button.name_label.get_theme_font_size("font_size"))
+		_check(lettering.x <= button.name_label.size.x, "%s Level %d name fits without truncation" % [size_label, level_id])
+		_check(button.name_label.get_global_rect().end.x < button.lock_icon.get_global_rect().position.x, "%s Level %d name does not overlap its padlock" % [size_label, level_id])
+		_check(button.portrait_rect.get_global_rect().end.x < button.name_label.get_global_rect().position.x, "%s Level %d portrait has space before its name" % [size_label, level_id])
 		_check(is_equal_approx(button.lock_icon.position.x + button.lock_icon.size.x, button.size.x - 16.0), "%s Level %d padlock keeps its right margin" % [size_label, level_id])
 		_check(is_equal_approx(button.lock_icon.position.y + button.lock_icon.size.y * 0.5, button.size.y * 0.5), "%s Level %d padlock stays vertically centered" % [size_label, level_id])
 		if level_id == 1:
@@ -75,8 +81,8 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 		else:
 			_check(button.disabled, "%s Level %d is disabled" % [size_label, level_id])
 			_check(button.is_lock_visible(), "%s Level %d shows its padlock" % [size_label, level_id])
-			var lock_uses_reference := button.lock_icon is TextureRect and (button.lock_icon as TextureRect).texture.resource_path.ends_with("locked_padlock_reference.png")
-			_check(lock_uses_reference, "%s Level %d uses the reference-style silver lock" % [size_label, level_id])
+			var lock_uses_reference := button.lock_icon is TextureRect and (button.lock_icon as TextureRect).texture.resource_path.ends_with("parchment_forest/padlock.svg")
+			_check(lock_uses_reference, "%s Level %d uses the cream-and-gold reference lock" % [size_label, level_id])
 			if button.is_lock_visible():
 				visible_lock_count += 1
 		if level_id > 1:
@@ -186,6 +192,35 @@ func _rect_is_inside(rect: Rect2, viewport_size: Vector2i) -> bool:
 		and rect.end.x <= float(viewport_size.x)
 		and rect.end.y <= float(viewport_size.y)
 	)
+
+
+func _test_main_menu_entry() -> void:
+	# Use the actual Autoload and navigation without resetting or awarding progress.
+	var menu = load("res://main_menu_tscn.tscn").instantiate()
+	get_root().add_child(menu)
+	current_scene = menu
+	await process_frame
+	menu.start_button.pressed.emit()
+	await process_frame
+	await process_frame
+	var screen = current_scene
+	_check(screen != null and screen.scene_file_path == "res://level_selection.tscn", "actual Main Menu Start Game opens the redesigned Level Selection")
+	if screen != null and screen.scene_file_path == "res://level_selection.tscn":
+		var progress: Node = get_root().get_node("ProgressManager")
+		for level_id: int in range(1, 7):
+			_check(screen.level_buttons[level_id].disabled == (not progress.is_level_unlocked(level_id)), "actual Level %d lock follows the real saved progress" % level_id)
+		await RenderingServer.frame_post_draw
+		var image: Image = get_root().get_texture().get_image()
+		_check(image != null and image.save_png(ProjectSettings.globalize_path("user://level_selection_actual_project.png")) == OK, "actual project Level Selection capture is saved")
+		await create_timer(0.2).timeout
+		screen.back_button.pressed.emit()
+		await process_frame
+		await process_frame
+		_check(current_scene != null and current_scene.scene_file_path == "res://main_menu_tscn.tscn", "actual Back navigation restores the existing Main Menu")
+	if current_scene != null:
+		current_scene.queue_free()
+		current_scene = null
+	await process_frame
 
 
 func _rect_contains(outer: Rect2, inner: Rect2) -> bool:

@@ -34,7 +34,7 @@ func _test_pixel_art_fresh_state() -> void:
 
 	_check(screen._validate_required_nodes(), "pixel Level Selection required nodes resolve")
 	_check(screen.level_buttons.size() == 6, "all six reusable level rows are cached")
-	_check(screen.get_node("Background").texture.resource_path.ends_with("navy_gold/background_v1.png"), "reference mountain-and-fields background is active")
+	_check(screen.get_node("Background").texture.resource_path.ends_with("parchment_forest/background.png"), "reference forest-and-terraces background is active")
 	_check(screen.title_banner.get_node("TitleLabel").text == "CHOOSE YOUR LEVEL", "title banner text is exact")
 	_check(screen.help_button.pressed.get_connections().size() == 1, "Help icon is connected")
 	_check(screen.get_node_or_null("%SettingsButton") == null, "Settings icon is removed")
@@ -43,13 +43,16 @@ func _test_pixel_art_fresh_state() -> void:
 	_check(screen.play_button.pressed.get_connections().size() == 1, "PLAY button is connected")
 
 	var expected_names := ["", "LEVEL 1 - LAPU-LAPU", "LEVEL 2 - ANDRES BONIFACIO", "LEVEL 3 - JOSE RIZAL", "LEVEL 4 - ANTONIO LUNA", "LEVEL 5 - MELCHORA AQUINO", "LEVEL 6 - APOLINARIO MABINI"]
+	var expected_portraits := ["", "lapulapu", "bonifacio", "rizal", "luna", "aquino", "mabini"]
 	var lock_count := 0
 	for level_id: int in range(1, 7):
 		var row: LevelSelectionRow = screen.level_buttons[level_id]
 		_check(row != null, "Level %d uses the reusable pixel row" % level_id)
 		_check(row.level_title == expected_names[level_id], "Level %d title is exact" % level_id)
 		_check(row.get_node_or_null("Row/Text/Subtitle") == null, "Level %d has no subtitle" % level_id)
-		_check(row.row_texture is AtlasTexture and row.row_texture.atlas.resource_path.ends_with("level%d_v1.png" % level_id), "Level %d uses its matching hero row artwork" % level_id)
+		_check(row.row_texture is AtlasTexture and row.row_texture.atlas.resource_path.ends_with("parchment_forest/row.png"), "Level %d uses the shared parchment artwork" % level_id)
+		_check(row.portrait is AtlasTexture and row.portrait.atlas.resource_path.ends_with("parchment_forest/%s.png" % expected_portraits[level_id]), "Level %d uses the matching framed chibi portrait" % level_id)
+		_check(row.name_label.visible and row.name_label.text == expected_names[level_id], "Level %d displays its complete name exactly once" % level_id)
 		_check(not row.level_title.contains("★"), "Level %d contains no star rating" % level_id)
 		if row.is_lock_visible():
 			lock_count += 1
@@ -61,7 +64,7 @@ func _test_pixel_art_fresh_state() -> void:
 		_check(locked_row.disabled, "fresh Level %d is disabled" % level_id)
 		_check(locked_row.is_lock_visible(), "fresh Level %d displays a padlock" % level_id)
 		_check(locked_row.status_label.text == "LOCKED", "fresh Level %d displays LOCKED" % level_id)
-		_check(locked_row.frame_rect.self_modulate == Color.WHITE, "fresh Level %d retains the reference's full navy/gold colors" % level_id)
+		_check(locked_row.frame_rect.self_modulate == Color.WHITE, "fresh Level %d retains readable parchment colors" % level_id)
 	_check(lock_count == 5, "fresh player has exactly five visible padlocks")
 	_check(screen.selected_level_id == 1, "Level 1 is highlighted as the default selection")
 	_check(not screen.play_button.disabled, "PLAY is enabled for Level 1")
