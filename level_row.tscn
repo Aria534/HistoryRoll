@@ -34,7 +34,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 0
 texture_filter = 1
 
 [node name="Portrait" type="TextureRect" parent="."]
@@ -69,9 +69,9 @@ text_overrun_behavior = 3
 layout_mode = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -124.0
+offset_left = -112.0
 offset_top = 23.0
-offset_right = -28.0
+offset_right = -16.0
 offset_bottom = 119.0
 grow_horizontal = 0
 mouse_filter = 2

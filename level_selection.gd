@@ -5,7 +5,7 @@ const STORY_MODE_SCENE: String = "res://story_mode.tscn"
 const CHARACTER_UNLOCK_SCENE: String = "res://character_unlock.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
 const SELECTED_SCALE := 1.025
-const DESIGN_SIZE := Vector2(1024.0, 1536.0)
+const DESIGN_SIZE := Vector2(1086.0, 1448.0)
 
 @export var hover_scale: float = 1.03
 @export var press_scale: float = 0.97
@@ -66,9 +66,19 @@ func _request_music(track_path: String) -> void:
 func _apply_responsive_layout() -> void:
 	if ui_root == null or size.x <= 0.0 or size.y <= 0.0:
 		return
-	var layout_scale := minf(size.x / DESIGN_SIZE.x, size.y / DESIGN_SIZE.y)
+	var safe_rect := Rect2(Vector2.ZERO, size)
+	if OS.has_feature("android"):
+		var screen_size := Vector2(DisplayServer.screen_get_size())
+		var safe_area := Rect2(DisplayServer.get_display_safe_area())
+		if screen_size.x > 0.0 and screen_size.y > 0.0 and safe_area.has_area():
+			safe_rect = Rect2(safe_area.position / screen_size * size, safe_area.size / screen_size * size)
+	var layout_scale := minf(safe_rect.size.x / DESIGN_SIZE.x, safe_rect.size.y / DESIGN_SIZE.y)
 	ui_root.scale = Vector2.ONE * layout_scale
-	ui_root.position = (size - DESIGN_SIZE * layout_scale) * 0.5
+	ui_root.size = safe_rect.size / layout_scale
+	ui_root.position = safe_rect.position
+	var background := get_node("Background") as TextureRect
+	background.size = Vector2(size.x, size.x * background.texture.get_height() / background.texture.get_width())
+	background.position = Vector2(0, size.y - background.size.y)
 
 
 func _cache_level_buttons() -> void:
@@ -280,6 +290,9 @@ func _on_button_mouse_exited(button: BaseButton) -> void:
 
 
 func _on_button_down(button: BaseButton) -> void:
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("play_sfx"):
+		audio_manager.call("play_sfx", "res://assets/audio/sfx/menu_press.ogg", "menu_press")
 	_animate_button(button, _get_rest_scale(button) * press_scale)
 
 

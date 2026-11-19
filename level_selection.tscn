@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dqnvxi15q2xue"]
 
 [ext_resource type="Script" uid="uid://bi0rgtrdac8qr" path="res://level_selection.gd" id="1_level"]
-[ext_resource type="Texture2D" uid="uid://c5rc2mq63gxkp" path="res://assets/level_selection_pixel/tropical_pixel_background.png" id="2_background"]
-[ext_resource type="Texture2D" uid="uid://dusysc2wryspv" path="res://assets/level_selection_pixel/back_button_reference.png" id="3_back"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/background_v1.png" id="2_background"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/back_icon.svg" id="3_back"]
 [ext_resource type="FontFile" uid="uid://2exqupx3ke7s" path="res://assets/fonts/PixelifySans.ttf" id="4_font"]
 [ext_resource type="PackedScene" path="res://level_row.tscn" id="5_row"]
 [ext_resource type="Texture2D" uid="uid://crso6usgfeo1r" path="res://assets/level_selection_pixel/lapulapu.png" id="6_lapulapu"]
@@ -11,9 +11,61 @@
 [ext_resource type="Texture2D" uid="uid://e52rtyhfslkx" path="res://assets/level_selection_pixel/luna.png" id="9_luna"]
 [ext_resource type="Texture2D" uid="uid://dnb4scenw3w2w" path="res://assets/level_selection_pixel/aquino.png" id="10_aquino"]
 [ext_resource type="Texture2D" uid="uid://bsje3efmemqv1" path="res://assets/level_selection_pixel/mabini.png" id="11_mabini"]
-[ext_resource type="Texture2D" uid="uid://bcttj5kiwc8pc" path="res://assets/level_selection_pixel/title_banner_reference.png" id="12_title_frame"]
-[ext_resource type="Texture2D" uid="uid://dn3kkgfejgi0c" path="res://assets/level_selection_pixel/play_button_reference.png" id="13_play_frame"]
-[ext_resource type="Texture2D" uid="uid://c2a1c7y20eek2" path="res://assets/level_selection_pixel/help_button_reference.png" id="14_help"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/title_v1.png" id="12_title_frame"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/play_v1.png" id="13_play_frame"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/icon_base.svg" id="14_help"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="15_icon_font"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/level1_v1.png" id="row1"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/level2_v1.png" id="row2"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/level3_v1.png" id="row3"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/level4_v1.png" id="row4"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/level5_v1.png" id="row5"]
+[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/navy_gold/level6_v1.png" id="row6"]
+
+[sub_resource type="AtlasTexture" id="Atlas_title"]
+atlas = ExtResource("12_title_frame")
+region = Rect2(30, 168, 2113, 373)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_play"]
+atlas = ExtResource("13_play_frame")
+region = Rect2(89, 101, 1994, 518)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_level1"]
+atlas = ExtResource("row1")
+region = Rect2(33, 124, 2146, 430)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_level2"]
+atlas = ExtResource("row2")
+region = Rect2(59, 186, 2019, 362)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_level3"]
+atlas = ExtResource("row3")
+region = Rect2(79, 182, 1980, 361)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_level4"]
+atlas = ExtResource("row4")
+region = Rect2(21, 154, 2132, 405)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_level5"]
+atlas = ExtResource("row5")
+region = Rect2(62, 179, 2049, 364)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_level6"]
+atlas = ExtResource("row6")
+region = Rect2(60, 187, 2059, 361)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="SkyStrip"]
+atlas = ExtResource("2_background")
+region = Rect2(0, 0, 1086, 1)
 
 [sub_resource type="StyleBoxFlat" id="Style_title"]
 bg_color = Color(0.965, 0.855, 0.62, 0.98)
@@ -64,46 +116,51 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture_filter = 1
 script = ExtResource("1_level")
 
-[node name="Background" type="TextureRect" parent="." unique_id=1606619570]
-texture_filter = 1
+
+[node name="SkyFill" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("SkyStrip")
+expand_mode = 1
+
+[node name="Background" type="TextureRect" parent="." unique_id=1606619570]
+layout_mode = 0
+offset_top = 88.0
+offset_right = 1086.0
+offset_bottom = 1536.0
 mouse_filter = 2
 texture = ExtResource("2_background")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 0
 
 [node name="BackdropTint" type="ColorRect" parent="." unique_id=1683104312]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+visible = false
+layout_mode = 0
 mouse_filter = 2
-color = Color(0.02, 0.12, 0.2, 0.1)
+color = Color(0, 0, 0, 0)
 
 [node name="UIRoot" type="Control" parent="." unique_id=511740690]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(1024, 1536)
-anchors_preset = 0
-offset_right = 1024.0
-offset_bottom = 1536.0
+custom_minimum_size = Vector2(1086, 1448)
+offset_right = 1086.0
+offset_bottom = 1448.0
 mouse_filter = 1
 
 [node name="BackButton" type="TextureButton" parent="UIRoot" unique_id=1582335023]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 32.0
-offset_top = 28.0
-offset_right = 136.0
-offset_bottom = 132.0
+offset_left = 35.0
+offset_top = 36.0
+offset_right = 135.0
+offset_bottom = 136.0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("3_back")
 ignore_texture_size = true
@@ -111,29 +168,45 @@ stretch_mode = 5
 
 [node name="HelpButton" type="TextureButton" parent="UIRoot" unique_id=1312519284]
 unique_name_in_owner = true
-texture_filter = 1
-layout_mode = 0
-offset_left = 882.0
-offset_top = 28.0
-offset_right = 986.0
-offset_bottom = 132.0
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -135.0
+offset_top = 36.0
+offset_right = -35.0
+offset_bottom = 136.0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("14_help")
-texture_pressed = ExtResource("14_help")
-texture_hover = ExtResource("14_help")
 ignore_texture_size = true
 stretch_mode = 5
 
+[node name="Symbol" type="Label" parent="UIRoot/HelpButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+mouse_filter = 2
+theme_override_fonts/font = ExtResource("15_icon_font")
+theme_override_font_sizes/font_size = 78
+theme_override_colors/font_color = Color(1, 0.8, 0.15, 1)
+theme_override_colors/font_outline_color = Color(0.01, 0.03, 0.05, 1)
+theme_override_colors/font_shadow_color = Color(0.55, 0.21, 0.01, 1)
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_offset_y = 4
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="TitleBanner" type="TextureRect" parent="UIRoot" unique_id=807028397]
 unique_name_in_owner = true
-texture_filter = 1
 layout_mode = 0
-offset_left = 86.0
-offset_top = 50.0
-offset_right = 938.0
-offset_bottom = 310.0
+offset_left = 170.0
+offset_top = 85.0
+offset_right = 916.0
+offset_bottom = 217.0
 mouse_filter = 2
-texture = ExtResource("12_title_frame")
+texture = SubResource("Atlas_title")
 expand_mode = 1
 stretch_mode = 5
 
@@ -160,94 +233,99 @@ vertical_alignment = 1
 
 [node name="LevelButtonsArea" type="Control" parent="UIRoot" unique_id=1400040509]
 unique_name_in_owner = true
-anchors_preset = 0
-offset_left = 156.0
-offset_top = 342.0
-offset_right = 868.0
-offset_bottom = 1254.0
+layout_mode = 1
+anchor_left = 0.1142
+anchor_top = 0.17
+anchor_right = 0.8794
+anchor_bottom = 0.81
+mouse_filter = 1
 
 [node name="Level1Button" parent="UIRoot/LevelButtonsArea" unique_id=1076678431 instance=ExtResource("5_row")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_right = 712.0
+layout_mode = 1
+anchor_top = 0.0000000
+anchor_right = 1.0
+anchor_bottom = 0.0000000
 offset_bottom = 142.0
-portrait = ExtResource("6_lapulapu")
-name_font_size = 34
+disabled = false
+level_id = 1
+level_title = "LEVEL 1 - LAPU-LAPU"
+row_texture = SubResource("Atlas_level1")
 
 [node name="Level2Button" parent="UIRoot/LevelButtonsArea" unique_id=522892594 instance=ExtResource("5_row")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_top = 154.0
-offset_right = 712.0
-offset_bottom = 296.0
+layout_mode = 1
+anchor_top = 0.1666667
+anchor_right = 1.0
+anchor_bottom = 0.1666667
+offset_bottom = 142.0
 disabled = true
 level_id = 2
 level_title = "LEVEL 2 - ANDRES BONIFACIO"
-portrait = ExtResource("7_bonifacio")
-name_font_size = 25
+row_texture = SubResource("Atlas_level2")
 
 [node name="Level3Button" parent="UIRoot/LevelButtonsArea" unique_id=1622845960 instance=ExtResource("5_row")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_top = 308.0
-offset_right = 712.0
-offset_bottom = 450.0
+layout_mode = 1
+anchor_top = 0.3333333
+anchor_right = 1.0
+anchor_bottom = 0.3333333
+offset_bottom = 142.0
 disabled = true
 level_id = 3
 level_title = "LEVEL 3 - JOSE RIZAL"
-portrait = ExtResource("8_rizal")
-name_font_size = 32
+row_texture = SubResource("Atlas_level3")
 
 [node name="Level4Button" parent="UIRoot/LevelButtonsArea" unique_id=1796087367 instance=ExtResource("5_row")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_top = 462.0
-offset_right = 712.0
-offset_bottom = 604.0
+layout_mode = 1
+anchor_top = 0.5000000
+anchor_right = 1.0
+anchor_bottom = 0.5000000
+offset_bottom = 142.0
 disabled = true
 level_id = 4
 level_title = "LEVEL 4 - ANTONIO LUNA"
-portrait = ExtResource("9_luna")
-name_font_size = 30
+row_texture = SubResource("Atlas_level4")
 
 [node name="Level5Button" parent="UIRoot/LevelButtonsArea" unique_id=1708645918 instance=ExtResource("5_row")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_top = 616.0
-offset_right = 712.0
-offset_bottom = 758.0
+layout_mode = 1
+anchor_top = 0.6666667
+anchor_right = 1.0
+anchor_bottom = 0.6666667
+offset_bottom = 142.0
 disabled = true
 level_id = 5
 level_title = "LEVEL 5 - MELCHORA AQUINO"
-portrait = ExtResource("10_aquino")
-name_font_size = 25
+row_texture = SubResource("Atlas_level5")
 
 [node name="Level6Button" parent="UIRoot/LevelButtonsArea" unique_id=1112743727 instance=ExtResource("5_row")]
 unique_name_in_owner = true
-layout_mode = 0
-offset_top = 770.0
-offset_right = 712.0
-offset_bottom = 912.0
+layout_mode = 1
+anchor_top = 0.8333333
+anchor_right = 1.0
+anchor_bottom = 0.8333333
+offset_bottom = 142.0
 disabled = true
 level_id = 6
 level_title = "LEVEL 6 - APOLINARIO MABINI"
-portrait = ExtResource("11_mabini")
-name_font_size = 27
+row_texture = SubResource("Atlas_level6")
 
 [node name="PlayButton" type="TextureButton" parent="UIRoot" unique_id=1085011560]
 unique_name_in_owner = true
-texture_filter = 1
-layout_mode = 0
-offset_left = 260.0
-offset_top = 1284.0
-offset_right = 764.0
-offset_bottom = 1436.0
+layout_mode = 1
+anchor_left = 0.239
+anchor_top = 0.93
+anchor_right = 0.761
+anchor_bottom = 0.93
+offset_top = -146.0
 mouse_default_cursor_shape = 2
 disabled = true
-texture_normal = ExtResource("13_play_frame")
-texture_pressed = ExtResource("13_play_frame")
-texture_hover = ExtResource("13_play_frame")
-texture_disabled = ExtResource("13_play_frame")
+texture_normal = SubResource("Atlas_play")
+texture_pressed = SubResource("Atlas_play")
+texture_hover = SubResource("Atlas_play")
+texture_disabled = SubResource("Atlas_play")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -290,11 +368,13 @@ mouse_filter = 1
 color = Color(0.01, 0.05, 0.1, 0.72)
 
 [node name="Panel" type="PanelContainer" parent="UIRoot/HelpOverlay" unique_id=1484799434]
-layout_mode = 0
-offset_left = 128.0
-offset_top = 276.0
-offset_right = 896.0
-offset_bottom = 1260.0
+layout_mode = 1
+anchor_left = 0.12
+anchor_top = 0.15
+anchor_right = 0.88
+anchor_bottom = 0.85
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("Style_title")
 
 [node name="Margin" type="MarginContainer" parent="UIRoot/HelpOverlay/Panel" unique_id=274411137]
