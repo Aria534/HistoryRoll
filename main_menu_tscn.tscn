@@ -1,37 +1,29 @@
-[gd_scene load_steps=13 format=3 uid="uid://couyhgwqwj2h4"]
+[gd_scene load_steps=11 format=3 uid="uid://couyhgwqwj2h4"]
 
 [ext_resource type="Script" path="res://main_menu_tscn.gd" id="1_menu"]
-[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/main_menu_background_clean_buttons_v8.png" id="2_background"]
-[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/start_game_button_reference_v2_cropped.png" id="3_start"]
-[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/hero_cards_button_reference_v2_cropped.png" id="4_hero"]
-[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/settings_button_reference_v2_cropped.png" id="5_settings"]
-[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/quit_game_button_reference_v2_cropped.png" id="6_quit"]
-[ext_resource type="Script" path="res://live_background.gd" id="7_background_script"]
-[ext_resource type="Script" path="res://plant_sway.gd" id="8_plants"]
-[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/animated_foliage_cluster.png" id="9_foliage"]
-[ext_resource type="Script" path="res://main_menu_board.gd" id="15_board"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/responsive/tropical_background_v1.png" id="2_background"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/responsive/historyroll_scroll_v1.png" id="3_logo"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/responsive/navy_button.svg" id="4_button"]
+[ext_resource type="Texture2D" path="res://assets/main_menu_pixel/responsive/selection_arrow.svg" id="5_arrow"]
+[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="6_font"]
+[ext_resource type="Script" path="res://main_menu_board.gd" id="7_board"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_background"]
+[sub_resource type="FontVariation" id="Font_pixel_bold"]
+base_font = ExtResource("6_font")
+variation_opentype = {2003265652: 700.0}
+variation_embolden = 0.5
+
+[sub_resource type="AtlasTexture" id="SkyStrip"]
+atlas = ExtResource("2_background")
+region = Rect2(0, 0, 1086, 1)
+
+[sub_resource type="SpriteFrames" id="Frames_background"]
 animations = [{
 "frames": [{"duration": 1.0, "texture": ExtResource("2_background")}],
 "loop": false,
 "name": &"default",
 "speed": 1.0
 }]
-
-[sub_resource type="StyleBoxFlat" id="StyleBox_button_backdrop"]
-bg_color = Color(0.015, 0.08, 0.14, 0.16)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(1, 0.72, 0.25, 0.18)
-corner_radius_top_left = 34
-corner_radius_top_right = 34
-corner_radius_bottom_right = 34
-corner_radius_bottom_left = 34
-shadow_color = Color(0.01, 0.03, 0.06, 0.18)
-shadow_size = 10
 
 [node name="main_menu_tscn" type="Control"]
 layout_mode = 3
@@ -40,144 +32,200 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+texture_filter = 1
 script = ExtResource("1_menu")
 
-[node name="LiveBackground" type="AnimatedSprite2D" parent="."]
-position = Vector2(512, 768)
-sprite_frames = SubResource("SpriteFrames_background")
-script = ExtResource("7_background_script")
-metadata/_edit_lock_ = true
-
-[node name="AnimatedPlants" type="Node2D" parent="."]
-self_modulate = Color(1, 1, 1, 0.14)
-script = ExtResource("8_plants")
-
-[node name="PlantTopLeft" type="Sprite2D" parent="AnimatedPlants"]
-position = Vector2(25, 170)
-scale = Vector2(0.14, 0.14)
-texture = ExtResource("9_foliage")
-offset = Vector2(0, -512)
-
-[node name="PlantTopRight" type="Sprite2D" parent="AnimatedPlants"]
-position = Vector2(999, 175)
-scale = Vector2(-0.14, 0.14)
-texture = ExtResource("9_foliage")
-offset = Vector2(0, -512)
-
-[node name="PlantLeft" type="Sprite2D" parent="AnimatedPlants"]
-position = Vector2(8, 1010)
-scale = Vector2(0.14, 0.14)
-texture = ExtResource("9_foliage")
-offset = Vector2(0, -512)
-
-[node name="PlantRight" type="Sprite2D" parent="AnimatedPlants"]
-position = Vector2(1016, 1020)
-scale = Vector2(-0.14, 0.14)
-texture = ExtResource("9_foliage")
-offset = Vector2(0, -512)
-
-[node name="PlantBottomLeft" type="Sprite2D" parent="AnimatedPlants"]
-position = Vector2(70, 1535)
-scale = Vector2(0.16, 0.16)
-texture = ExtResource("9_foliage")
-offset = Vector2(0, -512)
-
-[node name="PlantBottomRight" type="Sprite2D" parent="AnimatedPlants"]
-position = Vector2(954, 1535)
-scale = Vector2(-0.16, 0.16)
-texture = ExtResource("9_foliage")
-offset = Vector2(0, -512)
-
-[node name="ButtonBackdrop" type="Panel" parent="."]
-z_index = 1
+[node name="SkyFill" type="TextureRect" parent="."]
 layout_mode = 1
-anchor_left = 0.155
-anchor_top = 0.38
-anchor_right = 0.845
-anchor_bottom = 0.84
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBox_button_backdrop")
+texture = SubResource("SkyStrip")
+expand_mode = 1
+
+[node name="LiveBackground" type="AnimatedSprite2D" parent="."]
+position = Vector2(512, 853.333)
+scale = Vector2(0.94291, 0.94291)
+sprite_frames = SubResource("Frames_background")
+metadata/_edit_lock_ = true
+
+[node name="MenuLogo" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 42.0
+offset_top = 220.0
+offset_right = 982.0
+offset_bottom = 533.333
+mouse_filter = 2
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AnimatedPlants" type="Node2D" parent="."]
+visible = false
+process_mode = 4
+
+[node name="ButtonBackdrop" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+mouse_filter = 2
 
 [node name="StartButton" type="TextureButton" parent="."]
 unique_name_in_owner = true
 z_index = 2
-self_modulate = Color(1, 1, 1, 1)
-layout_mode = 1
-anchor_left = 0.2
-anchor_top = 0.405
-anchor_right = 0.8
-anchor_bottom = 0.495
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_left = 222.0
+offset_top = 650.0
+offset_right = 802.0
+offset_bottom = 752.0
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource("3_start")
+texture_normal = ExtResource("4_button")
 ignore_texture_size = true
 stretch_mode = 0
-texture_filter = 1
+tooltip_text = "START GAME"
+
+[node name="Caption" type="Label" parent="StartButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.77, 0.16, 1)
+theme_override_colors/font_outline_color = Color(0.52, 0.27, 0.03, 1)
+theme_override_colors/font_shadow_color = Color(0.04, 0.07, 0.11, 1)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = SubResource("Font_pixel_bold")
+theme_override_font_sizes/font_size = 70
+text = "START GAME"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="HeroCardsButton" type="TextureButton" parent="."]
 unique_name_in_owner = true
 z_index = 2
-self_modulate = Color(1, 1, 1, 1)
-layout_mode = 1
-anchor_left = 0.2
-anchor_top = 0.515
-anchor_right = 0.8
-anchor_bottom = 0.605
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_left = 222.0
+offset_top = 780.0
+offset_right = 802.0
+offset_bottom = 882.0
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource("4_hero")
+texture_normal = ExtResource("4_button")
 ignore_texture_size = true
 stretch_mode = 0
-texture_filter = 1
+tooltip_text = "HERO CARDS"
+
+[node name="Caption" type="Label" parent="HeroCardsButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.77, 0.16, 1)
+theme_override_colors/font_outline_color = Color(0.52, 0.27, 0.03, 1)
+theme_override_colors/font_shadow_color = Color(0.04, 0.07, 0.11, 1)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = SubResource("Font_pixel_bold")
+theme_override_font_sizes/font_size = 70
+text = "HERO CARDS"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SettingsButton" type="TextureButton" parent="."]
 unique_name_in_owner = true
 z_index = 2
-self_modulate = Color(1, 1, 1, 1)
-layout_mode = 1
-anchor_left = 0.2
-anchor_top = 0.625
-anchor_right = 0.8
-anchor_bottom = 0.715
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_left = 222.0
+offset_top = 910.0
+offset_right = 802.0
+offset_bottom = 1012.0
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource("5_settings")
+texture_normal = ExtResource("4_button")
 ignore_texture_size = true
 stretch_mode = 0
-texture_filter = 1
+tooltip_text = "SETTINGS"
+
+[node name="Caption" type="Label" parent="SettingsButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.77, 0.16, 1)
+theme_override_colors/font_outline_color = Color(0.52, 0.27, 0.03, 1)
+theme_override_colors/font_shadow_color = Color(0.04, 0.07, 0.11, 1)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = SubResource("Font_pixel_bold")
+theme_override_font_sizes/font_size = 70
+text = "SETTINGS"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="QuitButton" type="TextureButton" parent="."]
 unique_name_in_owner = true
 z_index = 2
-self_modulate = Color(1, 1, 1, 1)
-layout_mode = 1
-anchor_left = 0.2
-anchor_top = 0.735
-anchor_right = 0.8
-anchor_bottom = 0.825
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_left = 222.0
+offset_top = 1040.0
+offset_right = 802.0
+offset_bottom = 1142.0
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource("6_quit")
+texture_normal = ExtResource("4_button")
 ignore_texture_size = true
 stretch_mode = 0
-texture_filter = 1
+tooltip_text = "EXIT"
+
+[node name="Caption" type="Label" parent="QuitButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.77, 0.16, 1)
+theme_override_colors/font_outline_color = Color(0.52, 0.27, 0.03, 1)
+theme_override_colors/font_shadow_color = Color(0.04, 0.07, 0.11, 1)
+theme_override_constants/outline_size = 2
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = SubResource("Font_pixel_bold")
+theme_override_font_sizes/font_size = 70
+text = "EXIT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SelectionArrow" type="TextureRect" parent="."]
+unique_name_in_owner = true
+z_index = 3
+layout_mode = 0
+offset_left = 158.0
+offset_top = 675.0
+offset_right = 194.0
+offset_bottom = 723.0
+mouse_filter = 2
+texture = ExtResource("5_arrow")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="BoardDecoration" type="Control" parent="."]
 unique_name_in_owner = true
 visible = false
-z_index = 1
-layout_mode = 1
-anchor_left = -0.12
-anchor_top = 0.745
-anchor_right = 1.12
-anchor_bottom = 1.06
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
 mouse_filter = 2
-script = ExtResource("15_board")
+process_mode = 4
+script = ExtResource("7_board")

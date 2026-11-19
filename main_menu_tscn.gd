@@ -1,5 +1,8 @@
 extends Control
 
+const DESIGN_SIZE := Vector2(720, 1280)
+const BUTTON_LABELS := ["START GAME", "HERO CARDS", "SETTINGS", "EXIT"]
+
 @export_file("*.tscn") var start_game_scene: String = "res://level_selection.tscn"
 @export_file("*.tscn") var hero_cards_scene: String = "res://hero_cards.tscn"
 @export_file("*.tscn") var settings_scene: String = "res://settings.tscn"
@@ -16,9 +19,14 @@ extends Control
 @onready var hero_cards_button := get_node_or_null("HeroCardsButton") as TextureButton
 @onready var settings_button := get_node_or_null("SettingsButton") as TextureButton
 @onready var quit_button := get_node_or_null("QuitButton") as TextureButton
+@onready var menu_logo: TextureRect = %MenuLogo
+@onready var selection_arrow: TextureRect = %SelectionArrow
+@onready var live_background: AnimatedSprite2D = $LiveBackground
 
 var _button_tweens: Dictionary = {}
 var _hovered_buttons: Dictionary = {}
+var _button_rest_positions: Dictionary = {}
+var _selected_button: TextureButton
 var _scene_transition_pending := false
 var scene_change_handler: Callable
 var quit_handler: Callable
@@ -35,6 +43,71 @@ func _ready() -> void:
 	_setup_button(hero_cards_button, _on_hero_cards_pressed)
 	_setup_button(settings_button, _on_settings_pressed)
 	_setup_button(quit_button, _on_quit_pressed)
+	resized.connect(_apply_responsive_layout)
+	_apply_responsive_layout()
+	_select_button(start_button)
+
+
+func _apply_responsive_layout() -> void:
+	if size.x <= 0.0 or size.y <= 0.0 or not _validate_required_buttons():
+		return
+	var safe_rect := _get_safe_rect()
+	var ui_scale := minf(safe_rect.size.x / DESIGN_SIZE.x, safe_rect.size.y / DESIGN_SIZE.y)
+	var extra_height := maxf(0.0, safe_rect.size.y - DESIGN_SIZE.y * ui_scale)
+	var top := safe_rect.position.y + extra_height * 0.25
+	var logo_width := minf(safe_rect.size.x * 0.94, 680.0 * ui_scale)
+	menu_logo.size = Vector2(logo_width, logo_width / 3.0)
+	menu_logo.position = Vector2(safe_rect.get_center().x - logo_width * 0.5, top + 136.0 * ui_scale)
+	var button_size := Vector2(410.0, 72.0) * ui_scale
+	var buttons: Array[TextureButton] = [start_button, hero_cards_button, settings_button, quit_button]
+	for index: int in buttons.size():
+		var button := buttons[index]
+		var tween: Tween = _button_tweens.get(button)
+		if tween != null and tween.is_valid():
+			tween.kill()
+		button.scale = Vector2.ONE
+		button.position = Vector2(safe_rect.get_center().x - button_size.x * 0.5, top + (450.0 + index * 94.0) * ui_scale)
+		button.size = button_size
+		_button_rest_positions[button] = button.position
+		button.pivot_offset = button_size * 0.5
+		var label := button.get_node("Caption") as Label
+		var font := label.get_theme_font("font")
+		var font_size := maxi(18, roundi(50.0 * ui_scale))
+		while font_size > 18 and font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > button_size.x * 0.88:
+			font_size -= 1
+		label.add_theme_font_size_override("font_size", font_size)
+		label.add_theme_constant_override("outline_size", maxi(1, roundi(2.0 * ui_scale)))
+		label.add_theme_constant_override("shadow_offset_y", maxi(1, roundi(3.0 * ui_scale)))
+	selection_arrow.size = Vector2(27.0, 36.0) * ui_scale
+	_position_selection_arrow()
+	# Preserve the scenery's proportions and both edge landmarks. The SkyFill
+	# strip extends the source sky above the width-fitted image on tall phones.
+	var texture := live_background.sprite_frames.get_frame_texture("default", 0)
+	var fit_scale := size.x / texture.get_width()
+	live_background.scale = Vector2.ONE * fit_scale
+	live_background.position = Vector2(size.x * 0.5, size.y - texture.get_height() * fit_scale * 0.5)
+
+
+func _get_safe_rect() -> Rect2:
+	var result := Rect2(Vector2.ZERO, size)
+	if OS.has_feature("android"):
+		var screen_size := Vector2(DisplayServer.screen_get_size())
+		var safe_area := Rect2(DisplayServer.get_display_safe_area())
+		if screen_size.x > 0.0 and screen_size.y > 0.0 and safe_area.has_area():
+			result = Rect2(safe_area.position / screen_size * size, safe_area.size / screen_size * size)
+	return result.grow(-minf(16.0, size.x * 0.02))
+
+
+func _select_button(button: TextureButton) -> void:
+	_selected_button = button
+	_position_selection_arrow()
+
+
+func _position_selection_arrow() -> void:
+	if _selected_button == null:
+		return
+	var rest: Vector2 = _button_rest_positions.get(_selected_button, _selected_button.position)
+	selection_arrow.position = Vector2(rest.x - selection_arrow.size.x * 1.65, rest.y + (_selected_button.size.y - selection_arrow.size.y) * 0.5)
 
 
 func _request_music(track_path: String) -> void:
@@ -72,6 +145,7 @@ func _setup_button(button: TextureButton, callback: Callable) -> void:
 	var mouse_exited_callback := _on_button_mouse_exited.bind(button)
 	var button_down_callback := _on_button_down.bind(button)
 	var button_up_callback := _on_button_up.bind(button)
+	var focus_callback := _select_button.bind(button)
 	if not button.resized.is_connected(resize_callback):
 		button.resized.connect(resize_callback)
 	if not button.pressed.is_connected(callback):
@@ -84,6 +158,8 @@ func _setup_button(button: TextureButton, callback: Callable) -> void:
 		button.button_down.connect(button_down_callback)
 	if not button.button_up.is_connected(button_up_callback):
 		button.button_up.connect(button_up_callback)
+	if not button.focus_entered.is_connected(focus_callback):
+		button.focus_entered.connect(focus_callback)
 
 
 func _update_button_pivot(button: TextureButton) -> void:
@@ -92,6 +168,7 @@ func _update_button_pivot(button: TextureButton) -> void:
 
 func _on_button_mouse_entered(button: TextureButton) -> void:
 	_hovered_buttons[button] = true
+	_select_button(button)
 	if not button.button_pressed:
 		_animate_button(button, hover_scale)
 
@@ -103,6 +180,10 @@ func _on_button_mouse_exited(button: TextureButton) -> void:
 
 
 func _on_button_down(button: TextureButton) -> void:
+	_select_button(button)
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("play_sfx"):
+		audio_manager.call("play_sfx", "res://assets/audio/sfx/menu_press.ogg", "menu_press")
 	_animate_button(button, press_scale)
 
 
@@ -125,6 +206,10 @@ func _animate_button(button: TextureButton, target_scale: float) -> void:
 	tween.set_trans(Tween.TRANS_QUAD)
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(button, "scale", Vector2.ONE * target_scale, anim_time)
+	tween.parallel().tween_property(button, "self_modulate", Color(0.82, 0.88, 0.96) if target_scale == press_scale else Color.WHITE, anim_time)
+	var rest: Vector2 = _button_rest_positions.get(button, button.position)
+	var press_offset := Vector2(0, maxf(2.0, button.size.y * 0.04)) if target_scale == press_scale else Vector2.ZERO
+	tween.parallel().tween_property(button, "position", rest + press_offset, anim_time)
 	_button_tweens[button] = tween
 
 
