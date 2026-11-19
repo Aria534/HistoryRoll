@@ -16,6 +16,10 @@ func _run() -> void:
 	_cleanup_save()
 	await _test_viewport(Vector2i(1024, 1536), "level_selection_1024x1536.png")
 	await _test_viewport(Vector2i(720, 1280), "level_selection_720x1280.png")
+	await _test_viewport(Vector2i(1086, 1448), "level_selection_reference_1086x1448.png")
+	await _test_viewport(Vector2i(1080, 1920), "level_selection_1080x1920.png")
+	await _test_viewport(Vector2i(1080, 2340), "level_selection_1080x2340.png")
+	await _test_viewport(Vector2i(1080, 2400), "level_selection_1080x2400.png")
 	_cleanup_save()
 	await _test_returning_player_capture()
 	_cleanup_save()
@@ -33,6 +37,8 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 	progress.save_path = SAVE_PATH
 	var screen = LevelSelectionScene.instantiate()
 	screen.progress_manager = progress
+	var requested_scenes: Array[String] = []
+	screen.scene_change_handler = func(path: String) -> void: requested_scenes.append(path)
 	viewport.add_child(screen)
 	await process_frame
 	await process_frame
@@ -47,7 +53,7 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 	_check(screen.back_button.visible and screen.help_button.visible, "%s top controls remain visible beside the transparent banner" % size_label)
 	_check(_rect_is_inside(screen.back_button.get_global_rect(), viewport_size), "%s Back Arrow stays on-screen" % size_label)
 	_check(_rect_is_inside(screen.help_button.get_global_rect(), viewport_size), "%s Help icon stays on-screen" % size_label)
-	_check(screen.help_button.texture_normal.resource_path.ends_with("help_button_reference.png"), "%s Help uses the matching pixel-art texture" % size_label)
+	_check(screen.help_button.texture_normal.resource_path.ends_with("navy_gold/icon_base.svg"), "%s Help uses the matching navy icon" % size_label)
 	_check(_rect_is_inside(screen.play_button.get_global_rect(), viewport_size), "%s PLAY stays on-screen" % size_label)
 	var instructions: Label = screen.get_node("UIRoot/HelpOverlay/Panel/Margin/Content/Instructions")
 	_check(instructions.text.contains("Earn 10 points"), "%s Help explains correct-answer scoring" % size_label)
@@ -60,11 +66,9 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 		var button: LevelSelectionRow = screen.level_buttons[level_id]
 		var button_rect := button.get_global_rect()
 		_check(_rect_is_inside(button_rect, viewport_size), "%s Level %d stays on-screen" % [size_label, level_id])
-		_check(button.name_label.position.x - (button.portrait_rect.position.x + button.portrait_rect.size.x) >= 50.0, "%s Level %d keeps reference spacing between portrait and text" % [size_label, level_id])
-		var row_font: Font = button.name_label.get_theme_font("font")
-		var uses_row_font := row_font is FontVariation and (row_font as FontVariation).base_font.resource_path.ends_with("Roboto-Variable.ttf")
-		_check(uses_row_font, "%s Level %d uses the approved condensed game font" % [size_label, level_id])
-		_check(is_equal_approx(button.lock_icon.position.x + button.lock_icon.size.x, button.size.x - 28.0), "%s Level %d padlock keeps the reference right margin" % [size_label, level_id])
+		_check(not button.name_label.visible and not button.portrait_rect.visible, "%s Level %d avoids duplicate text or portraits over the reference artwork" % [size_label, level_id])
+		_check(button.frame_rect.texture == button.row_texture, "%s Level %d keeps the same gold typography when locked or unlocked" % [size_label, level_id])
+		_check(is_equal_approx(button.lock_icon.position.x + button.lock_icon.size.x, button.size.x - 16.0), "%s Level %d padlock keeps its right margin" % [size_label, level_id])
 		_check(is_equal_approx(button.lock_icon.position.y + button.lock_icon.size.y * 0.5, button.size.y * 0.5), "%s Level %d padlock stays vertically centered" % [size_label, level_id])
 		if level_id == 1:
 			_check(not button.is_lock_visible(), "%s unlocked Level 1 has no padlock" % size_label)
@@ -103,6 +107,24 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 		_check(false, "%s Help-panel capture is available" % size_label)
 	screen.close_help_button.pressed.emit()
 	_check(not screen.help_overlay.visible, "%s Help panel closes" % size_label)
+	# Exercise the rendered button through GUI hit-testing, rather than calling
+	# only its navigation callback. All artwork children must ignore input.
+	var point: Vector2 = screen.play_button.get_global_rect().get_center()
+	var motion := InputEventMouseMotion.new()
+	motion.position = point
+	viewport.push_input(motion, true)
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.position = point
+	press.pressed = true
+	viewport.push_input(press, true)
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.position = point
+	viewport.push_input(release, true)
+	_check(requested_scenes == ["res://gameplay_placeholder.tscn"], "%s PLAY hit-test requests the existing gameplay scene" % size_label)
+	screen.play_button.pressed.emit()
+	_check(requested_scenes.size() == 1, "%s repeated PLAY cannot request a second transition" % size_label)
 
 	screen.queue_free()
 	viewport.queue_free()

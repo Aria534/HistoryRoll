@@ -34,7 +34,7 @@ func _test_pixel_art_fresh_state() -> void:
 
 	_check(screen._validate_required_nodes(), "pixel Level Selection required nodes resolve")
 	_check(screen.level_buttons.size() == 6, "all six reusable level rows are cached")
-	_check(screen.get_node("Background").texture.resource_path.ends_with("tropical_pixel_background.png"), "pixel tropical background is active")
+	_check(screen.get_node("Background").texture.resource_path.ends_with("navy_gold/background_v1.png"), "reference mountain-and-fields background is active")
 	_check(screen.title_banner.get_node("TitleLabel").text == "CHOOSE YOUR LEVEL", "title banner text is exact")
 	_check(screen.help_button.pressed.get_connections().size() == 1, "Help icon is connected")
 	_check(screen.get_node_or_null("%SettingsButton") == null, "Settings icon is removed")
@@ -49,7 +49,7 @@ func _test_pixel_art_fresh_state() -> void:
 		_check(row != null, "Level %d uses the reusable pixel row" % level_id)
 		_check(row.level_title == expected_names[level_id], "Level %d title is exact" % level_id)
 		_check(row.get_node_or_null("Row/Text/Subtitle") == null, "Level %d has no subtitle" % level_id)
-		_check(row.portrait != null and row.portrait.resource_path.ends_with(".png"), "Level %d portrait is loaded" % level_id)
+		_check(row.row_texture is AtlasTexture and row.row_texture.atlas.resource_path.ends_with("level%d_v1.png" % level_id), "Level %d uses its matching hero row artwork" % level_id)
 		_check(not row.level_title.contains("★"), "Level %d contains no star rating" % level_id)
 		if row.is_lock_visible():
 			lock_count += 1
@@ -61,10 +61,12 @@ func _test_pixel_art_fresh_state() -> void:
 		_check(locked_row.disabled, "fresh Level %d is disabled" % level_id)
 		_check(locked_row.is_lock_visible(), "fresh Level %d displays a padlock" % level_id)
 		_check(locked_row.status_label.text == "LOCKED", "fresh Level %d displays LOCKED" % level_id)
-		_check(locked_row.portrait_rect.self_modulate.r < 0.7, "fresh Level %d portrait is visibly dimmed" % level_id)
+		_check(locked_row.frame_rect.self_modulate == Color.WHITE, "fresh Level %d retains the reference's full navy/gold colors" % level_id)
 	_check(lock_count == 5, "fresh player has exactly five visible padlocks")
 	_check(screen.selected_level_id == 1, "Level 1 is highlighted as the default selection")
 	_check(not screen.play_button.disabled, "PLAY is enabled for Level 1")
+	screen._on_level_pressed(2)
+	_check(screen.selected_level_id == 1 and progress.selected_level == 1, "locked Level 2 cannot replace the selected playable level")
 
 	_check(not screen.help_overlay.visible, "Help overlay starts hidden")
 	screen.help_button.pressed.emit()
@@ -111,6 +113,14 @@ func _test_dynamic_unlock_and_persistence() -> void:
 	_check(not reopened.level_buttons[2].disabled, "Level 2 unlocked state survives restart")
 	_check(not reopened.level_buttons[2].is_lock_visible(), "Level 2 remains without a padlock after restart")
 	_check(reopened.level_buttons[3].is_lock_visible(), "Level 3 padlock persists after restart")
+	_check(reloaded.record_board_completion(2, 120, {}), "Level 2 completion is recorded through the existing progress manager")
+	await process_frame
+	_check(not reopened.level_buttons[3].disabled and not reopened.level_buttons[3].is_lock_visible(), "Level 3 automatically unlocks and removes its padlock after Level 2")
+	var second_reload = ProgressManagerScript.new()
+	second_reload.save_path = _save_path
+	second_reload.load_progress()
+	_check(second_reload.is_level_unlocked(3), "Level 3 unlock survives reloading the save")
+	second_reload.free()
 
 	reopened.queue_free()
 	await process_frame
