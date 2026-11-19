@@ -1,7 +1,7 @@
 extends Control
 
-const DESIGN_SIZE := Vector2(720, 1280)
-const BUTTON_LABELS := ["START GAME", "HERO CARDS", "SETTINGS", "EXIT"]
+const DESIGN_SIZE := Vector2(1086, 1448)
+const BUTTON_LABELS := ["Start Game", "Hero Cards", "Settings", "Quit"]
 
 @export_file("*.tscn") var start_game_scene: String = "res://level_selection.tscn"
 @export_file("*.tscn") var hero_cards_scene: String = "res://hero_cards.tscn"
@@ -22,6 +22,7 @@ const BUTTON_LABELS := ["START GAME", "HERO CARDS", "SETTINGS", "EXIT"]
 @onready var menu_logo: TextureRect = %MenuLogo
 @onready var selection_arrow: TextureRect = %SelectionArrow
 @onready var live_background: AnimatedSprite2D = $LiveBackground
+@onready var menu_explorers: TextureRect = %MenuExplorers
 
 var _button_tweens: Dictionary = {}
 var _hovered_buttons: Dictionary = {}
@@ -55,10 +56,11 @@ func _apply_responsive_layout() -> void:
 	var ui_scale := minf(safe_rect.size.x / DESIGN_SIZE.x, safe_rect.size.y / DESIGN_SIZE.y)
 	var extra_height := maxf(0.0, safe_rect.size.y - DESIGN_SIZE.y * ui_scale)
 	var top := safe_rect.position.y + extra_height * 0.25
-	var logo_width := minf(safe_rect.size.x * 0.94, 680.0 * ui_scale)
-	menu_logo.size = Vector2(logo_width, logo_width / 3.0)
-	menu_logo.position = Vector2(safe_rect.get_center().x - logo_width * 0.5, top + 136.0 * ui_scale)
-	var button_size := Vector2(410.0, 72.0) * ui_scale
+	var logo_width := minf(safe_rect.size.x * 0.80, 780.0 * ui_scale)
+	var logo_aspect := menu_logo.texture.get_size().aspect()
+	menu_logo.size = Vector2(logo_width, logo_width / logo_aspect)
+	menu_logo.position = Vector2(safe_rect.get_center().x - logo_width * 0.5, top + 70.0 * ui_scale)
+	var button_size := Vector2(520.0, 110.0) * ui_scale
 	var buttons: Array[TextureButton] = [start_button, hero_cards_button, settings_button, quit_button]
 	for index: int in buttons.size():
 		var button := buttons[index]
@@ -66,26 +68,31 @@ func _apply_responsive_layout() -> void:
 		if tween != null and tween.is_valid():
 			tween.kill()
 		button.scale = Vector2.ONE
-		button.position = Vector2(safe_rect.get_center().x - button_size.x * 0.5, top + (450.0 + index * 94.0) * ui_scale)
+		button.self_modulate = Color.WHITE
+		button.get_node("PlankArt").self_modulate = Color.WHITE
+		button.position = Vector2(safe_rect.get_center().x - button_size.x * 0.5, top + (430.0 + index * 130.0) * ui_scale + extra_height * 0.15)
 		button.size = button_size
 		_button_rest_positions[button] = button.position
 		button.pivot_offset = button_size * 0.5
 		var label := button.get_node("Caption") as Label
 		var font := label.get_theme_font("font")
-		var font_size := maxi(18, roundi(50.0 * ui_scale))
-		while font_size > 18 and font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > button_size.x * 0.88:
+		var font_size := maxi(18, roundi(66.0 * ui_scale))
+		while font_size > 18 and font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > button_size.x * 0.61:
 			font_size -= 1
 		label.add_theme_font_size_override("font_size", font_size)
 		label.add_theme_constant_override("outline_size", maxi(1, roundi(2.0 * ui_scale)))
 		label.add_theme_constant_override("shadow_offset_y", maxi(1, roundi(3.0 * ui_scale)))
 	selection_arrow.size = Vector2(27.0, 36.0) * ui_scale
 	_position_selection_arrow()
-	# Preserve the scenery's proportions and both edge landmarks. The SkyFill
-	# strip extends the source sky above the width-fitted image on tall phones.
+	# Scenery covers the viewport; the separate foreground preserves both explorers
+	# and the lantern across portrait aspect ratios without stretching their art.
 	var texture := live_background.sprite_frames.get_frame_texture("default", 0)
-	var fit_scale := size.x / texture.get_width()
+	var fit_scale := maxf(size.x / texture.get_width(), size.y / texture.get_height())
 	live_background.scale = Vector2.ONE * fit_scale
-	live_background.position = Vector2(size.x * 0.5, size.y - texture.get_height() * fit_scale * 0.5)
+	live_background.position = size * 0.5
+	var foreground_height := minf(size.x * 0.57, size.y * 0.34)
+	menu_explorers.size = Vector2(size.x, foreground_height)
+	menu_explorers.position = Vector2(0.0, size.y - foreground_height)
 
 
 func _get_safe_rect() -> Rect2:
@@ -207,6 +214,7 @@ func _animate_button(button: TextureButton, target_scale: float) -> void:
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(button, "scale", Vector2.ONE * target_scale, anim_time)
 	tween.parallel().tween_property(button, "self_modulate", Color(0.82, 0.88, 0.96) if target_scale == press_scale else Color.WHITE, anim_time)
+	tween.parallel().tween_property(button.get_node("PlankArt"), "self_modulate", Color(0.82, 0.88, 0.96) if target_scale == press_scale else Color.WHITE, anim_time)
 	var rest: Vector2 = _button_rest_positions.get(button, button.position)
 	var press_offset := Vector2(0, maxf(2.0, button.size.y * 0.04)) if target_scale == press_scale else Vector2.ZERO
 	tween.parallel().tween_property(button, "position", rest + press_offset, anim_time)
