@@ -15,92 +15,156 @@ func _init() -> void:
 func _run() -> void:
 	_cleanup_settings()
 	var audio_manager: Node = get_root().get_node_or_null("AudioManager")
-	if audio_manager != null and audio_manager.has_method("set_music_enabled"):
-		audio_manager.set_music_enabled(true, false)
-	await _test_main_menu_viewport(Vector2i(1024, 1536), "main_menu_1024x1536.png")
-	await _test_main_menu_viewport(Vector2i(720, 1280), "main_menu_720x1280.png")
+	var saved_music: bool = audio_manager.is_music_enabled()
+	var saved_sfx: bool = audio_manager.is_sfx_enabled()
+	audio_manager.set_music_enabled(true, false)
+	await _test_main_menu_viewport(Vector2i(720, 1280))
+	await _test_main_menu_viewport(Vector2i(1080, 1920))
+	await _test_main_menu_viewport(Vector2i(1080, 2340))
+	await _test_main_menu_viewport(Vector2i(1080, 2400))
+	await _test_main_menu_viewport(Vector2i(1024, 1536))
+	await _test_touch_entry()
 	await _test_settings()
+	audio_manager.set_music_enabled(saved_music, false)
+	audio_manager.set_sfx_enabled(saved_sfx, false)
 	_cleanup_settings()
 	print("Main Menu redesign tests: %d passed, %d failed." % [_passed, _failed])
 	quit(0 if _failed == 0 else 1)
 
 
-func _test_main_menu_viewport(viewport_size: Vector2i, capture_name: String) -> void:
+func _test_main_menu_viewport(viewport_size: Vector2i) -> void:
 	var viewport := SubViewport.new()
 	viewport.size = viewport_size
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	get_root().add_child(viewport)
 	var menu = MainMenuScene.instantiate()
-	menu.scene_change_handler = func(_path: String): pass
-	menu.quit_handler = func(): pass
+	var requested: Array[String] = []
+	var exit_state := {"requested": false}
+	menu.scene_change_handler = func(path: String) -> void: requested.append(path)
+	menu.quit_handler = func() -> void: exit_state["requested"] = true
 	viewport.add_child(menu)
 	await process_frame
 	await process_frame
 	var audio_manager: Node = get_root().get_node_or_null("AudioManager")
 	var label := "%dx%d" % [viewport_size.x, viewport_size.y]
-	_check(audio_manager != null and str(audio_manager.call("get_current_track_path")) == "res://assets/audio/music/main_menu.ogg", "%s Main Menu requests its looping music track" % label)
-	_check(audio_manager != null and bool(audio_manager.call("is_music_playing")), "%s Main Menu music is audible when Music is ON" % label)
-	_check(menu.size.round() == Vector2(viewport_size), "%s Main Menu fills viewport" % label)
-	_check(not menu.has_node("HistoryRollLogo"), "%s has no duplicate logo node" % label)
-	var background := menu.get_node("LiveBackground") as AnimatedSprite2D
-	var background_texture := background.sprite_frames.get_frame_texture("default", 0)
-	_check(background_texture.resource_path.ends_with("main_menu_background_clean_buttons_v8.png"), "%s uses the clean scenery with no baked duplicate buttons" % label)
-	_check(menu.get_node("AnimatedPlants").self_modulate.a <= 0.15, "%s keeps foliage motion subtle over the complete artwork" % label)
-	var backdrop := menu.get_node("ButtonBackdrop") as Panel
-	_check(backdrop != null and backdrop.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s decorative button backdrop cannot block input" % label)
+	_check(audio_manager.get_current_track_path() == "res://assets/audio/music/main_menu.ogg", "%s Main Menu requests its music" % label)
+	_check(audio_manager.is_music_playing(), "%s enabled music is playing" % label)
+	var music_stream: AudioStream = audio_manager._player.stream
+	menu._request_music("res://assets/audio/music/main_menu.ogg")
+	_check(audio_manager._player.stream == music_stream, "%s the same music stream is retained" % label)
+	_check(menu.size.round() == Vector2(viewport_size), "%s menu fills the portrait viewport" % label)
+	_check(_rect_inside(menu.menu_logo.get_global_rect(), viewport_size), "%s independent logo stays on-screen" % label)
+	_check(is_equal_approx(menu.menu_logo.size.x / menu.menu_logo.size.y, 3.0), "%s logo keeps its source aspect ratio" % label)
+	_check(not menu.get_node("AnimatedPlants").visible and not menu.get_node("BoardDecoration").visible, "%s retired decorations do not cover the approved scenery" % label)
+	var background: AnimatedSprite2D = menu.get_node("LiveBackground")
+	var texture := background.sprite_frames.get_frame_texture("default", 0)
+	_check(texture.resource_path.ends_with("tropical_background_v1.png"), "%s uses the separated scenery" % label)
+	_check(is_equal_approx(background.scale.x, background.scale.y), "%s scenery is not stretched" % label)
+	_check(is_equal_approx(texture.get_width() * background.scale.x, viewport_size.x), "%s preserves scenery across both edges" % label)
+	_check(is_equal_approx(background.position.y + texture.get_height() * background.scale.y * 0.5, viewport_size.y), "%s grass platform stays at the bottom" % label)
+	_check(menu.get_node("SkyFill").size == Vector2(viewport_size), "%s extended sky prevents black bars" % label)
+	_check(menu.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "%s menu uses nearest filtering" % label)
 	var buttons: Array[TextureButton] = [menu.start_button, menu.hero_cards_button, menu.settings_button, menu.quit_button]
 	var previous_rect := Rect2()
-	var reference_size := Vector2.ZERO
+	var gap := -1.0
 	for index: int in buttons.size():
 		var button := buttons[index]
 		var rect := button.get_global_rect()
-		if index == 0:
-			reference_size = rect.size
-		_check(_rect_inside(rect, viewport_size), "%s button %d stays on-screen" % [label, index + 1])
-		_check(rect.size.y >= 90.0, "%s button %d remains touch-friendly" % [label, index + 1])
-		_check(rect.size.is_equal_approx(reference_size), "%s button %d uses the consistent menu size" % [label, index + 1])
+		var caption := button.get_node("Caption") as Label
+		var text_size := caption.get_theme_font("font").get_string_size(caption.text, HORIZONTAL_ALIGNMENT_LEFT, -1, caption.get_theme_font_size("font_size"))
+		_check(_rect_inside(rect, viewport_size) and rect.size.y >= 64.0, "%s button %d stays visible and touch-friendly" % [label, index + 1])
+		_check(rect.size.is_equal_approx(buttons[0].size), "%s button %d has the same dimensions" % [label, index + 1])
+		_check(caption.text == menu.BUTTON_LABELS[index], "%s button %d has the approved wording" % [label, index + 1])
+		_check(text_size.x < rect.size.x * 0.9 and text_size.y < rect.size.y, "%s button %d text fits its navy plaque" % [label, index + 1])
 		if index > 0:
-			_check(not previous_rect.intersects(rect), "%s buttons %d and %d do not overlap" % [label, index, index + 1])
-			_check(rect.position.y - previous_rect.end.y >= viewport_size.y * 0.015, "%s buttons %d and %d have a clear vertical gap" % [label, index, index + 1])
+			var current_gap := rect.position.y - previous_rect.end.y
+			if gap < 0.0:
+				gap = current_gap
+			_check(not rect.intersects(previous_rect) and current_gap >= 12.0, "%s button rows do not overlap" % label)
+			_check(is_equal_approx(gap, current_gap), "%s button rows have equal spacing" % label)
 		previous_rect = rect
-	menu._on_button_mouse_entered(buttons[0])
-	await create_timer(menu.anim_time + 0.05).timeout
-	_check(is_equal_approx(buttons[0].scale.x, 1.03), "%s mouse hover matches Level Selection's 1.03 scale" % label)
-	_check(is_equal_approx(buttons[0].self_modulate.a, 1.0), "%s mouse hover fully displays the animated button artwork" % label)
-	if viewport_size == Vector2i(720, 1280):
-		var hover_image := viewport.get_texture().get_image()
-		var hover_capture_path := ProjectSettings.globalize_path("user://main_menu_hover_720x1280.png")
-		_check(hover_image != null and not hover_image.is_empty() and hover_image.save_png(hover_capture_path) == OK, "720x1280 hover-state capture is saved")
+	_check(menu.menu_logo.get_global_rect().end.y < buttons[0].position.y, "%s logo and controls are separated" % label)
+	menu._on_button_mouse_entered(buttons[2])
+	await create_timer(menu.anim_time + 0.03).timeout
+	_check(menu._selected_button == buttons[2] and menu.selection_arrow.position.y > buttons[1].position.y, "%s selection arrow follows hover" % label)
+	var rest: Vector2 = menu._button_rest_positions[buttons[2]]
+	menu._on_button_down(buttons[2])
+	await create_timer(menu.anim_time + 0.03).timeout
+	_check(buttons[2].position.y > rest.y and buttons[2].self_modulate.r < 1.0, "%s pressing shifts and dims the button" % label)
+	menu._on_button_up(buttons[2])
+	menu._on_button_mouse_exited(buttons[2])
+	await create_timer(menu.anim_time + 0.03).timeout
+	_check(buttons[2].position.is_equal_approx(rest) and buttons[2].self_modulate == Color.WHITE, "%s release restores the button" % label)
+	# Exercise actual GUI hit-testing, including the nonblocking text and scenery.
+	var center := buttons[0].get_global_rect().get_center()
+	var motion := InputEventMouseMotion.new()
+	motion.position = center
+	viewport.push_input(motion, true)
+	var press := InputEventMouseButton.new()
+	press.position = center
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	viewport.push_input(press, true)
+	var release := InputEventMouseButton.new()
+	release.position = center
+	release.button_index = MOUSE_BUTTON_LEFT
+	viewport.push_input(release, true)
+	_check(requested == ["res://level_selection.tscn"], "%s mouse/touch-emulation hit-test opens Level Selection" % label)
+	var routes := ["res://level_selection.tscn", "res://hero_cards.tscn", "res://settings.tscn"]
+	for index: int in range(3):
+		menu._scene_transition_pending = false
+		menu._set_buttons_disabled(false)
+		requested.clear()
+		buttons[index].pressed.emit()
+		buttons[index].pressed.emit()
+		_check(requested == [routes[index]], "%s %s navigates once" % [label, menu.BUTTON_LABELS[index]])
+	menu._scene_transition_pending = false
+	menu._set_buttons_disabled(false)
+	menu.quit_button.pressed.emit()
+	_check(bool(exit_state["requested"]), "%s EXIT requests quit" % label)
+	menu._scene_transition_pending = false
+	menu._set_buttons_disabled(false)
 	menu._on_button_mouse_exited(buttons[0])
-	await create_timer(menu.anim_time + 0.05).timeout
-	_check(is_equal_approx(buttons[0].scale.x, 1.0), "%s mouse exit restores the normal Level Selection scale" % label)
-	_check(is_equal_approx(buttons[0].self_modulate.a, 1.0), "%s mouse exit keeps the button artwork fully visible" % label)
-	menu._on_button_down(buttons[0])
-	await create_timer(menu.anim_time + 0.05).timeout
-	_check(is_equal_approx(buttons[0].scale.x, menu.press_scale), "%s touch press visibly shrinks the active button" % label)
-	_check(is_equal_approx(buttons[0].self_modulate.a, 1.0), "%s touch press keeps the button artwork fully visible" % label)
-	menu._on_button_up(buttons[0])
-	await create_timer(menu.anim_time + 0.05).timeout
-	_check(is_equal_approx(buttons[0].scale.x, 1.0), "%s released button returns to normal scale" % label)
-	_check(is_equal_approx(buttons[0].self_modulate.a, 1.0), "%s released button remains fully visible" % label)
-	var board: Control = menu.get_node("BoardDecoration")
-	_check(not board.visible, "%s avoids drawing a duplicate procedural board" % label)
-	var board_rect := board.get_global_rect()
-	_check(board_rect.position.x < 0.0 and board_rect.end.x > viewport_size.x, "%s board extends beyond both side edges like the reference" % label)
-	_check(board_rect.position.y > 0.0 and board_rect.position.y < viewport_size.y, "%s board begins visibly behind Quit" % label)
-	_check(board_rect.end.y > viewport_size.y, "%s board continues below the viewport like the reference" % label)
-	_check(board_rect.position.y <= previous_rect.end.y - viewport_size.y * 0.04, "%s board visibly overlaps behind the Quit artwork" % label)
-	_check(board.get_visual_numbers() == [[21, 22, 23, 24, 25], [20, 19, 18, 17, 16], [11, 12, 13, 14, 15], [10, 9, 8, 7, 6], [1, 2, 3, 4, 5]], "%s board numbering is exact and serpentine" % label)
-	_check(board.get_start_label() == "START", "%s board marks the starting tile" % label)
-	_check(board.get_path_sequence() == range(1, 26), "%s board path is sequential from 1 through 25" % label)
-	_check(board.has_snakes_and_ladders(), "%s board contains snakes and ladders" % label)
-	_check(board_rect.position.y < previous_rect.end.y, "%s board begins behind Quit like the reference" % label)
-	_check(board.z_index < menu.quit_button.z_index, "%s board stays visually behind Quit" % label)
-	var image := viewport.get_texture().get_image()
-	var capture_path := ProjectSettings.globalize_path("user://%s" % capture_name)
-	_check(image != null and not image.is_empty() and image.save_png(capture_path) == OK, "%s capture is saved" % label)
+	menu._select_button(buttons[0])
+	await create_timer(menu.anim_time + 0.03).timeout
+	await RenderingServer.frame_post_draw
+	var capture := viewport.get_texture().get_image()
+	var capture_path := ProjectSettings.globalize_path("user://main_menu_%dx%d.png" % [viewport_size.x, viewport_size.y])
+	_check(capture != null and not capture.is_empty() and capture.save_png(capture_path) == OK, "%s actual rendered capture is saved" % label)
+	# Verify live resize, rather than only correctly sized initial instances.
+	viewport.size = Vector2i(720, 1280) if viewport_size.x != 720 else Vector2i(1080, 2400)
+	await process_frame
+	await process_frame
+	_check(_rect_inside(menu.quit_button.get_global_rect(), viewport.size), "%s live resize keeps EXIT in bounds" % label)
 	menu.queue_free()
 	viewport.queue_free()
+	await process_frame
+
+
+func _test_touch_entry() -> void:
+	var menu = MainMenuScene.instantiate()
+	var requested: Array[String] = []
+	menu.scene_change_handler = func(path: String) -> void: requested.append(path)
+	get_root().add_child(menu)
+	await process_frame
+	var was_emulating := Input.emulate_mouse_from_touch
+	Input.emulate_mouse_from_touch = true
+	var point: Vector2 = get_root().get_final_transform() * menu.start_button.get_global_rect().get_center()
+	var touch := InputEventScreenTouch.new()
+	touch.position = point
+	touch.index = 0
+	touch.pressed = true
+	Input.parse_input_event(touch)
+	await process_frame
+	var release := InputEventScreenTouch.new()
+	release.position = point
+	release.index = 0
+	release.pressed = false
+	Input.parse_input_event(release)
+	await process_frame
+	_check(requested == ["res://level_selection.tscn"], "a simulated touch tap opens Level Selection through input emulation")
+	Input.emulate_mouse_from_touch = was_emulating
+	menu.queue_free()
 	await process_frame
 
 
