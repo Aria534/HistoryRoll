@@ -2,6 +2,7 @@ extends Control
 
 const BoardRules = preload("res://board_rules.gd")
 const BOARD_FONT: FontFile = preload("res://assets/fonts/TitanOne-Regular.ttf")
+const SHIELD_ICON: Texture2D = preload("res://assets/gameplay_ui/terrace_blue/shield.svg")
 
 class BoardDie:
 	extends Control
@@ -45,6 +46,15 @@ class BoardDie:
 			draw_circle(normalized_position * size, pip_radius, Color("#352A2A"))
 
 const FRAME_WIDTH: float = 16.0
+const TILE_SKINS: Array[Texture2D] = [
+	preload("res://assets/gameplay_ui/terrace_blue/tile_blue.svg"),
+	preload("res://assets/gameplay_ui/terrace_blue/tile_cream.svg"),
+]
+const SNAKE_HEADS: Array[Texture2D] = [
+	preload("res://assets/gameplay_ui/terrace_blue/snake_orange.png"),
+	preload("res://assets/gameplay_ui/terrace_blue/snake_green.png"),
+	preload("res://assets/gameplay_ui/terrace_blue/snake_blue.png"),
+]
 const TILE_PALETTE: Array[Color] = [
 	Color("#F7D77C"), Color("#F6E7C5"), Color("#A9D3C2"),
 	Color("#EFA99F"), Color("#A9D5EA"),
@@ -254,65 +264,37 @@ func _draw() -> void:
 
 
 func _draw_wooden_frame(board_rect: Rect2) -> void:
+	# Keep this existing entry point; the frame now follows the aqua reference.
 	var outer := board_rect.grow(FRAME_WIDTH)
-	draw_rect(outer.grow(3.0), Color(0.08, 0.035, 0.015, 0.42), true)
-	draw_rect(outer, Color("#3A1C11"), true)
-	draw_rect(outer.grow(-3.0), Color("#8B431E"), true)
-	draw_rect(outer.grow(-6.0), Color("#D88832"), true)
-	draw_rect(outer.grow(-9.0), Color("#F2B84E"), true)
-	draw_rect(board_rect.grow(3.0), Color("#552B19"), true)
-	draw_rect(board_rect.grow(1.0), Color("#FFE08A"), false, 2.0, true)
-	draw_line(outer.position + Vector2(10, 8), Vector2(outer.end.x - 10, outer.position.y + 8), Color("#FFE18A"), 2.5, true)
-	draw_line(Vector2(outer.position.x + 9, outer.end.y - 7), outer.end - Vector2(9, 7), Color("#642C18"), 3.0, true)
-	var corner_size := FRAME_WIDTH * 1.4
-	for corner: Vector2 in [outer.position, Vector2(outer.end.x, outer.position.y), outer.end, Vector2(outer.position.x, outer.end.y)]:
-		draw_circle(corner, corner_size * 0.58, Color("#4A2416"))
-		draw_circle(corner, corner_size * 0.42, Color("#D08030"))
-		draw_circle(corner, corner_size * 0.23, Color("#FFD469"))
-		draw_circle(corner - Vector2(1.5, 1.5), corner_size * 0.09, Color("#FFF0A8"))
+	_draw_rounded_box(Rect2(outer.position + Vector2(0, 7), outer.size), Color("#002641"), 26)
+	_draw_rounded_box(outer, Color("#FFF8D8"), 25)
+	_draw_rounded_box(outer.grow(-4), Color("#89ECF3"), 22)
+	_draw_rounded_box(outer.grow(-8), Color("#008EBA"), 19)
+	_draw_rounded_box(outer.grow(-12), Color("#002844"), 15)
+
+
+func _draw_rounded_box(rect: Rect2, color: Color, radius: int) -> void:
+	var style := StyleBoxFlat.new()
+	style.bg_color = color
+	style.set_corner_radius_all(radius)
+	style.corner_detail = 8
+	draw_style_box(style, rect)
 
 
 func _draw_tile_surface(tile: int, tile_rect: Rect2, cell: Vector2i) -> void:
-	var minimum_side := minf(tile_rect.size.x, tile_rect.size.y)
-	var inset := maxf(0.9, minimum_side * 0.012)
-	var inner := tile_rect.grow(-inset)
-	draw_rect(inner, _get_tile_color(tile, cell), true)
-	# Soft inset shading adds depth while keeping the tile numbers readable.
-	draw_rect(inner.grow(-minimum_side * 0.035), Color(1.0, 0.96, 0.82, 0.065), true)
-	var highlight := Color(1.0, 0.94, 0.72, 0.72)
-	var shadow := Color(0.25, 0.12, 0.07, 0.42)
-	var bevel_width := clampf(minimum_side * 0.022, 1.2, 3.0)
-	draw_line(inner.position, Vector2(inner.end.x, inner.position.y), highlight, bevel_width, true)
-	draw_line(inner.position, Vector2(inner.position.x, inner.end.y), highlight, bevel_width, true)
-	draw_line(Vector2(inner.position.x, inner.end.y), inner.end, shadow, bevel_width, true)
-	draw_line(Vector2(inner.end.x, inner.position.y), inner.end, shadow, bevel_width, true)
-	draw_rect(tile_rect, Color("#68412B"), false, maxf(1.4, minimum_side * 0.018), true)
-	if tile == 1 or tile == columns * rows:
-		draw_rect(inner.grow(-minimum_side * 0.055), Color("#B8661F"), false, maxf(2.0, minimum_side * 0.028), true)
+	draw_texture_rect(TILE_SKINS[(cell.x + cell.y) % 2], tile_rect, false)
 
 
 func _get_tile_color(tile: int, cell: Vector2i) -> Color:
-	if BoardRules.is_question_tile(board_config, tile):
-		return Color("#C9DCE3")
-	var special_type := BoardRules.get_special_tile_type(board_config, tile)
-	match special_type:
-		"bonus":
-			return Color("#F7D66F")
-		"shield":
-			return Color("#BDD7E8")
-	if _mapping_has(board_config.get("snakes", {}), tile):
-		return Color("#E9B1A5")
-	if _mapping_has(board_config.get("ladders", {}), tile):
-		return Color("#F0D8A3")
-	return TILE_PALETTE[(cell.x + cell.y * columns) % TILE_PALETTE.size()]
+	return Color("#27BFF3") if (cell.x + cell.y) % 2 == 0 else Color("#FFE6AC")
 
 
 func _draw_tile_content(tile: int, tile_rect: Rect2) -> void:
 	var minimum_side: float = minf(tile_rect.size.x, tile_rect.size.y)
-	var number_size := clampi(int(minimum_side * 0.22), 13, 28)
-	var number_position := tile_rect.position + Vector2(maxf(5.0, minimum_side * 0.075), number_size + maxf(3.0, minimum_side * 0.045))
-	draw_string(BOARD_FONT, number_position + Vector2(1.6, 2.0), str(tile), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x - 8.0, number_size, Color(1.0, 0.91, 0.70, 0.88))
-	draw_string(BOARD_FONT, number_position, str(tile), HORIZONTAL_ALIGNMENT_LEFT, tile_rect.size.x - 8.0, number_size, Color("#3D271C"))
+	var number_size := clampi(int(minimum_side * 0.23), 12, 36)
+	var badge_size := Vector2(minimum_side * 0.43, minimum_side * 0.30)
+	var badge := Rect2(tile_rect.position + Vector2.ONE * minimum_side * 0.07, badge_size)
+	_draw_number_badge(badge, str(tile), number_size)
 
 	if BoardRules.is_question_tile(board_config, tile):
 		var icon_size := clampi(int(minimum_side * 0.42), 20, 36)
@@ -324,32 +306,39 @@ func _draw_tile_content(tile: int, tile_rect: Rect2) -> void:
 			_draw_special_icon(special_type, tile_rect, minimum_side)
 
 
+func _draw_number_badge(rect: Rect2, text: String, font_size: int) -> void:
+	var cut := rect.size.y * 0.24
+	var points := PackedVector2Array([
+		rect.position + Vector2(cut, 0), Vector2(rect.end.x - cut, rect.position.y),
+		Vector2(rect.end.x, rect.position.y + cut), rect.end - Vector2(0, cut),
+		rect.end - Vector2(cut, 0), Vector2(rect.position.x + cut, rect.end.y),
+		Vector2(rect.position.x, rect.end.y - cut), rect.position + Vector2(0, cut),
+	])
+	draw_colored_polygon(points, Color("#053C5B"))
+	draw_polyline(points + PackedVector2Array([points[0]]), Color("#001526"), 5.5, true)
+	draw_polyline(points + PackedVector2Array([points[0]]), Color("#FFDB66"), 2.5, true)
+	var text_width := BOARD_FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	var baseline := rect.get_center() + Vector2(-text_width * 0.5, (BOARD_FONT.get_ascent(font_size) - BOARD_FONT.get_descent(font_size)) * 0.5)
+	draw_string_outline(BOARD_FONT, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, 3, Color("#00172D"))
+	draw_string(BOARD_FONT, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, Color("#FFF2C6"))
+
+
 func _draw_special_icon(tile_type: String, tile_rect: Rect2, minimum_side: float) -> void:
 	var center := tile_rect.get_center() + Vector2(0.0, minimum_side * 0.08)
-	var radius := minimum_side * 0.22
+	var radius := minimum_side * 0.28
 	match tile_type:
 		"bonus":
 			draw_circle(center + Vector2(2.0, 3.0), radius * 1.18, Color(0.30, 0.13, 0.03, 0.22))
-			draw_circle(center, radius * 1.12, Color("#FFF1A0"))
 			var star := _make_star(center, radius, radius * 0.45)
 			draw_colored_polygon(star, Color("#F6B92C"))
-			draw_polyline(star + PackedVector2Array([star[0]]), Color("#874913"), 2.5, true)
+			for index: int in range(10):
+				var facet := PackedVector2Array([center, star[index], star[(index + 1) % 10]])
+				draw_colored_polygon(facet, Color("#FFF386") if index % 2 == 0 else Color("#F6AA0B"))
+			draw_polyline(star + PackedVector2Array([star[0]]), Color("#12334C"), 3.0, true)
 			draw_line(center - Vector2(radius * 0.18, radius * 0.48), center - Vector2(radius * 0.42, radius * 0.08), Color("#FFF1A0"), 2.0, true)
 		"shield":
-			var shield_points := PackedVector2Array([
-				center + Vector2(-radius * 0.75, -radius * 0.7),
-				center + Vector2(radius * 0.75, -radius * 0.7),
-				center + Vector2(radius * 0.62, radius * 0.35),
-				center + Vector2(0.0, radius),
-				center + Vector2(-radius * 0.62, radius * 0.35),
-			])
-			var shield_shadow := PackedVector2Array()
-			for point: Vector2 in shield_points:
-				shield_shadow.append(point + Vector2(2.0, 3.0))
-			draw_colored_polygon(shield_shadow, Color(0.12, 0.20, 0.28, 0.32))
-			draw_colored_polygon(shield_points, Color("#397CB6"))
-			draw_polyline(shield_points + PackedVector2Array([shield_points[0]]), Color("#244965"), 2.5, true)
-			draw_line(center + Vector2(0.0, -radius * 0.6), center + Vector2(0.0, radius * 0.58), Color("#8BC8EE"), 2.0, true)
+			var icon_rect := Rect2(center - Vector2(radius * 0.85, radius), Vector2(radius * 1.7, radius * 2.0))
+			draw_texture_rect(SHIELD_ICON, icon_rect, false)
 
 
 func _make_star(center: Vector2, outer_radius: float, inner_radius: float) -> PackedVector2Array:
@@ -369,17 +358,18 @@ func _draw_ladder(start: Vector2, destination: Vector2, cell_size: Vector2) -> v
 	var direction := destination - start
 	if direction.length() <= 0.0:
 		return
-	var scale_factor := clampf(minf(cell_size.x, cell_size.y) / 70.0, 0.55, 1.25)
-	var perpendicular := direction.normalized().orthogonal() * 8.0 * scale_factor
+	var scale_factor := clampf(minf(cell_size.x, cell_size.y) / 70.0, 0.55, 2.15)
+	var perpendicular := direction.normalized().orthogonal() * 9.0 * scale_factor
 	var shadow_offset := Vector2(3.0, 5.0) * scale_factor
 	for side: float in [-1.0, 1.0]:
 		draw_line(start + perpendicular * side + shadow_offset, destination + perpendicular * side + shadow_offset, Color(0.20, 0.09, 0.03, 0.30), 10.0 * scale_factor, true)
 	for side: float in [-1.0, 1.0]:
-		draw_line(start + perpendicular * side, destination + perpendicular * side, Color("#4A2818"), 9.0 * scale_factor, true)
-		draw_line(start + perpendicular * side, destination + perpendicular * side, Color("#D88732"), 5.4 * scale_factor, true)
+		draw_line(start + perpendicular * side, destination + perpendicular * side, Color("#102331"), 10.0 * scale_factor, true)
+		draw_line(start + perpendicular * side, destination + perpendicular * side, Color("#F2AE35"), 6.8 * scale_factor, true)
 		draw_line(start + perpendicular * side - perpendicular.normalized() * 1.0, destination + perpendicular * side - perpendicular.normalized() * 1.0, Color("#F5BD5D"), 1.4 * scale_factor, true)
-	for step: int in range(1, 8):
-		var point := start.lerp(destination, step / 8.0)
+	var rung_count := maxi(3, int(direction.length() / (18.0 * scale_factor)))
+	for step: int in range(1, rung_count):
+		var point := start.lerp(destination, float(step) / rung_count)
 		draw_line(point - perpendicular, point + perpendicular, Color("#4A2818"), 6.5 * scale_factor, true)
 		draw_line(point - perpendicular, point + perpendicular, Color("#E7A348"), 3.6 * scale_factor, true)
 
@@ -389,28 +379,30 @@ func _draw_snake(start: Vector2, destination: Vector2, cell_size: Vector2, snake
 	if direction.length() <= 0.0:
 		return
 	var minimum_cell_side := minf(cell_size.x, cell_size.y)
-	var scale_factor := clampf(minimum_cell_side / 70.0, 0.55, 1.2)
-	var body_width := clampf(minimum_cell_side * 0.12, 7.0, 14.0)
-	var wave_amplitude := clampf(minimum_cell_side * 0.18, 10.0, 23.0)
+	var body_width := clampf(minimum_cell_side * 0.23, 11.0, 40.0)
+	var wave_amplitude := clampf(minimum_cell_side * 0.28, 10.0, 52.0)
 	var travel_direction := direction.normalized()
 	var perpendicular_direction := travel_direction.orthogonal()
-	var wave_count := 2.0 + float(snake_index % 3) * 0.22
+	var wave_count := clampf(direction.length() / minimum_cell_side * 0.45, 0.65, 1.35)
 	var phase := float(snake_index % 2) * PI
 	var points := PackedVector2Array()
-	for step: int in range(49):
-		var progress := step / 48.0
+	for step: int in range(97):
+		var progress := step / 96.0
 		var end_taper := sin(progress * PI)
 		var wave_offset := sin(progress * TAU * wave_count + phase) * wave_amplitude * end_taper
 		var point := start.lerp(destination, progress) + perpendicular_direction * wave_offset
 		points.append(point)
-	var colors: Array = SNAKE_PALETTES[snake_index % SNAKE_PALETTES.size()]
-	var shadow_points := PackedVector2Array()
-	for point: Vector2 in points:
-		shadow_points.append(point + Vector2(3.0, 5.0) * scale_factor)
-	draw_polyline(shadow_points, Color(0.18, 0.06, 0.04, 0.30), body_width + 7.0 * scale_factor, true)
-	draw_polyline(points, colors[0], body_width + 5.0 * scale_factor, true)
-	draw_polyline(points, colors[1], body_width, true)
-	draw_polyline(points, colors[2], maxf(1.4, body_width * 0.18), true)
+	var body_colors: Array[Array] = [
+		[Color("#082639"), Color("#FF891B"), Color("#FFE186")],
+		[Color("#082639"), Color("#85D619"), Color("#FFF0A7")],
+		[Color("#082639"), Color("#0AAAF0"), Color("#FFF0B8")],
+	]
+	var colors: Array = body_colors[snake_index % body_colors.size()]
+	# Rounded segments safely support short, tightly curved catalog connections.
+	# A closed ribbon can self-intersect on those curves and fail triangulation.
+	_draw_tapered_snake(points, body_width + 5.0, colors[0])
+	_draw_tapered_snake(points, body_width, colors[1])
+	_draw_tapered_snake(points, body_width * 0.43, colors[2])
 
 	# Rounded spots make the body read like the friendly snakes in the reference.
 	for spot_index: int in range(1, 8):
@@ -418,12 +410,23 @@ func _draw_snake(start: Vector2, destination: Vector2, cell_size: Vector2, snake
 		var end_taper := sin(progress * PI)
 		var wave_offset := sin(progress * TAU * wave_count + phase) * wave_amplitude * end_taper
 		var spot_center := start.lerp(destination, progress) + perpendicular_direction * wave_offset
-		draw_circle(spot_center, maxf(1.2, body_width * 0.19), colors[2])
+		var taper := 1.0 - progress * progress
+		draw_circle(spot_center - Vector2(0, body_width * 0.18 * taper), maxf(1.2, body_width * 0.13 * taper), colors[2])
 
-	_draw_snake_head(start, -travel_direction, colors, body_width, scale_factor)
-	# The two tail circles form a clean rounded taper instead of an abrupt line end.
-	draw_circle(destination, maxf(2.8, body_width * 0.38), colors[0])
-	draw_circle(destination, maxf(1.6, body_width * 0.24), colors[2])
+	var head_side := minimum_cell_side * 0.62
+	var head_center := start + Vector2(minimum_cell_side * 0.10, minimum_cell_side * 0.08)
+	var head_rect := Rect2(head_center - Vector2.ONE * head_side * 0.5, Vector2.ONE * head_side)
+	draw_texture_rect(SNAKE_HEADS[snake_index % SNAKE_HEADS.size()], head_rect, false)
+
+
+func _draw_tapered_snake(points: PackedVector2Array, width: float, color: Color, offset := Vector2.ZERO) -> void:
+	for index: int in range(points.size()):
+		var progress := float(index) / float(points.size() - 1)
+		var radius := width * 0.5 * (1.0 - pow(progress, 2.1)) + 0.6
+		var point := points[index] + offset
+		draw_circle(point, radius, color, true, -1.0, true)
+		if index + 1 < points.size():
+			draw_line(point, points[index + 1] + offset, color, radius * 2.0, true)
 
 
 func _draw_snake_head(
