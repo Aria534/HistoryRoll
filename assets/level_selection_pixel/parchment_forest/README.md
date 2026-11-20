@@ -2,6 +2,10 @@
 
 Applied to the existing HistoryRoll project on 20 November 2026, using the user's warm pixel-art Level Selection reference.
 
+## Sizing refinement
+
+The level buttons retain their original horizontal span: 76.52% of the design width. The visible parchment box now fills the full 144-unit row height, rather than the 120-unit inset from the first sizing adjustment or the original 108-unit artwork. This makes the box taller without lengthening it. Portraits keep their aspect ratio; complete hero names automatically fit between the portrait and lock. Padlocks retain their artwork and dimensions, stay vertically centered, and have a 24-unit right margin. The larger centered title banner and its 68-unit lettering are retained. Existing unlock states, saves, navigation and independently editable row nodes are preserved.
+
 ## Integration
 Modified files:
 - level_selection.tscn: parchment title, forest scenery, six framed chibi portraits, wooden controls and PLAY artwork.
@@ -33,8 +37,8 @@ Bree Serif is reused from assets/fonts/BreeSerif-Regular.ttf, with its existing 
 ## Executed verification
 Godot 4.7.1 desktop:
 - Fresh-state/sequential-unlock/persistence suite: 95 assertions passed, 0 failed.
-- Rendered layout/navigation suite: 585 assertions passed, 0 failed.
-- Total: 680 assertions passed, 0 failed.
+- Rendered layout/navigation suite: 621 assertions passed, 0 failed.
+- Total: 716 assertions passed, 0 failed.
 - Rendered 1024x1536, 720x1280, 1086x1448, 1080x1920, 1080x2340 and 1080x2400.
 - Checked full names, portrait spacing, padlock alignment, five fresh-player locks, Help layout, PLAY hit testing and duplicate-transition protection.
 - Verified Level 2 unlock after Level 1 completion, Level 3 unlock after Level 2, and persistence after reloading isolated test saves.

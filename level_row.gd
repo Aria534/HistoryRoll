@@ -19,7 +19,7 @@ const LOCKED_FRAME := preload("res://assets/level_selection_pixel/level_row_lock
 			portrait_rect.texture = value
 @export var row_texture: Texture2D
 @export var use_embedded_artwork: bool = true
-@export_range(24, 56, 1) var name_font_size: int = 40
+@export_range(24, 56, 1) var name_font_size: int = 44
 
 @onready var frame_rect: TextureRect = $Frame
 @onready var portrait_rect: TextureRect = $Portrait

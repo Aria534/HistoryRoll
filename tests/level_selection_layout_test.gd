@@ -74,8 +74,9 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 		_check(lettering.x <= button.name_label.size.x, "%s Level %d name fits without truncation" % [size_label, level_id])
 		_check(button.name_label.get_global_rect().end.x < button.lock_icon.get_global_rect().position.x, "%s Level %d name does not overlap its padlock" % [size_label, level_id])
 		_check(button.portrait_rect.get_global_rect().end.x < button.name_label.get_global_rect().position.x, "%s Level %d portrait has space before its name" % [size_label, level_id])
-		_check(is_equal_approx(button.lock_icon.position.x + button.lock_icon.size.x, button.size.x - 16.0), "%s Level %d padlock keeps its right margin" % [size_label, level_id])
+		_check(is_equal_approx(button.lock_icon.position.x + button.lock_icon.size.x, button.size.x - 24.0), "%s Level %d padlock keeps its right margin" % [size_label, level_id])
 		_check(is_equal_approx(button.lock_icon.position.y + button.lock_icon.size.y * 0.5, button.size.y * 0.5), "%s Level %d padlock stays vertically centered" % [size_label, level_id])
+		_check(_rect_contains(button.frame_rect.get_global_rect(), button.lock_icon.get_global_rect()), "%s Level %d padlock fits fully inside its parchment frame" % [size_label, level_id])
 		if level_id == 1:
 			_check(not button.is_lock_visible(), "%s unlocked Level 1 has no padlock" % size_label)
 		else:
