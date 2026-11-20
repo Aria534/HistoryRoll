@@ -4,7 +4,8 @@ Applied to the existing `res://settings.tscn` on 2026-11-20, using the user's su
 
 ## Assets
 
-- `background.png`: opaque tropical scenery, blue sky, trees, stone church tower, and paved foreground.
+- `background_terraces.png`: current sunrise/rice-terraces scenery, mountains, river, wooden huts, and stone path.
+- `background.png`: previous church/tropical scenery, retained as an unused alternative.
 - `frame.png`: transparent wooden/gold frame, gear/book crest, blank red banner, pale parchment, waterfall inset, and wooden footer.
 - `green_row.svg`, `red_button.svg`: native SVG surfaces for the existing controls.
 - `music.svg`, `speaker.svg`, `book.svg`, `back.svg`: native SVG icons.
@@ -51,3 +52,14 @@ Use case: precise-object-edit. Asset type: opaque portrait scenery plate for the
 ### frame.png
 
 Use case: background-extraction. Asset type: complete transparent Settings panel artwork for existing Godot mobile game HistoryRoll. Image 1 is the USER'S Settings screen design reference; image 2 is the separately generated background, which must NOT be included. Recreate the large central wooden/parchment panel from image 1, isolated on actual transparent alpha, portrait 3:4 canvas, positioned to occupy the same proportions as the reference: outer frame roughly x=7%-93%, y=4%-92%. Rich dark warm wooden frame, gold beveled edge and small gold corner rivets, clipped bottom corners. Triangular upper crest with golden gear and small open cream book ornaments. Broad red ribbon below crest spans nearly panel width with warm gold edging; leave this ribbon COMPLETELY BLANK for live SETTINGS lettering. Large pale warm parchment content area. Keep its upper/middle area completely BLANK for two separate green control rows and a red How to Play button. Inside the LOWER content area, approximately y=63%-78% of the full canvas, retain the bright waterfall illustration from image 1: tropical trees, blue mountains, rocks, falling white-blue water and a turquoise river, neatly embedded into the bottom of the parchment. Beneath the parchment keep the broad dark wood footer, BLANK for a separate live Back button around y=81%-88%. Do NOT draw any buttons, switches, row outlines, labels or icons inside the content area or footer. No words or letters anywhere, no SETTINGS text, no music note, no sound icon, no How to Play, no Back arrow. No scenery or plants outside the panel silhouette; all exterior pixels transparent. Match image 1's warm outlined hand-drawn pixel-art game UI, brown/gold/cream/red colors, friendly polished shading. Show the entire panel, crest, ribbon, and waterfall without cropping any edge. No watermark.
+
+
+## Rice-terraces background revision — 2026-11-20
+
+The current scene uses `background_terraces.png`, generated with the built-in imagegen tool from the user's latest supplied landscape reference. The original `background.png` is retained as an unused alternative. Only the Background texture reference and its existing regression assertion changed; `settings.gd`, the frame PNG, controls, and save format were preserved.
+
+Godot 4.7.1 asset import completed; the existing external-editor launch warnings remain. The updated Settings suite executed **303 checks: 303 passed, 0 failed**, including six portrait renders, Music/SFX toggles, preference persistence, How to Play, and Back routing. The Main Menu suite was not rerun for this texture-only follow-up. Actual Settings captures at 720 x 1280 and 1086 x 1448 were visually inspected. Android device testing remains unperformed.
+
+Prompt (built-in imagegen):
+
+Use case: stylized-concept. Asset type: opaque portrait background scenery for the existing HistoryRoll Settings screen, mobile 9:16. Input image: the user's latest uploaded image is the exact composition and style reference. Reproduce this landscape as faithfully as possible: bright blue sky with softly pixelated cream-and-peach clouds, glowing warm sunrise with gentle rays just above layered blue mountain ridges in the upper third, deep green mountain valley, a winding turquoise-white river running down the center, vivid yellow-green Philippine rice terraces sweeping along BOTH slopes, several small traditional wooden huts with thatched roofs among the lower terraces, large leafy branch framing the UPPER LEFT corner, lush tropical edge foliage with a few small white flowers, low warm stone walls at the lower left and right framing a central entrance, broad warm irregular stone-paved foreground path across the BOTTOM. Match the supplied hand-drawn pixel-art / retro illustration look, clean crisp small pixel clusters, cheerful blue/green/gold palette and warm brown outlines. Preserve its composition and visual balance. Full-bleed scenery only, completely opaque. No UI panel, no frame in the center, no settings gear, no buttons, no writing, no logos, no characters, no church tower, no watermark.

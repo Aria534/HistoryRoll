@@ -47,7 +47,7 @@ func _capture(viewport_size: Vector2i) -> void:
 	var frame_rect := frame.get_global_rect()
 	var background := settings.get_node("Background") as TextureRect
 	_check(frame.texture.resource_path == "res://assets/settings_ui/waterfall/frame.png", "%s uses the waterfall and wood Settings frame" % label)
-	_check(background.texture.resource_path == "res://assets/settings_ui/waterfall/background.png", "%s uses the bright tropical scenery" % label)
+	_check(background.texture.resource_path == "res://assets/settings_ui/waterfall/background_terraces.png", "%s uses the sunrise rice-terraces scenery" % label)
 	_check(frame.stretch_mode == TextureRect.STRETCH_KEEP_ASPECT_CENTERED, "%s panel artwork keeps its proportions" % label)
 	_check(_inside(frame_rect, viewport_size), "%s whole frame stays inside the viewport" % label)
 	_check(not settings.get_node("Shade").visible, "%s scenery has no dark overlay" % label)
