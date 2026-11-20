@@ -4,6 +4,8 @@ const MAIN_MENU_SCENE := "res://main_menu_tscn.tscn"
 const DEFAULT_SETTINGS_PATH := "user://historyroll_settings.cfg"
 const TITLE_FONT: FontFile = preload("res://assets/fonts/TitanOne-Regular.ttf")
 const BODY_FONT: FontFile = preload("res://assets/fonts/Roboto-Variable.ttf")
+# All live controls share the artwork coordinate space; the panel never stretches.
+const SETTINGS_DESIGN_SIZE := Vector2(1086, 1448)
 const HELP_ROWS := [
 	["1", "?", "A question appears first."],
 	["2", "ABC", "Answer the question before rolling the dice."],
@@ -37,6 +39,7 @@ var settings_path := DEFAULT_SETTINGS_PATH
 var music_enabled := true
 var sfx_enabled := true
 var scene_change_handler: Callable
+var _settings_ui_scale := 1.0
 
 
 func _ready() -> void:
@@ -49,6 +52,71 @@ func _ready() -> void:
 	_connect_once(back_button.pressed, _on_back_pressed)
 	_refresh_controls()
 	_apply_audio_settings()
+	resized.connect(_apply_responsive_layout)
+	_apply_responsive_layout()
+
+
+func _apply_responsive_layout() -> void:
+	if size.x <= 0.0 or size.y <= 0.0:
+		return
+	var safe_rect := Rect2(Vector2.ZERO, size).grow(-minf(16.0, size.x * 0.02))
+	if OS.has_feature("android"):
+		var screen_size := Vector2(DisplayServer.screen_get_size())
+		var device_safe := Rect2(DisplayServer.get_display_safe_area())
+		if screen_size.x > 0.0 and screen_size.y > 0.0 and device_safe.has_area():
+			safe_rect = Rect2(device_safe.position / screen_size * size, device_safe.size / screen_size * size)
+	_settings_ui_scale = minf(safe_rect.size.x / SETTINGS_DESIGN_SIZE.x, safe_rect.size.y / SETTINGS_DESIGN_SIZE.y)
+	var frame_size := SETTINGS_DESIGN_SIZE * _settings_ui_scale
+	var frame_rect := Rect2(safe_rect.get_center() - frame_size * 0.5, frame_size)
+	var frame: TextureRect = %SettingsFrame
+	frame.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	frame.position = frame_rect.position
+	frame.size = frame_rect.size
+	_place_in_frame($Title, frame_rect, Rect2(0.20, 0.15, 0.60, 0.09))
+	_place_in_frame($Controls, frame_rect, Rect2(0.145, 0.32, 0.71, 0.29))
+	_place_in_frame(back_button, frame_rect, Rect2(0.315, 0.81, 0.37, 0.075))
+	$Title.add_theme_font_size_override("font_size", maxi(24, roundi(92.0 * _settings_ui_scale)))
+	$Title.add_theme_constant_override("outline_size", maxi(2, roundi(6.0 * _settings_ui_scale)))
+	$Controls.add_theme_constant_override("separation", roundi(29.0 * _settings_ui_scale))
+	for button: Button in [music_toggle, sfx_toggle]:
+		button.custom_minimum_size.y = frame_size.y * 0.078
+		var content := button.get_child(0) as MarginContainer
+		content.add_theme_constant_override("margin_left", roundi(30.0 * _settings_ui_scale))
+		content.add_theme_constant_override("margin_right", roundi(24.0 * _settings_ui_scale))
+		content.add_theme_constant_override("margin_top", roundi(14.0 * _settings_ui_scale))
+		content.add_theme_constant_override("margin_bottom", roundi(14.0 * _settings_ui_scale))
+		var row := content.get_child(0) as HBoxContainer
+		row.add_theme_constant_override("separation", roundi(18.0 * _settings_ui_scale))
+		(row.get_node("Icon") as TextureRect).custom_minimum_size.x = 72.0 * _settings_ui_scale
+	for track: Panel in [music_switch_track, sfx_switch_track]:
+		track.custom_minimum_size = Vector2(142.0, 72.0) * _settings_ui_scale
+		track.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	help_button.custom_minimum_size.y = frame_size.y * 0.084
+	for button: Button in [help_button, back_button]:
+		var row := button.get_node("Content/Row") as HBoxContainer
+		var caption := row.get_node("Caption") as Label
+		var icon := row.get_node("Icon") as TextureRect
+		var is_back := button == back_button
+		caption.add_theme_font_size_override("font_size", maxi(14, roundi((48.0 if is_back else 46.0) * _settings_ui_scale)))
+		icon.custom_minimum_size = Vector2(60.0 if is_back else 86.0, 60.0) * _settings_ui_scale
+		row.add_theme_constant_override("separation", roundi(18.0 * _settings_ui_scale))
+	_fit_audio_labels.call_deferred()
+
+
+func _place_in_frame(control: Control, frame: Rect2, ratios: Rect2) -> void:
+	control.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	control.position = frame.position + ratios.position * frame.size
+	control.size = ratios.size * frame.size
+
+
+func _fit_audio_labels() -> void:
+	for label: Label in [music_state_label, sfx_state_label]:
+		var base_size := 44.0 if label == music_state_label else 32.0
+		var font_size := maxi(12, roundi(base_size * _settings_ui_scale))
+		var font := label.get_theme_font("font")
+		while font_size > 10 and font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x > label.size.x:
+			font_size -= 1
+		label.add_theme_font_size_override("font_size", font_size)
 
 
 func _build_help_rows() -> void:
@@ -140,11 +208,12 @@ func _refresh_controls() -> void:
 	music_toggle.set_pressed_no_signal(music_enabled)
 	sfx_toggle.set_pressed_no_signal(sfx_enabled)
 	music_state_label.text = "MUSIC: ON" if music_enabled else "MUSIC: OFF"
-	sfx_state_label.text = "SOUND EFFECTS: ON" if sfx_enabled else "SOUND EFFECTS: OFF"
+	sfx_state_label.text = "SFX SOUND EFFECTS: ON" if sfx_enabled else "SFX SOUND EFFECTS: OFF"
 	music_toggle.tooltip_text = music_state_label.text
 	sfx_toggle.tooltip_text = sfx_state_label.text
 	_update_switch_visual(music_switch_track, music_switch_knob, music_enabled)
 	_update_switch_visual(sfx_switch_track, sfx_switch_knob, sfx_enabled)
+	_fit_audio_labels.call_deferred()
 
 
 func _update_switch_visual(track: Panel, knob: PanelContainer, enabled: bool) -> void:

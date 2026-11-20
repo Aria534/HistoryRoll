@@ -1,78 +1,76 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=23 format=3]
 
 [ext_resource type="Script" path="res://settings.gd" id="1_settings"]
-[ext_resource type="Texture2D" path="res://assets/background/Pastel Castle Overlook by the Sea.png" id="2_background"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/settings_frame_filipino_no_foliage.png" id="3_frame"]
+[ext_resource type="Texture2D" path="res://assets/settings_ui/waterfall/background.png" id="2_background"]
+[ext_resource type="Texture2D" path="res://assets/settings_ui/waterfall/frame.png" id="3_frame"]
 [ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="4_title_font"]
 [ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="5_body_font"]
-[ext_resource type="Texture2D" path="res://assets/level selection buttons/back_arrow.png" id="6_back_icon"]
+[ext_resource type="Texture2D" path="res://assets/settings_ui/waterfall/back.svg" id="6_back_icon"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/how_to_play_frame_filipino.png" id="7_help_frame"]
 
-[sub_resource type="StyleBoxFlat" id="TealButton"]
-bg_color = Color(0.035, 0.30, 0.29, 0.98)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0.91, 0.66, 0.25, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-shadow_color = Color(0.12, 0.045, 0.018, 0.7)
-shadow_size = 7
+[ext_resource type="Texture2D" path="res://assets/settings_ui/waterfall/green_row.svg" id="8_teal"]
+[ext_resource type="Texture2D" path="res://assets/settings_ui/waterfall/red_button.svg" id="9_red"]
+[ext_resource type="Texture2D" path="res://assets/settings_ui/waterfall/music.svg" id="10_music"]
+[ext_resource type="Texture2D" path="res://assets/settings_ui/waterfall/speaker.svg" id="11_speaker"]
+[ext_resource type="Texture2D" path="res://assets/settings_ui/waterfall/book.svg" id="12_book"]
 
-[sub_resource type="StyleBoxFlat" id="TealHover"]
-bg_color = Color(0.055, 0.43, 0.39, 1)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(1, 0.82, 0.36, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-shadow_color = Color(0.12, 0.045, 0.018, 0.65)
-shadow_size = 8
+[sub_resource type="StyleBoxTexture" id="TealButton"]
+texture = ExtResource("8_teal")
+texture_margin_left = 36.0
+texture_margin_top = 18.0
+texture_margin_right = 36.0
+texture_margin_bottom = 18.0
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxFlat" id="TealPressed"]
-bg_color = Color(0.025, 0.22, 0.22, 1)
-border_width_left = 5
-border_width_top = 7
-border_width_right = 5
-border_width_bottom = 3
-border_color = Color(0.78, 0.5, 0.14, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+[sub_resource type="StyleBoxTexture" id="TealHover"]
+texture = ExtResource("8_teal")
+modulate_color = Color(1.12, 1.12, 1.08, 1)
+texture_margin_left = 36.0
+texture_margin_top = 18.0
+texture_margin_right = 36.0
+texture_margin_bottom = 18.0
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxFlat" id="RedButton"]
-bg_color = Color(0.50, 0.12, 0.075, 0.98)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0.93, 0.66, 0.25, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-shadow_color = Color(0.13, 0.04, 0.015, 0.72)
-shadow_size = 7
+[sub_resource type="StyleBoxTexture" id="TealPressed"]
+texture = ExtResource("8_teal")
+modulate_color = Color(0.95, 0.98, 0.95, 1)
+texture_margin_left = 36.0
+texture_margin_top = 18.0
+texture_margin_right = 36.0
+texture_margin_bottom = 18.0
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxFlat" id="RedHover"]
-bg_color = Color(0.67, 0.18, 0.10, 1)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(1, 0.82, 0.36, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
+[sub_resource type="StyleBoxTexture" id="RedButton"]
+texture = ExtResource("9_red")
+texture_margin_left = 36.0
+texture_margin_top = 18.0
+texture_margin_right = 36.0
+texture_margin_bottom = 18.0
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxTexture" id="RedHover"]
+texture = ExtResource("9_red")
+modulate_color = Color(1.12, 1.1, 1.04, 1)
+texture_margin_left = 36.0
+texture_margin_top = 18.0
+texture_margin_right = 36.0
+texture_margin_bottom = 18.0
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxFlat" id="SwitchTrack"]
 bg_color = Color(0.36, 0.57, 0.035, 1)
@@ -129,6 +127,7 @@ corner_radius_bottom_left = 18
 [sub_resource type="StyleBoxEmpty" id="InvisibleFocus"]
 
 [node name="Settings" type="Control"]
+texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -151,6 +150,7 @@ stretch_mode = 6
 texture_filter = 1
 
 [node name="Shade" type="ColorRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -163,51 +163,48 @@ color = Color(0.04, 0.02, 0.008, 0.25)
 [node name="SettingsFrame" type="TextureRect" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = 8.0
-offset_right = -12.0
-offset_bottom = -8.0
+offset_left = 16.0
+offset_top = 106.6667
+offset_right = 1008.0
+offset_bottom = 1429.3333
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = ExtResource("3_frame")
 expand_mode = 1
-stretch_mode = 0
+stretch_mode = 5
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 1
-anchor_left = 0.19
-anchor_top = 0.09
-anchor_right = 0.81
-anchor_bottom = 0.20
+offset_left = 214.4
+offset_top = 305.0667
+offset_right = 809.6
+offset_bottom = 424.1067
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.91, 0.66, 1)
 theme_override_colors/font_outline_color = Color(0.20, 0.065, 0.025, 1)
-theme_override_constants/outline_size = 8
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("4_title_font")
-theme_override_font_sizes/font_size = 66
+theme_override_font_sizes/font_size = 84
 text = "SETTINGS"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Controls" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.145
-anchor_top = 0.30
-anchor_right = 0.855
-anchor_bottom = 0.65
+offset_left = 159.84
+offset_top = 529.92
+offset_right = 864.16
+offset_bottom = 913.4933
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 36
+theme_override_constants/separation = 26
 
 [node name="MusicToggle" type="Button" parent="Controls"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 116)
+custom_minimum_size = Vector2(0, 103.168)
 layout_mode = 2
 toggle_mode = true
 mouse_default_cursor_shape = 2
@@ -233,16 +230,13 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 18
 
-[node name="Icon" type="Label" parent="Controls/MusicToggle/MusicContent/Row"]
-custom_minimum_size = Vector2(74, 0)
+[node name="Icon" type="TextureRect" parent="Controls/MusicToggle/MusicContent/Row"]
+custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.91, 0.67, 1)
-theme_override_fonts/font = ExtResource("5_body_font")
-theme_override_font_sizes/font_size = 54
-text = "♫"
-horizontal_alignment = 1
-vertical_alignment = 1
+texture = ExtResource("10_music")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="MusicStateLabel" type="Label" parent="Controls/MusicToggle/MusicContent/Row"]
 unique_name_in_owner = true
@@ -252,15 +246,17 @@ mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
 theme_override_colors/font_outline_color = Color(0.08, 0.13, 0.10, 0.75)
 theme_override_constants/outline_size = 3
-theme_override_fonts/font = ExtResource("5_body_font")
-theme_override_font_sizes/font_size = 34
+theme_override_fonts/font = ExtResource("4_title_font")
+theme_override_font_sizes/font_size = 40
 text = "MUSIC: ON"
+clip_text = true
 vertical_alignment = 1
 
 [node name="MusicSwitchTrack" type="Panel" parent="Controls/MusicToggle/MusicContent/Row"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(126, 58)
+custom_minimum_size = Vector2(129.7, 65.8)
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("SwitchTrack")
 
@@ -278,7 +274,7 @@ theme_override_styles/panel = SubResource("SwitchKnob")
 
 [node name="SfxToggle" type="Button" parent="Controls"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 116)
+custom_minimum_size = Vector2(0, 103.168)
 layout_mode = 2
 toggle_mode = true
 mouse_default_cursor_shape = 2
@@ -304,16 +300,13 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="Icon" type="Label" parent="Controls/SfxToggle/SfxContent/Row"]
-custom_minimum_size = Vector2(50, 0)
+[node name="Icon" type="TextureRect" parent="Controls/SfxToggle/SfxContent/Row"]
+custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.91, 0.67, 1)
-theme_override_fonts/font = ExtResource("5_body_font")
-theme_override_font_sizes/font_size = 24
-text = "SFX"
-horizontal_alignment = 1
-vertical_alignment = 1
+texture = ExtResource("11_speaker")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="SfxStateLabel" type="Label" parent="Controls/SfxToggle/SfxContent/Row"]
 unique_name_in_owner = true
@@ -323,15 +316,17 @@ mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
 theme_override_colors/font_outline_color = Color(0.08, 0.13, 0.10, 0.75)
 theme_override_constants/outline_size = 3
-theme_override_fonts/font = ExtResource("5_body_font")
-theme_override_font_sizes/font_size = 26
-text = "SOUND EFFECTS: ON"
+theme_override_fonts/font = ExtResource("4_title_font")
+theme_override_font_sizes/font_size = 29
+text = "SFX SOUND EFFECTS: ON"
+clip_text = true
 vertical_alignment = 1
 
 [node name="SfxSwitchTrack" type="Panel" parent="Controls/SfxToggle/SfxContent/Row"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(110, 58)
+custom_minimum_size = Vector2(129.7, 65.8)
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("SwitchTrack")
 
@@ -349,34 +344,108 @@ theme_override_styles/panel = SubResource("SwitchKnob")
 
 [node name="HelpButton" type="Button" parent="Controls"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 112)
+custom_minimum_size = Vector2(0, 111.1)
 layout_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(1, 0.92, 0.72, 1)
 theme_override_colors/font_outline_color = Color(0.22, 0.055, 0.025, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("4_title_font")
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("RedButton")
 theme_override_styles/hover = SubResource("RedHover")
 theme_override_styles/pressed = SubResource("RedButton")
+text = ""
+theme_override_constants/icon_max_width = 86
+theme_override_constants/h_separation = 18
+
+
+[node name="Content" type="CenterContainer" parent="Controls/HelpButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Row" type="HBoxContainer" parent="Controls/HelpButton/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="Icon" type="TextureRect" parent="Controls/HelpButton/Content/Row"]
+custom_minimum_size = Vector2(72, 55)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("12_book")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="Controls/HelpButton/Content/Row"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
+theme_override_colors/font_outline_color = Color(0.22, 0.055, 0.025, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("4_title_font")
+theme_override_font_sizes/font_size = 42
 text = "HOW TO PLAY"
+vertical_alignment = 1
 
 [node name="BackButton" type="Button" parent="."]
 unique_name_in_owner = true
+layout_mode = 0
+offset_left = 328.48
+offset_top = 1178.08
+offset_right = 695.52
+offset_bottom = 1277.28
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
+theme_override_colors/font_outline_color = Color(0.22, 0.055, 0.025, 1)
+theme_override_constants/outline_size = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/icon_max_width = 55
+theme_override_fonts/font = ExtResource("4_title_font")
+theme_override_font_sizes/font_size = 44
+theme_override_styles/normal = SubResource("RedButton")
+theme_override_styles/hover = SubResource("RedHover")
+theme_override_styles/pressed = SubResource("RedButton")
+text = ""
+
+
+[node name="Content" type="CenterContainer" parent="BackButton"]
 layout_mode = 1
-anchor_left = 0.435
-anchor_top = 0.825
-anchor_right = 0.565
-anchor_bottom = 0.905
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_default_cursor_shape = 2
-flat = true
-icon = ExtResource("6_back_icon")
-expand_icon = true
-icon_max_width = 58
-icon_alignment = 1
+mouse_filter = 2
+
+[node name="Row" type="HBoxContainer" parent="BackButton/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="Icon" type="TextureRect" parent="BackButton/Content/Row"]
+custom_minimum_size = Vector2(72, 55)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("6_back_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Caption" type="Label" parent="BackButton/Content/Row"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.94, 0.78, 1)
+theme_override_colors/font_outline_color = Color(0.22, 0.055, 0.025, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("4_title_font")
+theme_override_font_sizes/font_size = 44
+text = "BACK"
+vertical_alignment = 1
 
 [node name="HowToPlayOverlay" type="Control" parent="."]
 unique_name_in_owner = true
