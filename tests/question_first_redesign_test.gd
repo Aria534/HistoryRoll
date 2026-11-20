@@ -34,6 +34,15 @@ func _run() -> void:
 	await _test_question_first_gameplay()
 	await _test_story_entry()
 	_cleanup()
+	# Stop procedural test music before engine teardown; no preference is saved.
+	var shutdown_audio: Node = get_root().get_node_or_null("AudioManager")
+	if shutdown_audio != null:
+		shutdown_audio.stop_music(0.0)
+	# Accelerated rolls finish before the existing 0.95-second answer callback.
+	# Drain those timer continuations before destroying the engine test process.
+	await create_timer(1.1).timeout
+	await process_frame
+	await process_frame
 	print("Question-first redesign tests: %d passed, %d failed." % [passed, failed])
 	quit(0 if failed == 0 else 1)
 
@@ -160,7 +169,7 @@ func _test_question_first_gameplay() -> void:
 	game.set_controlled_dice_results(roll_one); game.roll_button.pressed.emit()
 	_check(await _wait_state(game, GameplayScript.GameplayState.LEVEL_COMPLETE), "exact roll completes Level 1 at tile 20")
 	_check(progress.completion_calls == 1, "completion is recorded once")
-	_check(game.return_button.text == "RETURN TO LEVEL SELECTION", "Results no longer routes to Story Mode")
+	_check(game.return_button.text == "Continue", "Results uses the reference Continue caption")
 	game.progress_manager = null; game.queue_free(); await process_frame; progress.free()
 
 func _test_story_entry() -> void:
