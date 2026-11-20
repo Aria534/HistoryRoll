@@ -59,13 +59,13 @@ func _test_main_menu_viewport(viewport_size: Vector2i) -> void:
 	_check(not menu.get_node("AnimatedPlants").visible and not menu.get_node("BoardDecoration").visible, "%s retired decorations do not cover the approved scenery" % label)
 	var background: AnimatedSprite2D = menu.get_node("LiveBackground")
 	var texture := background.sprite_frames.get_frame_texture("default", 0)
-	_check(texture.resource_path.ends_with("forest_story/background.png"), "%s uses the separated forest scenery" % label)
+	_check(texture.resource_path.ends_with("forest_daylight/background.png"), "%s uses the separated forest scenery" % label)
 	_check(is_equal_approx(background.scale.x, background.scale.y), "%s scenery is not stretched" % label)
 	var background_size := texture.get_size() * background.scale
 	_check(background_size.x >= viewport_size.x and background_size.y >= viewport_size.y, "%s scenery covers the viewport without black bars" % label)
 	_check(background.position.is_equal_approx(Vector2(viewport_size) * 0.5), "%s scenery remains centered" % label)
 	_check(not menu.get_node("SkyFill").visible, "%s retired blue sky strip is hidden" % label)
-	_check(menu.menu_explorers.visible and _rect_inside(menu.menu_explorers.get_global_rect(), viewport_size), "%s both explorers and the lantern stay inside the screen" % label)
+	_check(menu.menu_explorers.visible and _rect_inside(menu.menu_explorers.get_global_rect(), viewport_size), "%s both full-body explorers stay inside the screen" % label)
 	_check(menu.menu_explorers.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s explorer art cannot consume menu input" % label)
 	_check(menu.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "%s menu uses nearest filtering" % label)
 	var buttons: Array[TextureButton] = [menu.start_button, menu.hero_cards_button, menu.settings_button, menu.quit_button]
@@ -148,7 +148,7 @@ func _test_main_menu_viewport(viewport_size: Vector2i) -> void:
 	viewport.size = Vector2i(720, 1280) if viewport_size.x != 720 else Vector2i(1080, 2400)
 	await process_frame
 	await process_frame
-	_check(_rect_inside(menu.quit_button.get_global_rect(), viewport.size), "%s live resize keeps EXIT in bounds" % label)
+	_check(_rect_inside(menu.quit_button.get_global_rect(), viewport.size), "%s live resize keeps Quit in bounds" % label)
 	menu.queue_free()
 	viewport.queue_free()
 	await process_frame
