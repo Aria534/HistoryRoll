@@ -17,6 +17,7 @@ const BoardRules = preload("res://board_rules.gd")
 const DiceRoller = preload("res://dice_roller.gd")
 const QuizSession = preload("res://quiz_session.gd")
 const QuizQuestionBank = preload("res://quiz_question_bank.gd")
+const LevelCompletionCard = preload("res://level_completion_card.gd")
 const TERRACE_BACKGROUND: Texture2D = preload("res://assets/gameplay_ui/forest_parchment/background.png")
 
 @export var shuffle_questions: bool = true
@@ -50,7 +51,7 @@ const TERRACE_BACKGROUND: Texture2D = preload("res://assets/gameplay_ui/forest_p
 @onready var roll_button: Button = %RollButton
 @onready var next_turn_button: Button = %NextTurnButton
 @onready var back_button: Button = %BackButton
-@onready var results_panel: PanelContainer = %ResultsPanel
+@onready var results_panel: LevelCompletionCard = %ResultsPanel
 @onready var results_label: Label = %ResultsLabel
 @onready var return_button: Button = %ReturnButton
 
@@ -426,6 +427,8 @@ func _begin_next_turn(message: String) -> void:
 
 
 func _complete_level() -> void:
+	if completion_recorded or results_transition_started:
+		return
 	_set_state(GameplayState.LEVEL_COMPLETE)
 	question_popup_layer.hide()
 	_request_music("res://assets/audio/music/victory.ogg")
@@ -439,9 +442,9 @@ func _complete_level() -> void:
 		level_id, score, correct_answers, incorrect_answers, bonus_score_increase,
 		snake_penalties, shields_collected, shields_consumed,
 	]
-	return_button.text = "RETURN TO LEVEL SELECTION"
+	return_button.text = "Continue"
 	return_button.disabled = false
-	results_panel.show()
+	results_panel.present_completion(level_id, score, bonus_score_increase)
 
 
 func get_gameplay_statistics() -> Dictionary:
@@ -695,4 +698,4 @@ func _show_fatal_error(message: String) -> void:
 	_set_state(GameplayState.LEVEL_COMPLETE)
 	return_button.text = "BACK TO LEVEL SELECTION"
 	results_label.text = message
-	results_panel.show()
+	results_panel.present_error(message)
