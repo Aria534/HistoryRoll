@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220" shape-rendering="crispEdges">
+<defs><linearGradient id="paper" x2=".8" y2="1"><stop stop-color="#FFF0C7"/><stop offset=".52" stop-color="#FFE2A3"/><stop offset="1" stop-color="#FFD58D"/></linearGradient></defs>
+<path fill="#542B13" d="M9 1H211L219 9V211L211 219H9L1 211V9Z"/>
+<path fill="#FFD58D" d="M12 4H208L216 12V208L208 216H12L4 208V12Z"/>
+<path fill="url(#paper)" d="M15 8H205L212 15V205L205 212H15L8 205V15Z"/>
+<path d="M17 12H201L208 19M12 19V201" fill="none" stroke="#FFF0C7" stroke-width="3"/>
+<g fill="none" stroke="#DBAD62" stroke-width="3" opacity=".76">
+<path d="M151 14Q155 43 180 42T207 71M206 149Q178 150 178 176T147 207M14 153Q43 152 42 178T75 207"/>
+<circle cx="189" cy="28" r="8"/><circle cx="193" cy="191" r="9"/><circle cx="28" cy="193" r="8"/>
+<path d="M189 23V29H194M189 191H195V197M25 191V196H30"/>
+</g></svg>
