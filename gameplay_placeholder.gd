@@ -17,7 +17,7 @@ const BoardRules = preload("res://board_rules.gd")
 const DiceRoller = preload("res://dice_roller.gd")
 const QuizSession = preload("res://quiz_session.gd")
 const QuizQuestionBank = preload("res://quiz_question_bank.gd")
-const TERRACE_BACKGROUND: Texture2D = preload("res://assets/gameplay_ui/terrace_blue/background.png")
+const TERRACE_BACKGROUND: Texture2D = preload("res://assets/gameplay_ui/forest_parchment/background.png")
 
 @export var shuffle_questions: bool = true
 @export var dice_animation_steps: int = 8
@@ -596,38 +596,60 @@ func _update_gameplay_layout() -> void:
 	var content_margin: MarginContainer = $MarginContainer
 	content_margin.offset_left = margin
 	content_margin.offset_right = -margin
-	content_margin.offset_top = screen_size.y * 0.025
-	content_margin.offset_bottom = -screen_size.y * 0.205
+	content_margin.offset_top = screen_size.y * 0.175
+	content_margin.offset_bottom = -screen_size.y * 0.245
 	var width := screen_size.x - margin * 2.0
 	var logo: TextureRect = $MarginContainer/Content/HistoryRollBrand
-	var logo_height := width * 0.255
-	logo.custom_minimum_size = Vector2(width * 0.82, logo_height)
+	# The reference leaves the sky open and uses only the Back icon above play.
+	logo.hide()
+	$MarginContainer/Content.add_theme_constant_override("separation", 0)
+	$MarginContainer/Content/BodyCenter.size_flags_vertical = Control.SIZE_FILL
 	var gap := clampi(int(screen_size.y * 0.012), 12, 24)
-	$MarginContainer/Content.add_theme_constant_override("separation", gap)
 	gameplay_body.add_theme_constant_override("separation", gap)
 	gameplay_body.custom_minimum_size.x = width
-	var status_height := clampf(width * 0.09, 84.0, 100.0)
+	var status_height := clampf(width * 0.11, 68.0, 112.0)
 	$MarginContainer/Content/BodyCenter/Body/StatusRow.custom_minimum_size.y = status_height
-	# Shrink taller boards while retaining square, aligned cells.
-	var available_height := screen_size.y * 0.77 - logo_height - status_height - gap * 3.0
-	var board_height := (width - 32.0) * float(board_view.rows) / float(board_view.columns) + 32.0
-	board_panel.custom_minimum_size.y = minf(board_height, available_height)
-	var back_side := clampf(width * 0.105, 64.0, 112.0)
+	# Match the reference's taller board. Grid visuals and token destinations
+	# share its fitted cell rectangles; catalog counts and rules stay intact.
+	board_panel.custom_minimum_size.y = screen_size.y * 0.49
+	var back_side := clampf(width * 0.105, 76.0, 104.0)
 	back_button.custom_minimum_size = Vector2.ONE * back_side
 	back_button.size = Vector2.ONE * back_side
-	back_button.position = Vector2(-margin * 0.2, -logo_height - gap)
-	back_button.add_theme_constant_override("icon_max_width", int(back_side))
-	var label_size := clampi(int(width * 0.029), 16, 30)
+	back_button.position = Vector2(0, screen_size.y * 0.038 - content_margin.offset_top)
+	back_button.add_theme_constant_override("icon_max_width", int(back_side * 0.76))
+	var label_size := clampi(int(width * 0.035), 19, 34)
 	for label: Label in [position_label, score_label, power_status_label]:
 		label.size_flags_vertical = Control.SIZE_FILL
 		label.add_theme_font_size_override("font_size", label_size)
 		label.add_theme_color_override("font_color", Color("#FFF1C4"))
 		var icon := label.get_child(0) as TextureRect
-		icon.offset_right = status_height * 0.43
-	var roll_height := screen_size.y * 0.12
+		icon.offset_left = 6.0
+		icon.offset_right = status_height * 0.60
+		var status_style := label.get_theme_stylebox("normal").duplicate() as StyleBoxFlat
+		status_style.content_margin_left = icon.offset_right + 6.0
+		status_style.content_margin_right = 12.0
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		var lettering_width := label.get_theme_font("font").get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, label_size).x
+		label.custom_minimum_size.x = lettering_width + icon.offset_right + 24.0
+		status_style.border_color = Color("#EFC574")
+		label.add_theme_stylebox_override("normal", status_style)
+	var roll_height := screen_size.y * 0.11
 	var roll_title: Label = $BottomRollArea/RollButton/RollVisual/RollContents/RollTitle
-	roll_title.add_theme_font_size_override("font_size", clampi(int(width * 0.078), 36, 80))
+	roll_title.add_theme_font_size_override("font_size", clampi(int(width * 0.082), 40, 88))
 	$BottomRollArea/RollButton/RollVisual/RollContents/DieIcon.custom_minimum_size = Vector2.ONE * roll_height * 0.58
+	_align_status_icons.call_deferred()
+
+
+func _align_status_icons() -> void:
+	for label: Label in [position_label, score_label, power_status_label]:
+		var icon := label.get_child(0) as TextureRect
+		var icon_width := icon.size.x
+		var font_size := label.get_theme_font_size("font_size")
+		var lettering_width := label.get_theme_font("font").get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		var right_padding := label.get_theme_stylebox("normal").content_margin_right
+		# Keep the icon beside its caption after the HBox has allocated widths.
+		icon.offset_right = label.size.x - right_padding - lettering_width - 10.0
+		icon.offset_left = icon.offset_right - icon_width
 
 
 func _set_popup_height(popup_height: float) -> void:

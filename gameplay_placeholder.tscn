@@ -1,21 +1,28 @@
-[gd_scene load_steps=40 format=3]
+[gd_scene load_steps=42 format=3]
 
 [ext_resource type="Script" path="res://gameplay_placeholder.gd" id="1_gameplay"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/background.png" id="2_background"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/background.png" id="2_background"]
 [ext_resource type="Script" path="res://board_view.gd" id="3_board"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/logo.png" id="4_logo"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/level_parchment.png" id="5_level_banner"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/quiz_frame_filipino_v2.png" id="6_quiz_scroll"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/board_frame.png" id="7_board_frame"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/roll_base.svg" id="8_roll"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/status_base.svg" id="9_status"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/back.svg" id="10_back"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/die.svg" id="11_die"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/roll_base.png" id="8_roll"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/status_base.svg" id="9_status"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/back.svg" id="10_back"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/die.svg" id="11_die"]
 [ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="12_font"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/person.svg" id="13_person"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/trophy.svg" id="14_trophy"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/shield.svg" id="15_shield"]
-[ext_resource type="FontFile" path="res://assets/fonts/Lora-Italic.ttf" id="16_serif"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/person.svg" id="13_person"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/trophy.svg" id="14_trophy"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/shield.svg" id="15_shield"]
+[ext_resource type="FontFile" path="res://assets/fonts/BreeSerif-Regular.ttf" id="16_serif"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Lora-Italic.ttf" id="17_roll_font"]
+
+[sub_resource type="FontVariation" id="Font_roll"]
+base_font = ExtResource("17_roll_font")
+variation_opentype = {"wght": 700.0}
+variation_embolden = 1.8
 
 [sub_resource type="FontVariation" id="Font_reference"]
 base_font = ExtResource("16_serif")
@@ -196,10 +203,10 @@ content_margin_right = 3.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_roll"]
 texture = ExtResource("8_roll")
-texture_margin_left = 110.0
-texture_margin_top = 42.0
-texture_margin_right = 110.0
-texture_margin_bottom = 42.0
+texture_margin_left = 0.0
+texture_margin_top = 0.0
+texture_margin_right = 0.0
+texture_margin_bottom = 0.0
 content_margin_left = 36.0
 content_margin_top = 18.0
 content_margin_right = 36.0
@@ -208,10 +215,10 @@ content_margin_bottom = 18.0
 [sub_resource type="StyleBoxTexture" id="StyleBox_roll_hover"]
 texture = ExtResource("8_roll")
 modulate_color = Color(1.12, 1.12, 1.08, 1)
-texture_margin_left = 110.0
-texture_margin_top = 42.0
-texture_margin_right = 110.0
-texture_margin_bottom = 42.0
+texture_margin_left = 0.0
+texture_margin_top = 0.0
+texture_margin_right = 0.0
+texture_margin_bottom = 0.0
 content_margin_left = 36.0
 content_margin_top = 18.0
 content_margin_right = 36.0
@@ -284,17 +291,18 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 26.0
-offset_top = 10.0
+offset_top = 268.0
 offset_right = -26.0
-offset_bottom = -12.0
+offset_bottom = -376.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Content" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 0
 
 [node name="HistoryRollBrand" type="TextureRect" parent="MarginContainer/Content"]
+visible = false
 custom_minimum_size = Vector2(760, 240)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -344,10 +352,11 @@ vertical_alignment = 1
 [node name="BackButton" type="Button" parent="MarginContainer/Content/Header"]
 unique_name_in_owner = true
 z_index = 30
-custom_minimum_size = Vector2(84, 84)
+custom_minimum_size = Vector2(98, 98)
 layout_mode = 1
-offset_right = 84.0
-offset_bottom = 84.0
+offset_top = -210.0
+offset_right = 98.0
+offset_bottom = -112.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.95, 0.82, 1)
@@ -358,6 +367,7 @@ theme_override_styles/normal = SubResource("StyleBox_brown_button")
 theme_override_styles/hover = SubResource("StyleBox_brown_hover")
 theme_override_styles/pressed = SubResource("StyleBox_brown_button")
 theme_override_styles/disabled = SubResource("StyleBox_brown_button")
+theme_override_constants/icon_max_width = 74
 icon = ExtResource("10_back")
 expand_icon = true
 icon_alignment = 1
@@ -456,7 +466,7 @@ theme_override_colors/font_color = Color(0.96, 0.97, 1, 1)
 theme_override_font_sizes/font_size = 22
 theme_override_fonts/font = SubResource("Font_reference")
 theme_override_constants/outline_size = 4
-theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
+theme_override_colors/font_outline_color = Color(0.19, 0.08, 0.03, 1)
 theme_override_styles/normal = SubResource("StyleBox_status_item")
 text = "Position: 1 / 100"
 horizontal_alignment = 1
@@ -481,7 +491,7 @@ theme_override_colors/font_color = Color(1, 0.84, 0.38, 1)
 theme_override_font_sizes/font_size = 22
 theme_override_fonts/font = SubResource("Font_reference")
 theme_override_constants/outline_size = 4
-theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
+theme_override_colors/font_outline_color = Color(0.19, 0.08, 0.03, 1)
 theme_override_styles/normal = SubResource("StyleBox_status_item")
 text = "Score: 0"
 horizontal_alignment = 1
@@ -506,7 +516,7 @@ theme_override_colors/font_color = Color(0.72, 0.86, 0.96, 1)
 theme_override_font_sizes/font_size = 21
 theme_override_fonts/font = SubResource("Font_reference")
 theme_override_constants/outline_size = 4
-theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
+theme_override_colors/font_outline_color = Color(0.19, 0.08, 0.03, 1)
 theme_override_styles/normal = SubResource("StyleBox_status_item")
 text = "1x  |  Shield: 0"
 horizontal_alignment = 1
@@ -539,9 +549,9 @@ vertical_alignment = 1
 z_index = 10
 layout_mode = 1
 anchor_left = 0.20
-anchor_top = 0.81
+anchor_top = 0.77
 anchor_right = 0.80
-anchor_bottom = 0.93
+anchor_bottom = 0.88
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -563,7 +573,7 @@ theme_override_colors/font_disabled_color = Color(0, 0, 0, 0)
 theme_override_font_sizes/font_size = 28
 theme_override_fonts/font = SubResource("Font_reference")
 theme_override_constants/outline_size = 0
-theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
+theme_override_colors/font_outline_color = Color(0.19, 0.08, 0.03, 1)
 theme_override_constants/h_separation = 16
 theme_override_styles/focus = SubResource("StyleBox_main")
 theme_override_styles/normal = SubResource("StyleBox_roll")
@@ -595,9 +605,9 @@ stretch_mode = 5
 [node name="RollTitle" type="Label" parent="BottomRollArea/RollButton/RollVisual/RollContents"]
 layout_mode = 2
 mouse_filter = 2
-theme_override_fonts/font = SubResource("Font_reference")
+theme_override_fonts/font = SubResource("Font_roll")
 theme_override_colors/font_color = Color(1, 0.96, 0.82, 1)
-theme_override_colors/font_outline_color = Color(0, 0.07, 0.13, 1)
+theme_override_colors/font_outline_color = Color(0.19, 0.08, 0.03, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 72
 text = "Roll Dice"
