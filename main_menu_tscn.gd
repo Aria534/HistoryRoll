@@ -56,11 +56,13 @@ func _apply_responsive_layout() -> void:
 	var ui_scale := minf(safe_rect.size.x / DESIGN_SIZE.x, safe_rect.size.y / DESIGN_SIZE.y)
 	var extra_height := maxf(0.0, safe_rect.size.y - DESIGN_SIZE.y * ui_scale)
 	var top := safe_rect.position.y + extra_height * 0.25
-	var logo_width := minf(safe_rect.size.x * 0.80, 780.0 * ui_scale)
+	var logo_width := minf(safe_rect.size.x * 0.80, 760.0 * ui_scale)
 	var logo_aspect := menu_logo.texture.get_size().aspect()
 	menu_logo.size = Vector2(logo_width, logo_width / logo_aspect)
-	menu_logo.position = Vector2(safe_rect.get_center().x - logo_width * 0.5, top + 70.0 * ui_scale)
-	var button_size := Vector2(520.0, 110.0) * ui_scale
+	menu_logo.position = Vector2(safe_rect.get_center().x - logo_width * 0.5, top + 12.0 * ui_scale)
+	var button_size := Vector2(520.0, 104.0) * ui_scale
+	var button_top := menu_logo.position.y + menu_logo.size.y + 28.0 * ui_scale + extra_height * 0.08
+	var button_pitch := 124.0 * ui_scale + extra_height * 0.035
 	var buttons: Array[TextureButton] = [start_button, hero_cards_button, settings_button, quit_button]
 	for index: int in buttons.size():
 		var button := buttons[index]
@@ -70,7 +72,7 @@ func _apply_responsive_layout() -> void:
 		button.scale = Vector2.ONE
 		button.self_modulate = Color.WHITE
 		button.get_node("PlankArt").self_modulate = Color.WHITE
-		button.position = Vector2(safe_rect.get_center().x - button_size.x * 0.5, top + (430.0 + index * 130.0) * ui_scale + extra_height * 0.15)
+		button.position = Vector2(safe_rect.get_center().x - button_size.x * 0.5, button_top + index * button_pitch)
 		button.size = button_size
 		_button_rest_positions[button] = button.position
 		button.pivot_offset = button_size * 0.5
@@ -84,15 +86,18 @@ func _apply_responsive_layout() -> void:
 		label.add_theme_constant_override("shadow_offset_y", maxi(1, roundi(3.0 * ui_scale)))
 	selection_arrow.size = Vector2(27.0, 36.0) * ui_scale
 	_position_selection_arrow()
-	# Scenery covers the viewport; the separate foreground preserves both explorers
-	# and the lantern across portrait aspect ratios without stretching their art.
+	# The background carries the path and lantern; the two complete explorers
+	# remain separate, keep their aspect ratio and leave the path visible below.
 	var texture := live_background.sprite_frames.get_frame_texture("default", 0)
 	var fit_scale := maxf(size.x / texture.get_width(), size.y / texture.get_height())
 	live_background.scale = Vector2.ONE * fit_scale
 	live_background.position = size * 0.5
-	var foreground_height := minf(size.x * 0.57, size.y * 0.34)
-	menu_explorers.size = Vector2(size.x, foreground_height)
-	menu_explorers.position = Vector2(0.0, size.y - foreground_height)
+	var foreground_width := minf(safe_rect.size.x * 0.80, 700.0 * ui_scale + minf(extra_height * 0.20, 100.0 * ui_scale))
+	var foreground_height := foreground_width / menu_explorers.texture.get_size().aspect()
+	menu_explorers.size = Vector2(foreground_width, foreground_height)
+	var foreground_bottom := safe_rect.end.y - 140.0 * ui_scale
+	var foreground_top := maxf(quit_button.position.y + button_size.y + 36.0 * ui_scale, foreground_bottom - foreground_height)
+	menu_explorers.position = Vector2(safe_rect.get_center().x + 36.0 * ui_scale - foreground_width * 0.5, foreground_top)
 
 
 func _get_safe_rect() -> Rect2:
