@@ -1,49 +1,47 @@
 [gd_scene format=3 uid="uid://dqnvxi15q2xue"]
 
 [ext_resource type="Script" uid="uid://bi0rgtrdac8qr" path="res://level_selection.gd" id="1_level"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/background.png" id="2_background"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/back.svg" id="3_back"]
-[ext_resource type="FontFile" path="res://assets/fonts/BreeSerif-Regular.ttf" id="4_font"]
+[ext_resource type="Texture2D" uid="uid://46kbnpnxpcw5" path="res://assets/level_selection_pixel/parchment_forest/background.png" id="2_background"]
+[ext_resource type="Texture2D" uid="uid://i0ofebakg1ap" path="res://assets/level_selection_pixel/parchment_forest/back.svg" id="3_back"]
+[ext_resource type="FontFile" uid="uid://be0coy4o0ujk2" path="res://assets/fonts/BreeSerif-Regular.ttf" id="4_font"]
 [ext_resource type="PackedScene" path="res://level_row.tscn" id="5_row"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/lapulapu.png" id="6_lapulapu"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/bonifacio.png" id="7_bonifacio"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/rizal.png" id="8_rizal"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/luna.png" id="9_luna"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/aquino.png" id="10_aquino"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/mabini.png" id="11_mabini"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/title.png" id="12_title_frame"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/play.png" id="13_play_frame"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/icon_base.svg" id="14_help"]
+[ext_resource type="Texture2D" uid="uid://cbkp0vjc1iuyw" path="res://assets/level_selection_pixel/parchment_forest/lapulapu.png" id="6_lapulapu"]
+[ext_resource type="Texture2D" uid="uid://dbeul3awb0p1o" path="res://assets/level_selection_pixel/parchment_forest/bonifacio.png" id="7_bonifacio"]
+[ext_resource type="Texture2D" uid="uid://dbalbcw1wl870" path="res://assets/level_selection_pixel/parchment_forest/rizal.png" id="8_rizal"]
+[ext_resource type="Texture2D" uid="uid://cw1x5l6irbcyv" path="res://assets/level_selection_pixel/parchment_forest/luna.png" id="9_luna"]
+[ext_resource type="Texture2D" uid="uid://ja7vw0klix6p" path="res://assets/level_selection_pixel/parchment_forest/aquino.png" id="10_aquino"]
+[ext_resource type="Texture2D" uid="uid://ce036u1vk5y6g" path="res://assets/level_selection_pixel/parchment_forest/mabini.png" id="11_mabini"]
+[ext_resource type="Texture2D" uid="uid://c27rh6wawrj3l" path="res://assets/level_selection_pixel/parchment_forest/title.png" id="12_title_frame"]
+[ext_resource type="Texture2D" uid="uid://4vtydbbs3hyk" path="res://assets/level_selection_pixel/parchment_forest/play.png" id="13_play_frame"]
+[ext_resource type="Texture2D" uid="uid://bxhbf5bfmapv7" path="res://assets/level_selection_pixel/parchment_forest/icon_base.svg" id="14_help"]
+[ext_resource type="Texture2D" uid="uid://bcmryttwe3x27" path="res://assets/level_selection_pixel/parchment_forest/row.png" id="16_row_frame"]
+[ext_resource type="Shader" uid="uid://bkcala7i7i8hg" path="res://assets/main_menu_pixel/forest_story/pixel_cutout.gdshader" id="17_cutout"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="15_icon_font"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/row.png" id="16_row_frame"]
-[ext_resource type="Shader" path="res://assets/main_menu_pixel/forest_story/pixel_cutout.gdshader" id="17_cutout"]
-
-[sub_resource type="ShaderMaterial" id="Material_pixel_cutout"]
-shader = ExtResource("17_cutout")
+[sub_resource type="AtlasTexture" id="SkyStrip"]
+atlas = ExtResource("2_background")
+region = Rect2(0, 0, 1086, 1)
 
 [sub_resource type="FontVariation" id="Font_heading"]
 base_font = ExtResource("4_font")
 variation_embolden = 0.5
 
-[sub_resource type="AtlasTexture" id="Atlas_row"]
-atlas = ExtResource("16_row_frame")
-region = Rect2(78, 191, 2019, 348)
-filter_clip = true
+[sub_resource type="ShaderMaterial" id="Material_pixel_cutout"]
+shader = ExtResource("17_cutout")
+shader_parameter/alpha_cutoff = 0.6
 
 [sub_resource type="AtlasTexture" id="Atlas_title"]
 atlas = ExtResource("12_title_frame")
 region = Rect2(46, 74, 2076, 522)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="Atlas_play"]
-atlas = ExtResource("13_play_frame")
-region = Rect2(80, 35, 2011, 654)
-filter_clip = true
-
 [sub_resource type="AtlasTexture" id="Atlas_level1"]
 atlas = ExtResource("6_lapulapu")
 region = Rect2(33, 39, 1186, 1176)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Atlas_row"]
+atlas = ExtResource("16_row_frame")
+region = Rect2(78, 191, 2019, 348)
 filter_clip = true
 
 [sub_resource type="AtlasTexture" id="Atlas_level2"]
@@ -71,9 +69,10 @@ atlas = ExtResource("11_mabini")
 region = Rect2(56, 61, 1143, 1132)
 filter_clip = true
 
-[sub_resource type="AtlasTexture" id="SkyStrip"]
-atlas = ExtResource("2_background")
-region = Rect2(0, 0, 1086, 1)
+[sub_resource type="AtlasTexture" id="Atlas_play"]
+atlas = ExtResource("13_play_frame")
+region = Rect2(80, 35, 2011, 654)
+filter_clip = true
 
 [sub_resource type="StyleBoxFlat" id="Style_title"]
 bg_color = Color(0.965, 0.855, 0.62, 0.98)
@@ -86,7 +85,7 @@ corner_radius_top_left = 18
 corner_radius_top_right = 18
 corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
-shadow_color = Color(0.21, 0.10, 0.04, 0.8)
+shadow_color = Color(0.21, 0.1, 0.04, 0.8)
 shadow_size = 8
 
 [sub_resource type="StyleBoxFlat" id="Style_icon_normal"]
@@ -118,17 +117,16 @@ shadow_color = Color(1, 0.76, 0.16, 1)
 shadow_size = 6
 
 [node name="LevelSelection" type="Control" unique_id=61055790]
+texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture_filter = 1
 script = ExtResource("1_level")
 
-
-[node name="SkyFill" type="TextureRect" parent="."]
+[node name="SkyFill" type="TextureRect" parent="." unique_id=983715067]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -158,6 +156,7 @@ color = Color(0, 0, 0, 0)
 [node name="UIRoot" type="Control" parent="." unique_id=511740690]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(1086, 1448)
+anchors_preset = 0
 offset_right = 1086.0
 offset_bottom = 1448.0
 mouse_filter = 1
@@ -177,49 +176,53 @@ stretch_mode = 5
 [node name="HelpButton" type="TextureButton" parent="UIRoot" unique_id=1312519284]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -155.0
 offset_top = 24.0
 offset_right = -35.0
 offset_bottom = 144.0
+grow_horizontal = 0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("14_help")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Symbol" type="Label" parent="UIRoot/HelpButton"]
+[node name="Symbol" type="Label" parent="UIRoot/HelpButton" unique_id=403104194]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -3.0
-mouse_filter = 2
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.65, 1)
+theme_override_colors/font_shadow_color = Color(0.35, 0.13, 0.025, 1)
+theme_override_colors/font_outline_color = Color(0.25, 0.1, 0.03, 1)
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = SubResource("Font_heading")
 theme_override_font_sizes/font_size = 90
-theme_override_colors/font_color = Color(1, 0.9, 0.65, 1)
-theme_override_colors/font_outline_color = Color(0.25, 0.10, 0.03, 1)
-theme_override_colors/font_shadow_color = Color(0.35, 0.13, 0.025, 1)
-theme_override_constants/outline_size = 4
-theme_override_constants/shadow_offset_y = 4
 text = "?"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="TitleBanner" type="TextureRect" parent="UIRoot" unique_id=807028397]
 unique_name_in_owner = true
+material = SubResource("Material_pixel_cutout")
 layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -429.0
 offset_top = 150.0
 offset_right = 429.0
 offset_bottom = 334.0
+grow_horizontal = 2
 mouse_filter = 2
 texture = SubResource("Atlas_title")
-material = SubResource("Material_pixel_cutout")
 expand_mode = 1
-stretch_mode = 0
 
 [node name="TitleLabel" type="Label" parent="UIRoot/TitleBanner" unique_id=271846468]
 layout_mode = 1
@@ -232,7 +235,7 @@ offset_right = -35.0
 offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.28, 0.10, 0.025, 1)
+theme_override_colors/font_color = Color(0.28, 0.1, 0.025, 1)
 theme_override_colors/font_outline_color = Color(1, 0.96, 0.82, 1)
 theme_override_constants/outline_size = 1
 theme_override_fonts/font = SubResource("Font_heading")
@@ -253,19 +256,17 @@ mouse_filter = 1
 [node name="Level1Button" parent="UIRoot/LevelButtonsArea" unique_id=1076678431 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 1
-anchor_top = 0.0000000
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 0.0000000
 offset_bottom = 144.0
-disabled = false
-level_id = 1
-level_title = "LEVEL 1 - LAPU-LAPU"
+grow_horizontal = 2
 portrait = SubResource("Atlas_level1")
 row_texture = SubResource("Atlas_row")
 
 [node name="Level2Button" parent="UIRoot/LevelButtonsArea" unique_id=522892594 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = -1
 anchor_top = 0.1666667
 anchor_right = 1.0
 anchor_bottom = 0.1666667
@@ -279,6 +280,7 @@ row_texture = SubResource("Atlas_row")
 [node name="Level3Button" parent="UIRoot/LevelButtonsArea" unique_id=1622845960 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = -1
 anchor_top = 0.3333333
 anchor_right = 1.0
 anchor_bottom = 0.3333333
@@ -292,10 +294,14 @@ row_texture = SubResource("Atlas_row")
 [node name="Level4Button" parent="UIRoot/LevelButtonsArea" unique_id=1796087367 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 1
-anchor_top = 0.5000000
+anchors_preset = 14
+anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.5000000
+anchor_bottom = 0.5
+offset_top = -4.0
 offset_bottom = 144.0
+grow_horizontal = 2
+grow_vertical = 2
 disabled = true
 level_id = 4
 level_title = "LEVEL 4 - ANTONIO LUNA"
@@ -305,6 +311,7 @@ row_texture = SubResource("Atlas_row")
 [node name="Level5Button" parent="UIRoot/LevelButtonsArea" unique_id=1708645918 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = -1
 anchor_top = 0.6666667
 anchor_right = 1.0
 anchor_bottom = 0.6666667
@@ -318,6 +325,7 @@ row_texture = SubResource("Atlas_row")
 [node name="Level6Button" parent="UIRoot/LevelButtonsArea" unique_id=1112743727 instance=ExtResource("5_row")]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = -1
 anchor_top = 0.8333333
 anchor_right = 1.0
 anchor_bottom = 0.8333333
@@ -330,7 +338,9 @@ row_texture = SubResource("Atlas_row")
 
 [node name="PlayButton" type="TextureButton" parent="UIRoot" unique_id=1085011560]
 unique_name_in_owner = true
+material = SubResource("Material_pixel_cutout")
 layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.27
 anchor_top = 0.99
 anchor_right = 0.73
@@ -339,7 +349,6 @@ offset_top = -164.0
 mouse_default_cursor_shape = 2
 disabled = true
 texture_normal = SubResource("Atlas_play")
-material = SubResource("Material_pixel_cutout")
 texture_pressed = SubResource("Atlas_play")
 texture_hover = SubResource("Atlas_play")
 texture_disabled = SubResource("Atlas_play")
@@ -386,6 +395,7 @@ color = Color(0.01, 0.05, 0.1, 0.72)
 
 [node name="Panel" type="PanelContainer" parent="UIRoot/HelpOverlay" unique_id=1484799434]
 layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.12
 anchor_top = 0.15
 anchor_right = 0.88
