@@ -42,7 +42,7 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	_check(_rect_inside(game.roll_button.get_global_rect(), viewport_size), "Level %d bottom Roll Dice stays within the portrait safe area" % level_id)
 	_check(not game.turn_message_label.visible and not game.feedback_label.visible, "Level %d removes the old instruction descriptions" % level_id)
 	if level_id == 1:
-		_check(game.background.texture.resource_path.ends_with("terrace_blue/background.png"), "Level 1 uses the reference rice-terrace background")
+		_check(game.background.texture.resource_path.ends_with("forest_parchment/background.png"), "Level 1 uses the reference pixel-art forest background")
 		var quiz_style := game.quiz_panel.get_theme_stylebox("panel") as StyleBoxTexture
 		_check(
 			quiz_style != null and quiz_style.texture.resource_path.ends_with("quiz_frame_filipino_v2.png"),
@@ -53,11 +53,12 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	var choice_count: int = game.current_question.get("choices", []).size()
 	var expected_columns: int = choice_count if choice_count <= 3 else 2
 	_check(game.answers_grid.columns == expected_columns, "Level %d balances its %d answer choices across the quiz row" % [level_id, choice_count])
-	_check(game.get_node("MarginContainer/Content/HistoryRollBrand").visible, "Level %d shows the reference aqua-scroll logo" % level_id)
+	_check(not game.get_node("MarginContainer/Content/HistoryRollBrand").visible, "Level %d leaves the reference sky free of a duplicate logo" % level_id)
 	var level_banner := game.get_node("MarginContainer/Content/Header/LevelBannerBackground") as TextureRect
 	var back_button := game.get_node("%BackButton") as Button
 	_check(not level_banner.visible and not game.level_label.visible, "Level %d gameplay header removes the level parchment and title" % level_id)
 	_check(back_button.visible and back_button.size.y >= 60.0, "Level %d keeps a large touch-friendly Back to Levels button" % level_id)
+	_check(back_button.get_theme_constant("icon_max_width") <= back_button.size.x * 0.80, "Level %d Back artwork stays smaller than its touch target" % level_id)
 	_check(game.gameplay_body.size.x >= float(viewport_size.x) * 0.85, "Level %d gameplay body fills the portrait safe width" % level_id)
 	var status_row: Control = game.get_node("MarginContainer/Content/BodyCenter/Body/StatusRow")
 	_check(game.board_panel.get_global_rect().end.y <= status_row.get_global_rect().position.y, "Level %d board does not overlap its status bar" % level_id)
@@ -67,7 +68,7 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	_check(die_icon.get_global_rect().end.x <= roll_title.get_global_rect().position.x, "Level %d Roll Dice lettering does not overlap the die icon" % level_id)
 	_check(game.roll_button.get_global_rect().encloses(roll_title.get_global_rect()), "Level %d Roll Dice lettering fits inside its button" % level_id)
 	_check(not game.state_label.visible, "Level %d status bar contains only Position, Score and Shield" % level_id)
-	_check(back_button.icon != null and back_button.text.is_empty(), "Level %d Back uses the round reference icon" % level_id)
+	_check(back_button.icon != null and back_button.text.is_empty(), "Level %d Back uses the wooden reference icon" % level_id)
 	_check(game.quiz_panel.size.y >= 390.0, "Level %d compact popup has sufficient vertical space" % level_id)
 	_check(_rect_inside(back_button.get_global_rect(), viewport_size), "Level %d Back button respects portrait safe bounds" % level_id)
 	_check(_rect_inside(game.board_panel.get_global_rect(), viewport_size), "Level %d board remains fully visible" % level_id)
@@ -80,7 +81,7 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	_check(player_center.distance_to(game.board_view.get_tile_center(1)) < 1.0, "Level %d current hero starts on Tile 1" % level_id)
 	var board_rect: Rect2 = game.board_view.get_board_rect()
 	var cell_size := Vector2(board_rect.size.x / game.board_view.columns, board_rect.size.y / game.board_view.rows)
-	_check(absf(cell_size.x - cell_size.y) < 0.1, "Level %d tiles stay square at %s" % [level_id, viewport_size])
+	_check((board_rect.size + Vector2.ONE * game.board_view.FRAME_WIDTH * 2.0).is_equal_approx(game.board_view.size), "Level %d fitted grid fills the taller board at %s" % [level_id, viewport_size])
 	var natural_token_size := clampf(minf(cell_size.x, cell_size.y) * 0.88, 44.0, 124.0)
 	_check(is_equal_approx(game.board_view.player_token.size.x, natural_token_size), "Level %d current hero portrait keeps natural tile padding" % level_id)
 	var token_style := game.board_view.player_token.get_theme_stylebox("panel") as StyleBoxFlat
@@ -219,7 +220,7 @@ func _test_pointer_controls() -> void:
 	_click(viewport, game.back_button.get_global_rect().get_center())
 	await process_frame
 	await process_frame
-	_check(current_scene != null and current_scene.scene_file_path == "res://level_selection.tscn", "pointer click on the round Back icon opens the real Level Selection scene")
+	_check(current_scene != null and current_scene.scene_file_path == "res://level_selection.tscn", "pointer click on the wooden Back icon opens the real Level Selection scene")
 	if current_scene != null:
 		current_scene.queue_free()
 		current_scene = null
