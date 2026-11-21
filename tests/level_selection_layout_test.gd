@@ -24,6 +24,11 @@ func _run() -> void:
 	await _test_returning_player_capture()
 	_cleanup_save()
 	await _test_main_menu_entry()
+	var audio: Node = get_root().get_node_or_null("AudioManager")
+	if audio != null:
+		audio.stop_music(0.0)
+	await process_frame
+	await process_frame
 	print("Level Selection layout tests: %d passed, %d failed." % [_passed, _failed])
 	quit(0 if _failed == 0 else 1)
 
@@ -51,6 +56,12 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 	_check(not screen.level_buttons_area is Container, "%s keeps level cards independently positionable in the 2D Editor" % size_label)
 	_check(screen.selection_label == null, "%s preserves the intentionally removed selected-level label" % size_label)
 	_check(_rect_is_inside(screen.title_banner.get_global_rect(), viewport_size), "%s title banner stays on-screen" % size_label)
+	var title_label: Label = screen.title_banner.get_node("TitleLabel")
+	var title_font_size := title_label.get_theme_font_size("font_size")
+	var title_font := title_label.get_theme_font("font")
+	_check(title_font.get_string_size(title_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, title_font_size).x <= title_label.size.x, "%s live title lettering fits on its red plaque" % size_label)
+	_check(title_font.get_height(title_font_size) <= title_label.size.y, "%s title lettering has sufficient vertical space" % size_label)
+	_check(_rect_contains(screen.title_banner.get_global_rect(), title_label.get_global_rect()), "%s title lettering stays within the crest bounds" % size_label)
 	_check(screen.back_button.visible and screen.help_button.visible, "%s top controls remain visible beside the transparent banner" % size_label)
 	_check(_rect_is_inside(screen.back_button.get_global_rect(), viewport_size), "%s Back Arrow stays on-screen" % size_label)
 	_check(_rect_is_inside(screen.help_button.get_global_rect(), viewport_size), "%s Help icon stays on-screen" % size_label)
@@ -91,6 +102,7 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 		previous_rect = button_rect
 	_check(visible_lock_count == 5, "%s fresh-player capture has exactly five padlocks" % size_label)
 	_check(previous_rect.end.y <= screen.play_button.get_global_rect().position.y, "%s PLAY is below the level list" % size_label)
+	_check(screen.title_banner.get_global_rect().end.y < screen.level_buttons[1].get_global_rect().position.y, "%s book crest stays above the first level" % size_label)
 
 	var image: Image = viewport.get_texture().get_image()
 	if image != null and not image.is_empty():
