@@ -1,11 +1,11 @@
-[gd_scene load_steps=49 format=3]
+[gd_scene load_steps=50 format=3]
 
 [ext_resource type="Script" path="res://gameplay_placeholder.gd" id="1_gameplay"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/background.png" id="2_background"]
 [ext_resource type="Script" path="res://board_view.gd" id="3_board"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/terrace_blue/logo.png" id="4_logo"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/level_parchment.png" id="5_level_banner"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/quiz_frame_filipino_v2.png" id="6_quiz_scroll"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/quiz_gold/frame.png" id="6_quiz_scroll"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/board_frame.png" id="7_board_frame"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/roll_base.png" id="8_roll"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/forest_parchment/status_base.svg" id="9_status"]
@@ -21,6 +21,7 @@
 
 [ext_resource type="Script" path="res://level_completion_card.gd" id="18_completion"]
 [ext_resource type="Texture2D" path="res://assets/gameplay_ui/level_completion/card.png" id="19_completion_art"]
+[ext_resource type="Texture2D" path="res://assets/gameplay_ui/quiz_gold/answer.png" id="20_quiz_answer"]
 
 [sub_resource type="FontVariation" id="Font_roll"]
 base_font = ExtResource("17_roll_font")
@@ -66,14 +67,10 @@ corner_radius_bottom_left = 40
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_quiz"]
 texture = ExtResource("6_quiz_scroll")
-texture_margin_left = 138.0
-texture_margin_top = 74.0
-texture_margin_right = 138.0
-texture_margin_bottom = 126.0
-content_margin_left = 58.0
+content_margin_left = 42.0
 content_margin_top = 82.0
-content_margin_right = 58.0
-content_margin_bottom = 54.0
+content_margin_right = 42.0
+content_margin_bottom = 84.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_quiz_transparent"]
 bg_color = Color(0, 0, 0, 0)
@@ -84,7 +81,8 @@ content_margin_bottom = 18.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_question_inset"]
 bg_color = Color(0, 0, 0, 0)
-content_margin_top = 14.0
+content_margin_left = 64.0
+content_margin_right = 64.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_brand"]
 bg_color = Color(0.32, 0.118, 0.047, 0.98)
@@ -132,55 +130,36 @@ border_width_left = 2
 border_color = Color(0.94, 0.64, 0.24, 0.85)
 content_margin_left = 38.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_answer"]
-bg_color = Color(0.12, 0.43, 0.045, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0.85, 0.55, 0.13, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-shadow_color = Color(0.08, 0.16, 0.035, 0.4)
-shadow_size = 5
+[sub_resource type="StyleBoxTexture" id="StyleBox_answer"]
+texture = ExtResource("20_quiz_answer")
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_answer_hover"]
-bg_color = Color(0.263, 0.604, 0.133, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.75, 0.82, 0.2, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="StyleBoxTexture" id="StyleBox_answer_hover"]
+texture = ExtResource("20_quiz_answer")
+modulate_color = Color(1.12, 1.12, 1.04, 1)
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_answer_pressed"]
-bg_color = Color(0.125, 0.349, 0.067, 1)
-border_width_left = 4
-border_width_top = 6
-border_width_right = 4
-border_width_bottom = 2
-border_color = Color(0.09, 0.235, 0.047, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+[sub_resource type="StyleBoxTexture" id="StyleBox_answer_pressed"]
+texture = ExtResource("20_quiz_answer")
+modulate_color = Color(0.82, 0.9, 0.75, 1)
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_disabled"]
-bg_color = Color(0.58, 0.55, 0.48, 0.82)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.43, 0.4, 0.34, 0.8)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+[sub_resource type="StyleBoxTexture" id="StyleBox_disabled"]
+texture = ExtResource("20_quiz_answer")
+modulate_color = Color(0.82, 0.86, 0.78, 1)
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_feedback_backing"]
 bg_color = Color(1, 0.882, 0.62, 0.92)
@@ -681,7 +660,8 @@ theme_override_constants/margin_bottom = 0
 
 [node name="QuizContent" type="VBoxContainer" parent="QuestionPopupLayer/QuizPanel/QuizMargin"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 12
+alignment = 1
 
 [node name="FixtureNotice" type="Label" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent"]
 unique_name_in_owner = true
@@ -699,12 +679,13 @@ custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.19, 0.08, 0.025, 1)
 theme_override_colors/font_outline_color = Color(1, 0.91, 0.68, 0.75)
-theme_override_constants/outline_size = 1
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("12_font")
 theme_override_font_sizes/font_size = 29
 theme_override_styles/normal = SubResource("StyleBox_question_inset")
 text = "Question"
 horizontal_alignment = 1
-vertical_alignment = 2
+vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="Answers" type="GridContainer" parent="QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent"]
@@ -721,7 +702,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.05, 0.16, 0.025, 0.75)
-theme_override_constants/outline_size = 1
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("12_font")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBox_answer")
 theme_override_styles/hover = SubResource("StyleBox_answer_hover")
@@ -737,7 +719,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.05, 0.16, 0.025, 0.75)
-theme_override_constants/outline_size = 1
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("12_font")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBox_answer")
 theme_override_styles/hover = SubResource("StyleBox_answer_hover")
@@ -753,7 +736,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.05, 0.16, 0.025, 0.75)
-theme_override_constants/outline_size = 1
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("12_font")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBox_answer")
 theme_override_styles/hover = SubResource("StyleBox_answer_hover")
@@ -769,7 +753,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0.05, 0.16, 0.025, 0.75)
-theme_override_constants/outline_size = 1
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("12_font")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBox_answer")
 theme_override_styles/hover = SubResource("StyleBox_answer_hover")
