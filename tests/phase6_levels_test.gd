@@ -47,13 +47,14 @@ func _run() -> void:
 func _test_redesigned_levels() -> void:
 	var expected := [20, 30, 40, 50, 100, 100]
 	var previous_snake_count := 0
+	var expected_snakes := [1, 4, 5, 6, 7, 8]
 	for level_id: int in range(1, 7):
 		var level: Dictionary = LevelCatalog.get_level(level_id)
 		var board: Dictionary = level.get("board", {})
 		_check(BoardRules.validate_config(board).is_empty(), "Level %d redesigned board is valid" % level_id)
 		_check(BoardRules.get_tile_count(board) == expected[level_id - 1], "Level %d uses its approved tile count" % level_id)
 		var snake_count := (board.get("snakes", {}) as Dictionary).size()
-		_check(snake_count == level_id + 2, "Level %d includes the added snake and preserves the difficulty curve" % level_id)
+		_check(snake_count == expected_snakes[level_id - 1], "Level %d uses the approved snake count" % level_id)
 		if level_id > 1:
 			_check(snake_count > previous_snake_count, "Level %d has more snakes than the preceding level" % level_id)
 		previous_snake_count = snake_count

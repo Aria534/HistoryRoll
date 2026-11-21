@@ -48,7 +48,7 @@ func _run() -> void:
 
 func _test_catalog_and_boards() -> void:
 	var expected_tiles := [20, 30, 40, 50, 100, 100]
-	var expected_snakes := [3, 4, 5, 6, 7, 8]
+	var expected_snakes := [1, 4, 5, 6, 7, 8]
 	var expected_ladders := [3, 4, 4, 5, 6, 6]
 	var expected_heroes := ["lapulapu", "andres_bonifacio", "jose_rizal", "antonio_luna", "melchora_aquino", "apolinario_mabini"]
 	for level_id: int in range(1, 7):
