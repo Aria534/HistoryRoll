@@ -613,10 +613,10 @@ func _layout_face_sprite(sprite: TextureRect, token: Control, cell_size: Vector2
 		return
 	# Keep the existing token's movement anchor at the cell center, while the
 	# face sits below the number badge and stays inside the tile.
-	var face_side := minf(token.size.x * 0.84, minf(cell_size.x * 0.70, cell_size.y * 0.48))
+	var face_side := minf(token.size.x * 0.96, minf(cell_size.x * 0.78, cell_size.y * 0.54))
 	sprite.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	sprite.size = Vector2.ONE * face_side
-	sprite.position = token.size * 0.5 - sprite.size * 0.5 + Vector2(0, cell_size.y * 0.22)
+	sprite.position = token.size * 0.5 - sprite.size * 0.5 + Vector2(0, cell_size.y * 0.20)
 
 
 func _position_board_die() -> void:
@@ -638,12 +638,20 @@ func _sync_sprite_pivots() -> void:
 
 
 func _restart_idle_animations() -> void:
-	_sync_sprite_pivots()
 	waiting_animation_active = false
 	if player_idle_tween != null:
 		player_idle_tween.kill()
 	if waiting_idle_tween != null:
 		waiting_idle_tween.kill()
+	# Rebuild the resting positions after stopping the old tweens. Resizing or
+	# repeated setup must not use an already-bobbing position as the next origin.
+	if columns <= 0 or rows <= 0:
+		return
+	var board_rect := get_board_rect()
+	var cell_size := Vector2(board_rect.size.x / columns, board_rect.size.y / rows)
+	_layout_face_sprite(player_sprite, player_token, cell_size)
+	_layout_face_sprite(waiting_hero_sprite, waiting_hero_token, cell_size)
+	_sync_sprite_pivots()
 	if player_sprite != null and player_sprite.visible:
 		player_sprite.rotation = -0.025
 		var player_rest := player_sprite.position
@@ -658,17 +666,18 @@ func _restart_idle_animations() -> void:
 		player_idle_tween.parallel().tween_property(player_sprite, "position", player_rest, 0.68)
 	if waiting_hero_sprite != null and waiting_hero_sprite.visible:
 		waiting_animation_active = true
-		waiting_hero_sprite.rotation = -0.085
+		waiting_hero_sprite.rotation = -0.105
 		var waiting_rest := waiting_hero_sprite.position
+		var greeting_lift := clampf(waiting_hero_sprite.size.y * 0.08, 2.0, 7.0)
 		waiting_hero_sprite.scale = Vector2.ONE
 		waiting_idle_tween = create_tween().set_loops()
 		waiting_idle_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		waiting_idle_tween.tween_property(waiting_hero_sprite, "rotation", 0.085, 0.42)
-		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "scale", Vector2(1.06, 0.99), 0.42)
-		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "position", waiting_rest + Vector2(0.0, -3.0), 0.42)
-		waiting_idle_tween.tween_property(waiting_hero_sprite, "rotation", -0.085, 0.42)
-		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "scale", Vector2.ONE, 0.42)
-		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "position", waiting_rest, 0.42)
+		waiting_idle_tween.tween_property(waiting_hero_sprite, "rotation", 0.105, 0.5)
+		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "scale", Vector2(1.035, 0.99), 0.5)
+		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "position", waiting_rest + Vector2(0.0, -greeting_lift), 0.5)
+		waiting_idle_tween.tween_property(waiting_hero_sprite, "rotation", -0.105, 0.5)
+		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "scale", Vector2.ONE, 0.5)
+		waiting_idle_tween.parallel().tween_property(waiting_hero_sprite, "position", waiting_rest, 0.5)
 
 
 func _initials(hero_name: String) -> String:

@@ -26,6 +26,13 @@ func _run() -> void:
 	await _capture_reaction(true, "gameplay_happy_reaction.png")
 	await _capture_reaction(false, "gameplay_sad_reaction.png")
 	await _test_pointer_controls()
+	# Retire procedural audio and pending answer timers before engine teardown.
+	var audio: Node = get_root().get_node_or_null("AudioManager")
+	if audio != null:
+		audio.stop_music(0.0)
+	await create_timer(1.1).timeout
+	await process_frame
+	await process_frame
 	print("Gameplay redesign layout tests: %d passed, %d failed." % [passed, failed])
 	quit(0 if failed == 0 else 1)
 
@@ -65,6 +72,8 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	_check(status_row.get_global_rect().end.y < game.roll_button.get_global_rect().position.y, "Level %d status bar stays above Roll Dice" % level_id)
 	var roll_title: Label = game.get_node("BottomRollArea/RollButton/RollVisual/RollContents/RollTitle")
 	var die_icon: TextureRect = game.get_node("BottomRollArea/RollButton/RollVisual/RollContents/DieIcon")
+	var roll_style := game.roll_button.get_theme_stylebox("normal") as StyleBoxTexture
+	_check(roll_style != null and roll_style.texture.resource_path.ends_with("forest_parchment/roll_base.png"), "Level %d keeps the existing leaf-free Roll Dice artwork" % level_id)
 	_check(die_icon.get_global_rect().end.x <= roll_title.get_global_rect().position.x, "Level %d Roll Dice lettering does not overlap the die icon" % level_id)
 	_check(game.roll_button.get_global_rect().encloses(roll_title.get_global_rect()), "Level %d Roll Dice lettering fits inside its button" % level_id)
 	_check(not game.state_label.visible, "Level %d status bar contains only Position, Score and Shield" % level_id)
@@ -83,6 +92,9 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	var cell_size := Vector2(board_rect.size.x / game.board_view.columns, board_rect.size.y / game.board_view.rows)
 	_check((board_rect.size + Vector2.ONE * game.board_view.FRAME_WIDTH * 2.0).is_equal_approx(game.board_view.size), "Level %d fitted grid fills the taller board at %s" % [level_id, viewport_size])
 	var natural_token_size := clampf(minf(cell_size.x, cell_size.y) * 0.88, 44.0, 124.0)
+	var previous_face_side := minf(natural_token_size * 0.84, minf(cell_size.x * 0.70, cell_size.y * 0.48))
+	_check(game.board_view.player_sprite.size.x >= previous_face_side * 1.10, "Level %d player chibi is modestly larger than its previous face size" % level_id)
+	_check(game.board_view.waiting_hero_sprite.size.is_equal_approx(game.board_view.player_sprite.size), "Level %d finish chibi uses the same enlarged face size" % level_id)
 	_check(is_equal_approx(game.board_view.player_token.size.x, natural_token_size), "Level %d current hero portrait keeps natural tile padding" % level_id)
 	var token_style := game.board_view.player_token.get_theme_stylebox("panel") as StyleBoxFlat
 	_check(token_style != null and is_zero_approx(token_style.bg_color.a), "Level %d hero portrait has no colored backing box" % level_id)
@@ -101,9 +113,17 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 		_check(waiting_portrait != null and is_equal_approx(waiting_portrait.region.size.x, waiting_portrait.region.size.y), "Level %d finish token uses a square face crop" % level_id)
 		_check(game.board_view.waiting_hero_label.visible == false, "Level %d next hero chibi replaces finish initials" % level_id)
 		if level_id == 1:
-			var wave_rotation_before: float = game.board_view.waiting_hero_sprite.rotation
-			await create_timer(0.24).timeout
-			_check(not is_equal_approx(game.board_view.waiting_hero_sprite.rotation, wave_rotation_before), "finish hero visibly moves during its wave animation")
+			_check(game.board_view.board_config.get("snakes", {}) == {17: 7}, "Level 1 draws only its single functional snake from 17 to 7")
+		game.board_view._restart_idle_animations()
+		var waiting_rest: Vector2 = game.board_view.waiting_hero_sprite.position
+		var wave_rotation_before: float = game.board_view.waiting_hero_sprite.rotation
+		var wave_position_before: Vector2 = game.board_view.waiting_hero_sprite.position
+		await create_timer(0.24).timeout
+		_check(game.board_view.waiting_animation_active and game.board_view.waiting_idle_tween.is_running(), "Level %d finish hero greeting is running" % level_id)
+		_check(not is_equal_approx(game.board_view.waiting_hero_sprite.rotation, wave_rotation_before), "Level %d finish hero visibly sways" % level_id)
+		_check(not game.board_view.waiting_hero_sprite.position.is_equal_approx(wave_position_before), "Level %d finish hero visibly bobs" % level_id)
+		game.board_view._restart_idle_animations()
+		_check(game.board_view.waiting_hero_sprite.position.is_equal_approx(waiting_rest), "Level %d finish greeting restarts without cumulative position drift" % level_id)
 	else:
 		_check(not game.board_view.waiting_hero_sprite.visible and game.board_view.waiting_hero_label.text == "TROPHY", "Level 6 uses the final trophy instead of inventing a next hero")
 	var image: Image = viewport.get_texture().get_image()

@@ -11,14 +11,14 @@ Applied to the existing shared gameplay screen from the user's green/wood pixel-
 - New assets in this folder: three PNGs and eight SVGs, plus Godot import descriptors.
 - PNGs: background.png, snake_green.png, roll_base.png.
 - SVGs: back.svg, die.svg, person.svg, trophy.svg, shield.svg, status_base.svg, tile_green.svg, tile_cream.svg.
-- No new Autoloads, nodes, scene hierarchy, input actions, save schema, or gameplay rules.
+- No new Autoloads, nodes, scene hierarchy, input actions, or save schema. The 21 November refinement changes only Level 1 to a single functional snake; higher-level counts and other rules remain intact.
 - Original blue gameplay artwork is retained.
 
-The shared renderer draws green/parchment tiles, brown/gold number badges, a layered wooden frame with corner vines, golden ladders and friendly green snakes. All connections and numbering still come from the catalog. The six levels retain 20, 30, 40, 50, 100 and 100 tiles and their existing snake/ladder counts. The reference is recreated as a functioning UI; it is not a pixel-identical extraction. The grid now fills the taller portrait board rather than forcing square cells. Tile surfaces, badges, hero movement targets, snakes and ladders use the same fitted rectangular cell geometry. This changes presentation only; all catalog mappings, dice results, effects and progression are preserved.
+The shared renderer draws green/parchment tiles, brown/gold number badges, a layered wooden frame with corner vines, golden ladders and friendly green snakes. All connections and numbering still come from the catalog. The six levels retain 20, 30, 40, 50, 100 and 100 tiles. Snake counts are now 1, 4, 5, 6, 7 and 8, with the original ladder counts unchanged. Level 1 retains only 17 -> 7; the removed 16 -> 10 and 19 -> 12 effects are removed from the actual catalog as well as the drawing. The reference is recreated as a functioning UI; it is not a pixel-identical extraction. The grid now fills the taller portrait board rather than forcing square cells. Tile surfaces, badges, hero movement targets, snakes and ladders use the same fitted rectangular cell geometry. The fitted cell geometry changes presentation only. The separate, explicitly requested Level 1 snake reduction updates its catalog mapping; higher-level mappings, dice generation, scoring, effects and progression are preserved.
 
-The existing HistoryRollBrand node is hidden for the reference's open-sky composition, not deleted or recreated. Back stays top left; Position/Score/Shield remain below the board; the wooden Roll Dice button stays lower on screen. Existing face tokens and finish hero animation are retained. Question-first popups, score reactions, score rules, audio requests, saves, navigation and level unlocking remain unchanged.
+The existing HistoryRollBrand node is hidden for the reference's open-sky composition, not deleted or recreated. Back stays top left; Position/Score/Shield remain below the board; the wooden Roll Dice button stays lower on screen. Existing face portraits are approximately 12-14% larger, with unchanged token movement anchors. Finish heroes on Levels 1-5 continuously sway and bob with a stronger greeting. Rebuilding an animation restores its resting position first, preventing cumulative drift on repeated setup or resize. Level 6 retains the existing final trophy because there is no next hero. Question-first popups, score reactions, score rules, audio requests, saves, navigation and level unlocking remain unchanged.
 
-The button is still a native Button with live text and a separate input-transparent die icon. Its generated wood base contains no baked lettering. Roll Dice remains disabled until the question is answered and while the turn is running. Numbers are larger live Bree Serif badges; the bolder roll caption uses the existing Lora Italic font with weight 700. Both licensed fonts were already in assets/fonts; no font download or new font license is involved.
+The button is still a native Button with live text and a separate input-transparent die icon. Inspection of roll_base.png and actual Godot renders confirmed it already has no leaves; no raster edit or replacement was needed. Its generated wood base contains no baked lettering. Roll Dice remains disabled until the question is answered and while the turn is running. Numbers are larger live Bree Serif badges; the bolder roll caption uses the existing Lora Italic font with weight 700. Both licensed fonts were already in assets/fonts; no font download or new font license is involved.
 
 ## Reference-proportion refinement
 
@@ -26,11 +26,11 @@ The board occupies 49% of viewport height at the reference position, with a thic
 
 ## Verification
 
-Executed using Godot 4.7.1:
+Latest verification executed using Godot 4.7.1 on 21 November 2026:
 - tests/question_first_redesign_test.gd: 115 assertions passed, 0 failed.
-- tests/question_popup_test.gd: 12 assertions passed, 0 failed.
-- tests/gameplay_redesign_layout_test.gd: 425 assertions passed, 0 failed, including a repeat after the final art/layout adjustments.
-- Total across the three suites: 552 passed, 0 failed.
+- tests/phase6_levels_test.gd: 47 assertions passed, 0 failed.
+- tests/gameplay_redesign_layout_test.gd: 487 assertions passed, 0 failed; final process exit code 0. Checks include larger face sizes, actual finish rotation/bobbing, stable restart origins, the single Level 1 snake, leaf-free button skin and real pointer input/navigation.
+- Total across the three suites: 649 passed, 0 failed. All final processes exited with code 0.
 - git diff --check: passed.
 - Visually reviewed the actual rendered shared scene at 1024x1536 and 720x1280, including a 100-tile board.
 - Render coverage includes every level at 1024x1536, Level 1 at 720x1280, 1080x1920 and 1080x2400, and Level 6 at 720x1280.
@@ -39,13 +39,13 @@ Executed using Godot 4.7.1:
 
 Captures are saved to user://gameplay_level_1_1024x1536_ready.png, user://gameplay_level_1_720x1280_ready.png and corresponding gameplay_level_* files. Popup, long-question, happy/sad reaction and on-board die captures are also generated.
 
-Existing warnings remain: the import-only editor run reports this machine's external text-editor launch configuration; some regression runs report one ObjectDB instance at shutdown. No new script, missing-resource or rendering errors were reported by the gameplay suites. The AudioManager still reports its existing built-in music fallback for missing .ogg tracks; audio was outside this visual task.
+An initial rendered test run completed 479 checks but crashed during engine teardown. The test now stops procedural audio and drains pending answer timers before quitting; the final expanded run completed 487 checks and exited normally. No script, missing-resource or rendering errors were reported by the final gameplay suites. The AudioManager still reports its existing built-in music fallback for missing .ogg tracks; audio behavior was not changed.
 
 Physical Android performance, device safe areas and touch input remain unverified.
 
 To re-run:
 - Godot --headless --path . --script res://tests/question_first_redesign_test.gd
-- Godot --headless --path . --script res://tests/question_popup_test.gd
+- Godot --headless --path . --script res://tests/phase6_levels_test.gd
 - Godot --path . --script res://tests/gameplay_redesign_layout_test.gd --audio-driver Dummy
 
 Manual check: F5 -> Start Game -> select an available level -> PLAY. Answer the question, let the popup close, press Roll Dice, check movement against the displayed die, then use Back. Higher levels automatically use the same skin. No Inspector setup is required.
