@@ -1,22 +1,36 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://splash_screen.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/gameplay_ui/historyroll_sign.png" id="2_logo"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/logo.png" id="2_logo"]
 [ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="3_title"]
 [ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="4_body"]
 
-[sub_resource type="Gradient" id="Gradient_background"]
-offsets = PackedFloat32Array(0, 0.48, 1)
-colors = PackedColorArray(0.015, 0.055, 0.12, 1, 0.025, 0.2, 0.34, 1, 0.09, 0.34, 0.45, 1)
+[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/background.png" id="5_background"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/explorers.png" id="6_explorers"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/subject_banner.svg" id="7_subject"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/loading_banner.svg" id="8_loading"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/bar_track.svg" id="9_track"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/bar_fill.svg" id="10_fill"]
 
-[sub_resource type="GradientTexture2D" id="GradientTexture_background"]
-gradient = SubResource("Gradient_background")
-width = 1024
-height = 1536
-fill_from = Vector2(0.5, 0)
-fill_to = Vector2(0.5, 1)
+[sub_resource type="AtlasTexture" id="IntroLogoAtlas"]
+atlas = ExtResource("2_logo")
+region = Rect2(0, 8, 1738, 861)
+
+[sub_resource type="AtlasTexture" id="IntroExplorersAtlas"]
+atlas = ExtResource("6_explorers")
+region = Rect2(0, 40, 1106, 1344)
+
+[sub_resource type="StyleBoxEmpty" id="LoadingTrack"]
+
+[sub_resource type="StyleBoxTexture" id="LoadingFill"]
+texture = ExtResource("10_fill")
+texture_margin_left = 20.0
+texture_margin_top = 10.0
+texture_margin_right = 20.0
+texture_margin_bottom = 10.0
 
 [node name="SplashScreen" type="Control"]
+texture_filter = 2
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,11 +47,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("GradientTexture_background")
+texture = ExtResource("5_background")
 expand_mode = 1
 stretch_mode = 6
 
 [node name="GlowBottom" type="ColorRect" parent="."]
+visible = false
 layout_mode = 1
 anchor_left = 0.18
 anchor_top = 0.86
@@ -62,64 +77,122 @@ mouse_filter = 2
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.08
-anchor_top = 0.32
+anchor_top = 0.018
 anchor_right = 0.92
-anchor_bottom = 0.54
+anchor_bottom = 0.31
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_logo")
+texture = SubResource("IntroLogoAtlas")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Tagline" type="Label" parent="Presentation"]
 layout_mode = 1
 anchor_left = 0.08
-anchor_top = 0.575
+anchor_top = 0.325
 anchor_right = 0.92
-anchor_bottom = 0.625
+anchor_bottom = 0.37
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.88, 0.58, 1)
-theme_override_colors/font_outline_color = Color(0.04, 0.02, 0.015, 0.9)
+theme_override_colors/font_color = Color(1, 0.95, 0.78, 1)
+theme_override_colors/font_outline_color = Color(0.27, 0.07, 0.015, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_title")
-theme_override_font_sizes/font_size = 31
+theme_override_font_sizes/font_size = 43
 text = "LEARN • PLAY • DISCOVER"
 horizontal_alignment = 1
+clip_text = true
 vertical_alignment = 1
+
+[node name="SubjectBanner" type="TextureRect" parent="Presentation"]
+layout_mode = 1
+anchor_left = 0.12
+anchor_top = 0.38
+anchor_right = 0.88
+anchor_bottom = 0.43
+mouse_filter = 2
+texture = ExtResource("7_subject")
+expand_mode = 1
 
 [node name="Subject" type="Label" parent="Presentation"]
 layout_mode = 1
 anchor_left = 0.12
-anchor_top = 0.635
+anchor_top = 0.38
 anchor_right = 0.88
-anchor_bottom = 0.685
+anchor_bottom = 0.43
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.86, 0.94, 1, 0.9)
-theme_override_fonts/font = ExtResource("4_body")
-theme_override_font_sizes/font_size = 24
-text = "FILIPINO HEROES AND HISTORY"
+theme_override_colors/font_color = Color(0.26, 0.07, 0.02, 1)
+theme_override_fonts/font = ExtResource("3_title")
+theme_override_font_sizes/font_size = 30
+text = "DISCOVER HEROES. LEARN OUR HISTORY."
 horizontal_alignment = 1
+clip_text = true
 vertical_alignment = 1
+
+[node name="Explorers" type="TextureRect" parent="Presentation"]
+layout_mode = 1
+anchor_left = 0.05
+anchor_top = 0.48
+anchor_right = 0.51
+anchor_bottom = 0.84
+mouse_filter = 2
+texture = SubResource("IntroExplorersAtlas")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LoadingBarFrame" type="TextureRect" parent="Presentation"]
+layout_mode = 1
+anchor_left = 0.125
+anchor_top = 0.85
+anchor_right = 0.875
+anchor_bottom = 0.895
+mouse_filter = 2
+texture = ExtResource("9_track")
+expand_mode = 1
+
+[node name="LoadingBar" type="ProgressBar" parent="Presentation"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.125
+anchor_top = 0.85
+anchor_right = 0.875
+anchor_bottom = 0.895
+mouse_filter = 2
+theme_override_styles/background = SubResource("LoadingTrack")
+theme_override_styles/fill = SubResource("LoadingFill")
+show_percentage = false
+
+[node name="LoadingBanner" type="TextureRect" parent="Presentation"]
+layout_mode = 1
+anchor_left = 0.22
+anchor_top = 0.91
+anchor_right = 0.78
+anchor_bottom = 0.965
+mouse_filter = 2
+texture = ExtResource("8_loading")
+expand_mode = 1
 
 [node name="LoadingLabel" type="Label" parent="Presentation"]
 layout_mode = 1
 anchor_left = 0.25
-anchor_top = 0.875
+anchor_top = 0.91
 anchor_right = 0.75
-anchor_bottom = 0.925
+anchor_bottom = 0.965
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.82, 0.9, 0.96, 0.72)
-theme_override_fonts/font = ExtResource("4_body")
-theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.95, 0.78, 1)
+theme_override_colors/font_outline_color = Color(0.35, 0.075, 0.015, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_title")
+theme_override_font_sizes/font_size = 34
 text = "LOADING HISTORYROLL..."
 horizontal_alignment = 1
+clip_text = true
 vertical_alignment = 1
 
 [node name="FadeOverlay" type="ColorRect" parent="."]
