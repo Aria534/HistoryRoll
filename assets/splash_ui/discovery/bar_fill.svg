@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="60" viewBox="0 0 1000 60">
+<defs><linearGradient id="g" x2="0" y2="1"><stop stop-color="#FFF24A"/><stop offset=".5" stop-color="#FFD500"/><stop offset="1" stop-color="#FFBE00"/></linearGradient><clipPath id="c"><rect x="1" y="1" width="998" height="58" rx="29"/></clipPath></defs>
+<rect x="1" y="1" width="998" height="58" rx="29" fill="url(#g)"/>
+<path d="M-60 0h25l-42 60h-25Z M0 0h25l-42 60h-25Z M60 0h25l-42 60h-25Z M120 0h25l-42 60h-25Z M180 0h25l-42 60h-25Z M240 0h25l-42 60h-25Z M300 0h25l-42 60h-25Z M360 0h25l-42 60h-25Z M420 0h25l-42 60h-25Z M480 0h25l-42 60h-25Z M540 0h25l-42 60h-25Z M600 0h25l-42 60h-25Z M660 0h25l-42 60h-25Z M720 0h25l-42 60h-25Z M780 0h25l-42 60h-25Z M840 0h25l-42 60h-25Z M900 0h25l-42 60h-25Z M960 0h25l-42 60h-25Z M1020 0h25l-42 60h-25Z" fill="#FFF35B" opacity=".52" clip-path="url(#c)"/>
+<path d="M30 7H966" stroke="#FFF6AE" stroke-width="3" opacity=".8"/>
+</svg>
