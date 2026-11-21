@@ -217,7 +217,6 @@ func _begin_question(question_type: String) -> void:
 		var answer_button := answer_buttons[index]
 		answer_button.visible = index < choices.size()
 		answer_button.text = str(choices[index]) if answer_button.visible else ""
-		answer_button.custom_minimum_size.y = 72.0 if choices.size() <= 3 else 60.0
 		answer_button.modulate = Color.WHITE
 	feedback_label.text = ""
 	next_turn_button.hide()
@@ -231,21 +230,20 @@ func _apply_question_typography(choices: Array) -> void:
 	var question_text := question_label.text.strip_edges()
 	var question_length := question_text.length()
 	var question_font_size := 29
-	var question_height := 64.0
 	if question_length > 55:
 		question_font_size = 24
-		question_height = 92.0
-		# The illustrated frame has a decorative thatched cap. A visual leading
-		# line keeps wrapped questions inside the parchment without changing the
-		# stored question text or moving the answer and dice controls.
-		question_label.text = "\n" + question_text
-	else:
-		question_label.text = question_text
 	if question_length > 95:
 		question_font_size = 20
-		question_height = 92.0
+	question_label.text = question_text
 	question_label.add_theme_font_size_override("font_size", question_font_size)
-	question_label.custom_minimum_size.y = question_height
+	var panel_width := get_viewport_rect().size.x * (quiz_panel.anchor_right - quiz_panel.anchor_left)
+	var panel_style := quiz_panel.get_theme_stylebox("panel")
+	var content_width := panel_width - panel_style.get_content_margin(SIDE_LEFT) - panel_style.get_content_margin(SIDE_RIGHT)
+	var inset := question_label.get_theme_stylebox("normal")
+	var question_width := maxf(32.0, content_width - inset.get_content_margin(SIDE_LEFT) - inset.get_content_margin(SIDE_RIGHT))
+	var question_font := question_label.get_theme_font("font")
+	var question_text_height := question_font.get_multiline_string_size(question_text, HORIZONTAL_ALIGNMENT_CENTER, question_width, question_font_size).y
+	question_label.custom_minimum_size.y = maxf(64.0, ceilf(question_text_height) + 12.0)
 
 	var longest_choice := 0
 	for choice: Variant in choices:
@@ -255,8 +253,19 @@ func _apply_question_typography(choices: Array) -> void:
 		answer_font_size = 20
 	if longest_choice > 36:
 		answer_font_size = 18
-	for answer_button: Button in answer_buttons:
+	var answer_columns := choices.size() if choices.size() <= 3 else 2
+	var column_width := (content_width - answers_grid.get_theme_constant("h_separation") * (answer_columns - 1)) / maxi(1, answer_columns)
+	for index: int in range(answer_buttons.size()):
+		var answer_button := answer_buttons[index]
 		answer_button.add_theme_font_size_override("font_size", answer_font_size)
+		var answer_style := answer_button.get_theme_stylebox("normal")
+		var answer_width := maxf(32.0, column_width - answer_style.get_content_margin(SIDE_LEFT) - answer_style.get_content_margin(SIDE_RIGHT))
+		var answer_text := str(choices[index]) if index < choices.size() else ""
+		var answer_font := answer_button.get_theme_font("font")
+		var answer_text_height := answer_font.get_multiline_string_size(answer_text, HORIZONTAL_ALIGNMENT_CENTER, answer_width, answer_font_size).y
+		# Keep wrapped lettering inside the illustrated green inset, including
+		# its transparent top/bottom padding and thick golden rim.
+		answer_button.custom_minimum_size.y = maxf(72.0, ceilf(answer_text_height / 0.58) + 12.0)
 
 
 func _on_answer_pressed(choice_index: int) -> void:
@@ -582,13 +591,35 @@ func _update_status_labels() -> void:
 
 
 func _set_quiz_panel_height(_quiz_active: bool) -> void:
-	var viewport_size := get_viewport_rect().size
-	var viewport_height := viewport_size.y
-	var choice_count := int(current_question.get("choices", []).size())
-	var popup_height := 450.0 if choice_count >= 4 else 390.0
-	popup_height = minf(popup_height, viewport_height - 100.0)
-	_set_popup_height(popup_height)
 	_update_gameplay_layout()
+
+
+func _update_question_popup_layout() -> void:
+	if current_question.is_empty() or fatal_error_active:
+		return
+	var choices: Array = current_question.get("choices", [])
+	if choices.size() < 2:
+		return
+	_apply_question_typography(choices)
+	var answer_columns := choices.size() if choices.size() <= 3 else 2
+	var answer_rows := ceili(float(choices.size()) / answer_columns)
+	var answer_height := 0.0
+	for index: int in range(choices.size()):
+		answer_height = maxf(answer_height, answer_buttons[index].custom_minimum_size.y)
+	var content_height := question_label.custom_minimum_size.y + answer_height * answer_rows
+	content_height += answers_grid.get_theme_constant("v_separation") * (answer_rows - 1)
+	content_height += $QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent.get_theme_constant("separation")
+	if fixture_notice.visible:
+		content_height += fixture_notice.get_minimum_size().y + 12.0
+	# The crest occupies the top 24%; the footer/curls occupy the bottom 30%.
+	# Reserve those proportions even when a four-choice or long-text popup grows.
+	var popup_height := maxf(450.0 if choices.size() >= 4 else 390.0, ceilf((content_height + 8.0) / 0.46))
+	popup_height = minf(popup_height, get_viewport_rect().size.y - 100.0)
+	var style := quiz_panel.get_theme_stylebox("panel").duplicate() as StyleBoxTexture
+	style.content_margin_top = popup_height * 0.24 + 4.0
+	style.content_margin_bottom = popup_height * 0.30 + 4.0
+	quiz_panel.add_theme_stylebox_override("panel", style)
+	_set_popup_height(popup_height)
 
 
 func _update_gameplay_layout() -> void:
@@ -641,6 +672,7 @@ func _update_gameplay_layout() -> void:
 	roll_title.add_theme_font_size_override("font_size", clampi(int(width * 0.082), 40, 88))
 	$BottomRollArea/RollButton/RollVisual/RollContents/DieIcon.custom_minimum_size = Vector2.ONE * roll_height * 0.58
 	_align_status_icons.call_deferred()
+	_update_question_popup_layout()
 
 
 func _align_status_icons() -> void:
