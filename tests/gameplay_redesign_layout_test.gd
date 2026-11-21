@@ -21,6 +21,7 @@ func _run() -> void:
 	await _capture_level(1, Vector2i(1080, 1920), "gameplay_level_1_1080x1920.png")
 	await _capture_level(1, Vector2i(1080, 2400), "gameplay_level_1_1080x2400.png")
 	await _capture_level(6, Vector2i(720, 1280), "gameplay_level_6_720x1280.png")
+	await _capture_reference_quizzes()
 	await _capture_long_mactan_question()
 	await _capture_dice_on_board("gameplay_dice_on_board.png")
 	await _capture_reaction(true, "gameplay_happy_reaction.png")
@@ -52,11 +53,12 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 		_check(game.background.texture.resource_path.ends_with("forest_parchment/background.png"), "Level 1 uses the reference pixel-art forest background")
 		var quiz_style := game.quiz_panel.get_theme_stylebox("panel") as StyleBoxTexture
 		_check(
-			quiz_style != null and quiz_style.texture.resource_path.ends_with("quiz_frame_filipino_v2.png"),
-			"Level 1 uses the Filipino bamboo-and-parchment quiz frame"
+			quiz_style != null and quiz_style.texture.resource_path.ends_with("quiz_gold/frame.png"),
+			"Level 1 uses the leaf-free cream-and-gold quiz frame"
 		)
 		_check(game.get_node("%DiceLabel").get_parent().has_node("DiceIcon"), "Die Result card includes its decorative die icon")
 		_check(not game.get_node("QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls/ControlDivider").visible, "quiz popup removes the old divider")
+	_check_quiz_content(game, "Level %d %s" % [level_id, viewport_size])
 	var choice_count: int = game.current_question.get("choices", []).size()
 	var expected_columns: int = choice_count if choice_count <= 3 else 2
 	_check(game.answers_grid.columns == expected_columns, "Level %d balances its %d answer choices across the quiz row" % [level_id, choice_count])
@@ -138,6 +140,75 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 	_check(image != null and image.save_png(ProjectSettings.globalize_path("user://%s" % ready_filename)) == OK, "%s ready-board capture is saved" % ready_filename)
 	game.progress_manager = null; game.queue_free(); viewport.queue_free(); await process_frame; progress.free()
 
+func _check_quiz_content(game, label: String) -> void:
+	var panel_rect: Rect2 = game.quiz_panel.get_global_rect()
+	_check(panel_rect.encloses(game.question_label.get_global_rect()), "%s question stays inside the illustrated frame" % label)
+	_check(panel_rect.encloses(game.answers_grid.get_global_rect()), "%s answers stay inside the illustrated frame" % label)
+	_check(game.question_label.get_global_rect().position.y >= panel_rect.position.y + panel_rect.size.y * 0.23, "%s question clears the sun crest" % label)
+	_check(game.answers_grid.get_global_rect().end.y <= panel_rect.end.y - panel_rect.size.y * 0.29, "%s choices clear the bottom curls and footer" % label)
+	_check(game.question_label.get_global_rect().end.y <= game.answers_grid.get_global_rect().position.y, "%s question does not overlap its answers" % label)
+	_check(not game.question_label.text.begins_with("\n"), "%s question has no obsolete spacer line" % label)
+	var question_style: StyleBox = game.question_label.get_theme_stylebox("normal")
+	var question_width: float = game.question_label.size.x - question_style.get_content_margin(SIDE_LEFT) - question_style.get_content_margin(SIDE_RIGHT)
+	var question_font: Font = game.question_label.get_theme_font("font")
+	var question_height: float = question_font.get_multiline_string_size(game.question_label.text, HORIZONTAL_ALIGNMENT_CENTER, question_width, game.question_label.get_theme_font_size("font_size")).y
+	_check(question_height <= game.question_label.size.y + 1.0, "%s wrapped question lettering fits vertically" % label)
+	for index: int in range(game.answer_buttons.size()):
+		var button: Button = game.answer_buttons[index]
+		if not button.visible:
+			continue
+		var style := button.get_theme_stylebox("normal")
+		var available_width := button.size.x - style.get_content_margin(SIDE_LEFT) - style.get_content_margin(SIDE_RIGHT)
+		var font := button.get_theme_font("font")
+		var text_height := font.get_multiline_string_size(button.text, HORIZONTAL_ALIGNMENT_CENTER, available_width, button.get_theme_font_size("font_size")).y
+		_check(text_height <= button.size.y * 0.58 + 1.0, "%s choice %d lettering fits within the green inset" % [label, index + 1])
+		_check(style is StyleBoxTexture and style.texture.resource_path.ends_with("quiz_gold/answer.png"), "%s choice %d uses the leaf-free illustrated button" % [label, index + 1])
+
+
+func _capture_reference_quizzes() -> void:
+	var viewport := SubViewport.new()
+	viewport.size = Vector2i(720, 1280)
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	get_root().add_child(viewport)
+	var progress := MockProgress.new()
+	var game = GameplayScene.instantiate()
+	game.progress_manager = progress
+	game.shuffle_questions = false
+	viewport.add_child(game)
+	await create_timer(0.35).timeout
+	# Display-only fixtures exercise each supported layout. They do not alter
+	# the approved question bank or submit answers to the active QuizSession.
+	var fixtures := [
+		{"id": "true_false", "question": "The Battle of Mactan took place in 1521.", "choices": ["True", "False"]},
+		{"id": "festival", "question": "The annual festival on April 27 reenacts the Battle of Mactan.", "choices": ["Sinulog", "Kadaugan sa Mactan", "Ati-Atihan"]},
+		{"id": "four_choices", "question": "Which hero defended Mactan during the battle in 1521?", "choices": ["Lapu-Lapu", "Andres Bonifacio", "Jose Rizal", "Antonio Luna"]},
+		{"id": "long_choices", "question": "Why couldn't the Spanish ships get close to the shore of Mactan?", "choices": ["Shallow water and coral reefs blocked them", "The sea was too deep", "Large rocks crashed their ships"]},
+	]
+	for fixture: Dictionary in fixtures:
+		var choices: Array = fixture.choices
+		game.current_question["choices"] = choices
+		game.question_label.text = fixture.question
+		game.answers_grid.columns = choices.size() if choices.size() <= 3 else 2
+		for index: int in range(game.answer_buttons.size()):
+			game.answer_buttons[index].visible = index < choices.size()
+			game.answer_buttons[index].disabled = false
+			game.answer_buttons[index].modulate = Color.WHITE
+			game.answer_buttons[index].text = str(choices[index]) if index < choices.size() else ""
+		game._set_quiz_panel_height(true)
+		await process_frame
+		await process_frame
+		await RenderingServer.frame_post_draw
+		_check_quiz_content(game, str(fixture.id))
+		_check(_rect_inside(game.quiz_panel.get_global_rect(), viewport.size), "%s popup fits the portrait screen" % str(fixture.id))
+		var image: Image = viewport.get_texture().get_image()
+		_check(image != null and image.save_png("user://quiz_gold_%s_720x1280.png" % str(fixture.id)) == OK, "%s leaf-free popup capture is saved" % str(fixture.id))
+	game.progress_manager = null
+	game.queue_free()
+	viewport.queue_free()
+	await process_frame
+	progress.free()
+
+
 func _capture_long_mactan_question() -> void:
 	var viewport := SubViewport.new(); viewport.size = Vector2i(720, 1280); viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	get_root().add_child(viewport)
@@ -149,14 +220,15 @@ func _capture_long_mactan_question() -> void:
 		"The sea was too deep",
 		"Large rocks crashed their ships",
 	]
+	game.current_question["choices"] = choices
 	game.question_label.text = "Why couldn't the Spanish ships get close to the shore of Mactan?"
 	game._apply_question_typography(choices)
 	game.answers_grid.columns = 3
 	for index: int in range(3):
 		game.answer_buttons[index].text = choices[index]
 		game.answer_buttons[index].visible = true
-		game.answer_buttons[index].custom_minimum_size.y = 72.0
 	game.answer_buttons[3].hide()
+	game._set_quiz_panel_height(true)
 	await process_frame; await process_frame
 	_check(game.question_label.get_theme_font_size("font_size") == 24, "long Mactan question uses the fitted parchment font")
 	for index: int in range(3):
