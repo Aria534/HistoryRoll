@@ -230,7 +230,7 @@ func _capture_long_mactan_question() -> void:
 	game.answer_buttons[3].hide()
 	game._set_quiz_panel_height(true)
 	await process_frame; await process_frame
-	_check(game.question_label.get_theme_font_size("font_size") == 24, "long Mactan question uses the fitted parchment font")
+	_check(game.question_label.get_theme_font_size("font_size") == 28, "long Mactan question uses the larger fitted parchment font")
 	for index: int in range(3):
 		_check(_rect_inside(game.answer_buttons[index].get_global_rect(), viewport.size), "long Mactan answer %d stays inside the portrait screen" % (index + 1))
 	var image: Image = viewport.get_texture().get_image()
