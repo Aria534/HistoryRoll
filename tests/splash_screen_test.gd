@@ -77,11 +77,11 @@ func _test_layout(viewport_size: Vector2i) -> void:
 	_check(splash.loading_bar.value == 100.0 and not splash.loading_bar.show_percentage, "%s actual menu load fills the yellow bar without a percentage overlay" % label)
 	_check(splash.tagline.text == "LEARN • PLAY • DISCOVER", "%s tagline matches the reference" % label)
 	_check(splash.subject.text == "DISCOVER HEROES. LEARN OUR HISTORY.", "%s subject caption matches the reference" % label)
-	_check(splash.loading_label.text == "LOADING HISTORYROLL...", "%s loading caption matches the reference" % label)
-	for control: Control in [splash.logo, splash.tagline, splash.subject, splash.explorers, splash.loading_bar, splash.loading_label]:
+	_check(not splash.loading_label.visible and not splash.get_node("Presentation/LoadingBanner").visible, "%s normal loading omits the red caption banner" % label)
+	for control: Control in [splash.logo, splash.tagline, splash.subject, splash.explorers, splash.loading_bar]:
 		_check(_visible_inside(control, viewport_size), "%s %s remains visible and inside the portrait viewport" % [label, control.name])
 		_check(control.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s %s cannot swallow skip input" % [label, control.name])
-	for caption: Label in [splash.tagline, splash.subject, splash.loading_label]:
+	for caption: Label in [splash.tagline, splash.subject]:
 		var font_size := caption.get_theme_font_size("font_size")
 		var font := caption.get_theme_font("font")
 		var text_size := font.get_string_size(caption.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
@@ -92,7 +92,7 @@ func _test_layout(viewport_size: Vector2i) -> void:
 	_check(splash.tagline.get_global_rect().end.y < splash.subject.position.y, "%s tagline does not overlap the subject banner" % label)
 	_check(splash.subject.get_global_rect().end.y < splash.explorers.position.y, "%s explorers stay below the captions" % label)
 	_check(splash.explorers.get_global_rect().end.y < splash.loading_bar.position.y, "%s explorer feet remain above the progress bar" % label)
-	_check(splash.loading_bar.get_global_rect().end.y < splash.loading_label.position.y, "%s loading bar and caption do not overlap" % label)
+	_check(splash.loading_bar.is_visible_in_tree(), "%s progress bar remains visible without the caption banner" % label)
 	var frame := splash.get_node("Presentation/LoadingBarFrame") as TextureRect
 	_check(frame.get_global_rect().encloses(splash.loading_bar.get_global_rect()), "%s progress fill stays inside its white/brown frame" % label)
 	await RenderingServer.frame_post_draw
