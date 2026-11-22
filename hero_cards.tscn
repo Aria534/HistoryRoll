@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://hero_cards.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/background/Dreamy Philippine Bay Boardwalk.png" id="2_background"]
-[ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="3_title_font"]
+[ext_resource type="Texture2D" path="res://assets/hero_cards_ui/heritage_village/background.png" id="2_background"]
+[ext_resource type="FontFile" path="res://assets/fonts/BreeSerif-Regular.ttf" id="3_title_font"]
 [ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="4_body_font"]
 
 [node name="HeroCards" type="Control"]
@@ -27,6 +27,7 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="BackgroundShade" type="ColorRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
