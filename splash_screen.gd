@@ -83,6 +83,8 @@ func _begin_menu_load() -> void:
 	_resource_progress = 0.0
 	loading_bar.value = 0.0
 	loading_label.text = "LOADING HISTORYROLL..."
+	loading_label.hide()
+	$Presentation/LoadingBanner.hide()
 	var error := ResourceLoader.load_threaded_request(MAIN_MENU_SCENE, "PackedScene")
 	if error != OK:
 		_report_load_failure("Unable to request the Main Menu: %s" % error_string(error))
@@ -124,6 +126,8 @@ func _report_load_failure(message: String) -> void:
 	_load_failed = true
 	_transitioning = false
 	loading_label.text = "LOAD FAILED - TAP TO RETRY"
+	loading_label.show()
+	$Presentation/LoadingBanner.show()
 	fade_overlay.modulate.a = 0.0
 	presentation.modulate.a = 1.0
 	_update_layout()
