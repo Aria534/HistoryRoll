@@ -112,11 +112,14 @@ func _test_viewport(viewport_size: Vector2i, capture_name: String) -> void:
 		_check(false, "%s rendered capture is available" % size_label)
 
 	screen.help_button.pressed.emit()
-	await process_frame
+	# Allow the shared wrapped rows to finish their deferred container passes.
+	for settle_frame in 6:
+		await process_frame
+	await RenderingServer.frame_post_draw
 	var help_panel: Control = screen.get_node("UIRoot/HelpOverlay/Panel")
 	_check(screen.help_overlay.visible, "%s Help panel opens" % size_label)
 	_check(_rect_is_inside(help_panel.get_global_rect(), viewport_size), "%s Help panel stays on-screen" % size_label)
-	_check(_rect_contains(help_panel.get_global_rect(), instructions.get_global_rect()), "%s Help instructions stay inside the panel" % size_label)
+	_check(_rect_contains(help_panel.get_global_rect(), help_panel.get_node("Margin/Content/HelpRows").get_global_rect()), "%s visible Help instruction rows stay inside the panel" % size_label)
 	var help_image: Image = viewport.get_texture().get_image()
 	if help_image != null and not help_image.is_empty():
 		var help_capture_name := capture_name.trim_suffix(".png") + "_help.png"

@@ -107,9 +107,9 @@ func _capture(viewport_size: Vector2i) -> void:
 	_click(viewport, settings.help_button.get_global_rect().get_center())
 	await _settle()
 	_check(settings.how_to_play_overlay.visible, "%s pointer opens How to Play" % label)
-	_check(settings.help_rows.get_child_count() == 12, "%s twelve existing instruction rows remain" % label)
+	_check(settings.help_rows.get_child_count() == 11, "%s eleven reference-layout instruction rows explain the existing rules" % label)
 	var help_frame := settings.get_node("%HelpFrame") as TextureRect
-	_check(help_frame.texture.resource_path.ends_with("how_to_play_frame_filipino.png"), "%s existing help artwork is retained" % label)
+	_check(help_frame.texture.resource_path.ends_with("how_to_play_ui/library/frame.png"), "%s new library help artwork is applied" % label)
 	if viewport_size == Vector2i(720, 1280):
 		await _save_capture(viewport, "how_to_play_%s.png" % label)
 	_click(viewport, settings.close_help_button.get_global_rect().get_center())
