@@ -108,3 +108,9 @@ Final verification executed with Godot 4.7.1:
 - Settings and progress SHA-256 values remain unchanged. Physical Android testing was not performed.
 
 Run the existing project, open Settings -> How to Play or Level Selection -> ?, and check both top icons. No Inspector changes are required.
+
+## Level Selection question-button content - 23 November 2026
+
+The existing Level Selection question button opens its existing HelpOverlay. level_selection.gd now explicitly refreshes the panel from HowToPlayPanel.RULES on every open, the same shared eleven-rule source used by Settings, and exposes a How to Play tooltip. No duplicate panel, rules database, nodes or gameplay controller was created.
+
+Executed focused verification: tests/how_to_play_design_test.gd -- --quick, 234 passed / 0 failed, exit 0. Both Settings and Level Selection were rendered, all eleven visible rule rows checked, and actual Main Menu entry plus question-icon, Back and GOT IT pointer interactions exercised. The actual main-game Level Selection help capture was visually reviewed. The run has no script/parse errors; one existing ObjectDB shutdown warning remains. Physical Android testing was not performed.

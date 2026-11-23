@@ -4,6 +4,7 @@ const MAIN_MENU_SCENE: String = "res://main_menu_tscn.tscn"
 const STORY_MODE_SCENE: String = "res://story_mode.tscn"
 const CHARACTER_UNLOCK_SCENE: String = "res://character_unlock.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
+const HowToPlayPanel = preload("res://how_to_play_panel.gd")
 const SELECTED_SCALE := 1.025
 const DESIGN_SIZE := Vector2(1086.0, 1448.0)
 
@@ -42,6 +43,7 @@ func _ready() -> void:
 		return
 	_connect_button_once(back_button, _on_back_pressed)
 	_connect_button_once(help_button, _on_help_pressed)
+	help_button.tooltip_text = "How to Play"
 	_connect_button_once(close_help_button, _on_close_help_pressed)
 	_connect_button_once(play_button, _on_play_pressed)
 	_setup_animated_button(back_button)
@@ -233,6 +235,8 @@ func _on_back_pressed() -> void:
 
 
 func _on_help_pressed() -> void:
+	# Use the same shared rules as Settings each time this help screen opens.
+	help_overlay.get_node("Panel").build_rows(HowToPlayPanel.RULES)
 	help_overlay.visible = true
 	close_help_button.grab_focus()
 
