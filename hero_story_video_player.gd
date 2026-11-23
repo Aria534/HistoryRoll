@@ -59,7 +59,6 @@ func _ready() -> void:
 	_connect_once(replay_button.pressed, _on_replay_pressed)
 	_connect_once(back_button.pressed, _on_back_pressed)
 	_connect_once(video_player.finished, _on_video_finished)
-	_suspend_background_music()
 	_load_selected_story()
 
 
@@ -112,6 +111,7 @@ func _load_video_stream() -> void:
 func _start_video() -> void:
 	if not video_available:
 		return
+	_suspend_background_music()
 	ending_visible = false
 	playback_paused = false
 	ending_panel.hide()
@@ -150,6 +150,7 @@ func _show_ending(mark_watched: bool) -> void:
 	ending_visible = true
 	playback_paused = false
 	video_player.stop()
+	_restore_hero_cards_music()
 	controls_layer.hide()
 	ending_panel.show()
 	if mark_watched and progress_manager != null and progress_manager.has_method("mark_story_watched"):
@@ -208,7 +209,7 @@ func _change_scene(path: String) -> void:
 func _suspend_background_music() -> void:
 	var audio_manager := get_node_or_null("/root/AudioManager")
 	if audio_manager != null and audio_manager.has_method("stop_music"):
-		audio_manager.stop_music(0.35)
+		audio_manager.stop_music(0.0)
 
 
 func _restore_hero_cards_music() -> void:
