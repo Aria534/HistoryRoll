@@ -40,6 +40,9 @@ func _ready() -> void:
 	_connect_once(back_button.pressed, _on_back_pressed)
 	_refresh_controls()
 	_apply_audio_settings()
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("play_music"):
+		audio_manager.play_music("res://assets/audio/music/main_menu.ogg", 0.45)
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 
