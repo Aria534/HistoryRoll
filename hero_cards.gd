@@ -93,7 +93,7 @@ func _apply_scene_theme() -> void:
 	status_label.add_theme_color_override("font_color", INK)
 	status_label.add_theme_constant_override("outline_size", 0)
 
-	back_button.custom_minimum_size = Vector2(340, 96) if compact else Vector2(440, 104)
+	back_button.custom_minimum_size = Vector2(440, 96) if compact else Vector2(560, 104)
 	back_button.add_theme_font_override("font", TITLE_FONT)
 	back_button.add_theme_font_size_override("font_size", 36 if compact else 44)
 	back_button.add_theme_color_override("font_color", Color("FFF3D2"))

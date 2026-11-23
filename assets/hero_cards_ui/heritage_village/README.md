@@ -89,7 +89,7 @@ Use case: precise-object-edit. Asset type: a single transparent blank Back-butto
 
 - Added `title_leaf_free.png` and `back_leaf_free.png`, with Godot import metadata, in this folder. The original PNGs remain available.
 - `hero_cards.gd` now uses the leaf-free title and Back plate. The title keeps the book, sun, ribbons, red plaque and gold trim; its FILIPINO HERO text remains live.
-- The existing Back button stays centered below the scroll area. Its minimum size is 340x96 for compact viewports and 440x104 otherwise, with lower-frame spacing and reduced text padding to fit the leaf-free capsule.
+- The existing Back button stays centered below the scroll area. Its minimum size is 440x96 for compact viewports and 560x104 otherwise, with lower-frame spacing and reduced text padding to fit the leaf-free capsule.
 - Hero data, portraits, six story routes, selection restrictions, saved progress and scene hierarchy are preserved. No Inspector changes are needed.
 
 Verification executed: Godot 4.7.1 imported both assets successfully and `tests/hero_cards_design_test.gd` passed 453 assertions with 0 failures (exit 0). The suite rendered 1024x1536, 720x1280, 1080x1920 and 1080x2400, tested all six Watch Story routes, selection restrictions, watched status, scrolling and Back navigation. The 1024x1536 first-card capture and 720x1280 lower-card capture were visually reviewed. Real settings/progress hashes remained unchanged. The test log reports one pre-existing ObjectDB shutdown warning; the import log reports the existing external text editor configuration warning. No script errors or physical Android tests.
