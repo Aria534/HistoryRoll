@@ -30,6 +30,9 @@ var _resource_progress := 0.0
 
 
 func _ready() -> void:
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("play_music"):
+		audio_manager.play_music("res://assets/audio/music/main_menu.ogg", 0.45)
 	fade_overlay.show()
 	fade_overlay.modulate.a = 1.0
 	presentation.modulate.a = 0.0
