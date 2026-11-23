@@ -114,3 +114,25 @@ Run the existing project, open Settings -> How to Play or Level Selection -> ?, 
 The existing Level Selection question button opens its existing HelpOverlay. level_selection.gd now explicitly refreshes the panel from HowToPlayPanel.RULES on every open, the same shared eleven-rule source used by Settings, and exposes a How to Play tooltip. No duplicate panel, rules database, nodes or gameplay controller was created.
 
 Executed focused verification: tests/how_to_play_design_test.gd -- --quick, 234 passed / 0 failed, exit 0. Both Settings and Level Selection were rendered, all eleven visible rule rows checked, and actual Main Menu entry plus question-icon, Back and GOT IT pointer interactions exercised. The actual main-game Level Selection help capture was visually reviewed. The run has no script/parse errors; one existing ObjectDB shutdown warning remains. Physical Android testing was not performed.
+
+
+## Delayed-open missing rules fix - 23 November 2026
+
+The user's Editor screenshot showed only rule 1 near the lower half of the parchment. This was reproduced in the actual Level Selection scene by leaving the overlay hidden for twelve frames before opening it. Before the fix, the focused runtime test failed eleven checks: rules 2-11 lay outside the frame and the rules overlapped GOT IT (223 passed, 11 failed). Earlier tests opened the panel immediately and did not expose this case.
+
+Hidden Containers had retained an oversized first layout. The saved Level Selection HelpRows bottom was 12173, while its intended area is y=325..1000. The shared tool script previously retried layout while the overlay was hidden and did not update again when an ancestor became visible.
+
+- how_to_play_panel.gd now refreshes on visibility_changed and defers geometry while hidden. Pending wrap-settling work also stops if the panel becomes hidden.
+- level_selection.tscn corrects only HelpRows/Instructions bottom bounds to 1000. Existing nodes, eleven saved rule rows and navigation remain.
+- Runtime and Editor tests now leave panels hidden before opening them. The Editor capture explicitly requests a render to avoid waiting indefinitely for an idle low-processor redraw.
+- preview_with_instructions.png is refreshed from the verified Level Selection Editor render. No artwork was regenerated.
+
+Executed final checks:
+- Full runtime suite with delayed opening: 1374 passed, 0 failed; exit 0.
+- Editor suite with delayed opening: 59 passed, 0 failed; exit 0.
+- Actual delayed-open runtime and Editor captures were visually reviewed with all eleven rules inside the parchment.
+- Player settings/progress remain unchanged. Existing Editor initialization/external-editor and renderer/ObjectDB shutdown warnings remain; no script/parse errors in final runs.
+- An earlier Editor capture run stalled waiting for frame_post_draw and was stopped; only its test processes were stopped. The user's existing Editor process was preserved. The completed replacement run uses force_draw(false).
+- Physical Android testing was not performed.
+
+Reload level_selection.tscn in the existing Godot Editor to load the corrected saved bounds and tool-script visibility connection. To check the original case, leave HelpOverlay hidden briefly, then show UIRoot/HelpOverlay: rules 1-11 should be visible. In game, wait on Level Selection before pressing ?: Back and GOT IT should still close help.

@@ -64,6 +64,8 @@ func _ready() -> void:
 	rows.focus_mode = Control.FOCUS_ALL
 	if not resized.is_connected(_update_layout):
 		resized.connect(_update_layout)
+	if not visibility_changed.is_connected(_update_layout):
+		visibility_changed.connect(_update_layout)
 	_update_layout()
 
 
@@ -103,7 +105,7 @@ func build_rows(rule_data: Array) -> void:
 
 
 func _update_layout() -> void:
-	if not is_node_ready() or size.x <= 0.0 or size.y <= 0.0:
+	if not is_node_ready() or not is_visible_in_tree() or size.x <= 0.0 or size.y <= 0.0:
 		return
 	var ui_scale := minf(size.x / DESIGN_SIZE.x, size.y / DESIGN_SIZE.y)
 	var art_rect := Rect2((size - DESIGN_SIZE * ui_scale) * 0.5, DESIGN_SIZE * ui_scale)
@@ -194,13 +196,13 @@ func _settle_rows(revision: int) -> void:
 	# width. Shrink the VBox again after Godot has completed its container pass.
 	for index in 2:
 		await get_tree().process_frame
-		if not is_inside_tree() or revision != _layout_revision:
+		if not is_inside_tree() or not is_visible_in_tree() or revision != _layout_revision:
 			return
 	for attempt in 5:
 		rows.position = _rows_target.position
 		rows.size = _rows_target.size
 		await get_tree().process_frame
-		if not is_inside_tree() or revision != _layout_revision:
+		if not is_inside_tree() or not is_visible_in_tree() or revision != _layout_revision:
 			return
 		if rows.get_combined_minimum_size().y <= _rows_target.size.y + 0.5:
 			break

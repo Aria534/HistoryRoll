@@ -66,6 +66,10 @@ func _capture(viewport_size: Vector2i, from_settings: bool) -> void:
 		_check(screen.get_node("HowToPlayOverlay/HelpAspect").stretch_mode == AspectRatioContainer.STRETCH_FIT, "Settings help artwork fits both available width and height")
 	viewport.add_child(screen)
 	await _settle()
+	# Users can leave the screen idle before opening Help. Hidden Containers
+	# must not retain an oversized first layout when the overlay is shown later.
+	for hidden_frame in 12:
+		await process_frame
 	var overlay: Control = screen.how_to_play_overlay if from_settings else screen.help_overlay
 	var panel = screen.get_node("HowToPlayOverlay/HelpAspect/Canvas" if from_settings else "UIRoot/HelpOverlay/Panel")
 	var label := "%s_%dx%d" % ["settings" if from_settings else "levels", viewport_size.x, viewport_size.y]
@@ -248,6 +252,8 @@ func _test_editor_preview() -> void:
 		var scene = SettingsScene.instantiate() if from_settings else LevelScene.instantiate()
 		viewport.add_child(scene)
 		var overlay: Control = scene.get_node("HowToPlayOverlay" if from_settings else "UIRoot/HelpOverlay")
+		for hidden_frame in 12:
+			await process_frame
 		overlay.show()
 		for frame_index in 10:
 			await process_frame
@@ -262,7 +268,9 @@ func _test_editor_preview() -> void:
 			var description := row.get_node("Description") as Label
 			_check(description.is_visible_in_tree() and not description.text.is_empty(), "editor preview displays " + row.name)
 			_check(panel.frame.get_global_rect().encloses(row.get_global_rect()), "editor preview keeps " + row.name + " inside the frame")
-		await RenderingServer.frame_post_draw
+		# Editor low-processor mode may stop automatic drawing once layout is idle.
+		# Render now instead of waiting indefinitely for a future redraw signal.
+		RenderingServer.force_draw(false)
 		var image: Image = viewport.get_texture().get_image()
 		var filename := "user://how_to_play_editor_%s_1086x1448.png" % ("settings" if from_settings else "levels")
 		_check(image != null and image.save_png(filename) == OK, "editor-preview screenshot is saved")
