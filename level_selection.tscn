@@ -15,25 +15,11 @@
 [ext_resource type="Texture2D" uid="uid://dgibt8etrc0cv" path="res://assets/level_selection_pixel/heritage_courtyard/play.png" id="13_play_frame"]
 [ext_resource type="Texture2D" uid="uid://bxhbf5bfmapv7" path="res://assets/level_selection_pixel/parchment_forest/icon_base.svg" id="14_help"]
 [ext_resource type="Texture2D" uid="uid://bcmryttwe3x27" path="res://assets/level_selection_pixel/parchment_forest/row.png" id="16_row_frame"]
+[ext_resource type="Texture2D" uid="uid://dj28v74vtnngw" path="res://assets/how_to_play_ui/library/got_it.png" id="17_b6sn7"]
+[ext_resource type="Script" uid="uid://dn7p550u6nijw" path="res://how_to_play_panel.gd" id="17_help_layout"]
+[ext_resource type="Texture2D" uid="uid://dvg655oabashr" path="res://assets/how_to_play_ui/library/frame.png" id="18_help_art"]
+[ext_resource type="FontFile" uid="uid://bnslflg5jdysq" path="res://assets/fonts/Roboto-Variable.ttf" id="19_help_body"]
 
-[ext_resource type="Script" path="res://how_to_play_panel.gd" id="17_help_layout"]
-[ext_resource type="Texture2D" path="res://assets/how_to_play_ui/library/frame.png" id="18_help_art"]
-
-[ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="19_help_body"]
-
-[sub_resource type="StyleBoxFlat" id="HelpNumberCoin"]
-bg_color = Color(1, 0.741, 0.208, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.529, 0.314, 0.043, 1)
-corner_radius_top_left = 28
-corner_radius_top_right = 28
-corner_radius_bottom_left = 28
-corner_radius_bottom_right = 28
-shadow_color = Color(0.416, 0.192, 0.027, 0.467)
-shadow_size = 2
 [sub_resource type="AtlasTexture" id="SkyStrip"]
 atlas = ExtResource("2_background")
 region = Rect2(0, 0, 1086, 1)
@@ -87,47 +73,192 @@ atlas = ExtResource("13_play_frame")
 region = Rect2(0, 0, 2172, 724)
 filter_clip = true
 
-[sub_resource type="StyleBoxFlat" id="Style_title"]
-bg_color = Color(0.965, 0.855, 0.62, 0.98)
-border_width_left = 8
-border_width_top = 8
-border_width_right = 8
-border_width_bottom = 8
-border_color = Color(0.47, 0.22, 0.08, 1)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-shadow_color = Color(0.21, 0.1, 0.04, 0.8)
-shadow_size = 8
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0015f"]
+texture = ExtResource("17_b6sn7")
 
-[sub_resource type="StyleBoxFlat" id="Style_icon_normal"]
-bg_color = Color(0.98, 0.9, 0.72, 1)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(0.06, 0.2, 0.35, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_color = Color(0.96, 0.61, 0.1, 1)
-shadow_size = 5
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tcj11"]
+texture = ExtResource("17_b6sn7")
+modulate_color = Color(0.86, 0.88, 0.76, 1)
 
-[sub_resource type="StyleBoxFlat" id="Style_icon_hover"]
-bg_color = Color(1, 0.95, 0.78, 1)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(0.04, 0.35, 0.58, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_color = Color(1, 0.76, 0.16, 1)
-shadow_size = 6
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qfiye"]
+texture = ExtResource("17_b6sn7")
+modulate_color = Color(1.08, 1.06, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i3sc1"]
+texture = ExtResource("17_b6sn7")
+modulate_color = Color(1.08, 1.06, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82vgc"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="FontVariation" id="FontVariation_ppcpj"]
+base_font = ExtResource("19_help_body")
+variation_embolden = 0.5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lphe5"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oal2d"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kj6cg"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lyp5f"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3qsfa"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nchy3"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ejh6"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ihh7s"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2bjll"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ald0f"]
+bg_color = Color(1, 0.7411765, 0.20784314, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5294118, 0.3137255, 0.043137256, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.41568628, 0.19215687, 0.02745098, 0.46666667)
+shadow_size = 2
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mx2e4"]
+texture = ExtResource("14_help")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4fgkv"]
+texture = ExtResource("14_help")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_joisu"]
+texture = ExtResource("14_help")
+modulate_color = Color(1.1, 1.07, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n0wa8"]
+texture = ExtResource("14_help")
+modulate_color = Color(1.1, 1.07, 1, 1)
 
 [node name="LevelSelection" type="Control" unique_id=61055790]
 texture_filter = 1
@@ -410,9 +541,6 @@ color = Color(0.04, 0.025, 0.02, 1)
 
 [node name="Panel" type="Control" parent="UIRoot/HelpOverlay" unique_id=1484799434]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.0
-anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -431,10 +559,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 50
-theme_override_constants/margin_top = 42
-theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 42
 
 [node name="Content" type="Control" parent="UIRoot/HelpOverlay/Panel/Margin" unique_id=1367659964]
 layout_mode = 1
@@ -444,22 +568,29 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 20
 
 [node name="Heading" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content" unique_id=1078158359]
 layout_mode = 1
-theme_override_colors/font_color = Color(0.035, 0.18, 0.31, 1)
+offset_left = 275.0
+offset_top = 154.0
+offset_right = 811.0
+offset_bottom = 264.0
+theme_override_colors/font_color = Color(1, 0.9411765, 0.77254903, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.09019608, 0.019607844, 1)
+theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 64
 text = "HOW TO PLAY"
 horizontal_alignment = 1
-anchor_bottom = 0.18232
-anchor_top = 0.106354
-anchor_right = 0.746777
-anchor_left = 0.253223
+vertical_alignment = 1
 
 [node name="Instructions" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content" unique_id=908964260]
-layout_mode = 2
+visible = false
+layout_mode = 0
+offset_left = 235.0
+offset_top = 325.0
+offset_right = 850.0
+offset_bottom = 3552.0
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.08, 0.14, 0.2, 1)
 theme_override_fonts/font = ExtResource("4_font")
@@ -470,442 +601,429 @@ text = "1. Answer the multiple-choice question first.
 4. Roll the dice after answering.
 5. Move your hero by the number shown on the dice.
 6. Ladders move you forward.
-7. Snakes move you backward.
-8. A shield protects you from one snake.
-9. Bonus Tiles give additional points.
+7. Snakes move you backward unless you have a shield.
+8. One shield protects you from one snake.
+9. Bonus Tiles can give extra points.
 10. Reach the final tile with an exact dice roll.
 11. Complete the level to unlock the next one."
 vertical_alignment = 1
 autowrap_mode = 2
-visible = false
 
 [node name="CloseHelpButton" type="Button" parent="UIRoot/HelpOverlay/Panel/Margin/Content" unique_id=895855597]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 0)
 layout_mode = 1
+offset_left = 340.0
+offset_top = 1035.0
+offset_right = 746.0
+offset_bottom = 1171.0
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.04, 0.19, 0.32, 1)
-theme_override_colors/font_focus_color = Color(0.04, 0.19, 0.32, 1)
-theme_override_colors/font_pressed_color = Color(0.04, 0.19, 0.32, 1)
-theme_override_colors/font_hover_color = Color(0.04, 0.19, 0.32, 1)
-theme_override_colors/font_outline_color = Color(1, 0.84, 0.28, 1)
-theme_override_constants/outline_size = 2
+theme_override_colors/font_color = Color(1, 0.9490196, 0.78039217, 1)
+theme_override_colors/font_focus_color = Color(1, 0.9490196, 0.78039217, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.9490196, 0.78039217, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9490196, 0.78039217, 1)
+theme_override_colors/font_outline_color = Color(0.23921569, 0.14117648, 0.03137255, 1)
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 64
-theme_override_styles/normal = SubResource("Style_icon_normal")
-theme_override_styles/pressed = SubResource("Style_icon_normal")
-theme_override_styles/hover = SubResource("Style_icon_hover")
+theme_override_styles/normal = SubResource("StyleBoxTexture_0015f")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_tcj11")
+theme_override_styles/hover = SubResource("StyleBoxTexture_qfiye")
+theme_override_styles/focus = SubResource("StyleBoxTexture_i3sc1")
 text = "GOT IT"
-anchor_bottom = 0.808702
-anchor_top = 0.714779
-anchor_left = 0.313076
-flat = false
-anchor_right = 0.686924
 
-[node name="HelpFrame" type="TextureRect" parent="UIRoot/HelpOverlay/Panel"]
-layout_mode = 0
-mouse_filter = 2
-texture = ExtResource("18_help_art")
-expand_mode = 1
-stretch_mode = 5
-show_behind_parent = true
-
-[node name="HelpRows" type="VBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content"]
+[node name="HelpRows" type="VBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content" unique_id=272286382]
 layout_mode = 1
+offset_left = 235.0
+offset_top = 325.0
+offset_right = 850.0
+offset_bottom = 12173.0
+focus_mode = 2
 mouse_filter = 2
-anchor_bottom = 0.690608
-anchor_top = 0.224448
 theme_override_constants/separation = 5
-anchor_right = 0.782689
-anchor_left = 0.21639
 
-[node name="HelpBackButton" type="TextureButton" parent="UIRoot/HelpOverlay/Panel"]
-layout_mode = 1
-mouse_default_cursor_shape = 2
-ignore_texture_size = true
-anchor_left = 0.038674
-anchor_bottom = 0.084254
-anchor_right = 0.139963
-anchor_top = 0.008287
-
-[node name="HelpHintButton" type="Button" parent="UIRoot/HelpOverlay/Panel"]
-layout_mode = 1
-mouse_default_cursor_shape = 2
-text = "?"
-anchor_left = 0.856354
-anchor_bottom = 0.084254
-anchor_right = 0.957643
-anchor_top = 0.008287
-
-[node name="Rule1" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule1" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=1792001485]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule1"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule1" unique_id=1785599117]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_82vgc")
 text = "1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule1"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule1" unique_id=929150168]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Answer the multiple-choice question first."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule2" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule2" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=112502709]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule2"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule2" unique_id=651456869]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_lphe5")
 text = "2"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule2"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule2" unique_id=813315272]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Earn 10 points for a correct answer."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule3" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule3" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=93265408]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule3"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule3" unique_id=576094200]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_oal2d")
 text = "3"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule3"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule3" unique_id=1309165528]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Lose 2 points for a wrong answer. Your score never goes below zero."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule4" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule4" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=314920941]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule4"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule4" unique_id=398705105]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_kj6cg")
 text = "4"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule4"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule4" unique_id=877965280]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Roll the dice after answering."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule5" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule5" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=257680882]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule5"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule5" unique_id=1768059854]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_lyp5f")
 text = "5"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule5"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule5" unique_id=962542891]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Move your hero by the number shown on the dice."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule6" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule6" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=139350762]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule6"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule6" unique_id=953749712]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_3qsfa")
 text = "6"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule6"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule6" unique_id=60229173]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Ladders move you forward."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule7" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule7" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=789906542]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule7"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule7" unique_id=1040869005]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_nchy3")
 text = "7"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule7"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule7" unique_id=1920903686]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Snakes move you backward unless you have a shield."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule8" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule8" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=1692522377]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule8"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule8" unique_id=14444751]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_0ejh6")
 text = "8"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule8"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule8" unique_id=17870203]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "One shield protects you from one snake."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule9" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule9" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=343610197]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule9"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule9" unique_id=358737656]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ihh7s")
 text = "9"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule9"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule9" unique_id=96548570]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Bonus Tiles can give extra points."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule10" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule10" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=1389771252]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule10"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule10" unique_id=970612359]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_2bjll")
 text = "10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule10"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule10" unique_id=1300658877]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Reach the final tile with an exact dice roll."
 vertical_alignment = 1
 autowrap_mode = 3
 
-
-[node name="Rule11" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows"]
+[node name="Rule11" type="HBoxContainer" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows" unique_id=484898217]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule11"]
+[node name="Number" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule11" unique_id=1981906302]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 2
-size_flags_vertical = 4
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.941, 0.749, 1)
-theme_override_colors/font_outline_color = Color(0.302, 0.129, 0.031, 1)
+theme_override_colors/font_color = Color(1, 0.9411765, 0.7490196, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("4_font")
 theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("HelpNumberCoin")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ald0f")
 text = "11"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule11"]
+[node name="Description" type="Label" parent="UIRoot/HelpOverlay/Panel/Margin/Content/HelpRows/Rule11" unique_id=1798799917]
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_colors/font_color = Color(0.282, 0.125, 0.051, 1)
-theme_override_fonts/font = ExtResource("19_help_body")
-theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.28235295, 0.1254902, 0.050980393, 1)
+theme_override_constants/line_spacing = 2
+theme_override_fonts/font = SubResource("FontVariation_ppcpj")
+theme_override_font_sizes/font_size = 23
 text = "Complete the level to unlock the next one."
 vertical_alignment = 1
 autowrap_mode = 3
+
+[node name="HelpFrame" type="TextureRect" parent="UIRoot/HelpOverlay/Panel" unique_id=2117076480]
+show_behind_parent = true
+layout_mode = 0
+offset_right = 1086.0
+offset_bottom = 1448.0
+mouse_filter = 2
+texture = ExtResource("18_help_art")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HelpBackButton" type="TextureButton" parent="UIRoot/HelpOverlay/Panel" unique_id=1431918640]
+layout_mode = 1
+offset_left = 42.0
+offset_top = 12.0
+offset_right = 152.0
+offset_bottom = 122.0
+tooltip_text = "Back"
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("3_back")
+texture_pressed = ExtResource("3_back")
+texture_hover = ExtResource("3_back")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="HelpHintButton" type="Button" parent="UIRoot/HelpOverlay/Panel" unique_id=1862968813]
+layout_mode = 1
+offset_left = 930.0
+offset_top = 12.0
+offset_right = 1040.0
+offset_bottom = 122.0
+tooltip_text = "Read the rules below. Choose GOT IT or Back to return."
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.9490196, 0.78039217, 1)
+theme_override_colors/font_focus_color = Color(1, 0.9490196, 0.78039217, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.9490196, 0.78039217, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9490196, 0.78039217, 1)
+theme_override_colors/font_outline_color = Color(0.3019608, 0.12941177, 0.03137255, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("4_font")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxTexture_mx2e4")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_4fgkv")
+theme_override_styles/hover = SubResource("StyleBoxTexture_joisu")
+theme_override_styles/focus = SubResource("StyleBoxTexture_n0wa8")
+text = "?"
