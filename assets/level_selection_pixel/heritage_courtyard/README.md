@@ -1,5 +1,36 @@
 # Heritage Courtyard Level Selection
 
+## Complete title PNG — 23 November 2026
+
+The user confirmed this change targets CHOOSE YOUR LEVEL and that the title must remain leaf-free.
+
+- Added `res://assets/level_selection_pixel/heritage_courtyard/title_with_text.png` (2172×724, alpha): open book/rays, burgundy ribbon and red/gold plaque with the complete cream, dark-outlined CHOOSE YOUR LEVEL lettering in the PNG.
+- The original blank `title.png` remains available. The selected generated output was copied intact, retaining its alpha.
+- The existing TitleBanner now references the complete PNG and uses KEEP_ASPECT_CENTERED. The existing TitleLabel remains in the scene with its text but is hidden to prevent duplicate lettering.
+- TitleBanner size/position, the six level controls, background, main PLAY, Back, Help and gameplay systems were preserved.
+- The scene already contained unsaved-to-Git Editor changes at task start. Those were preserved. Relative to a temporary copy of that starting scene, this task changes only the title texture reference, the title stretch mode and TitleLabel visibility (3 added lines, 1 replaced line).
+- The starting scene was backed up at `C:/Users/user/AppData/Local/Temp/historyroll-level-selection-before-title-20261123.tscn`.
+
+Verification executed with Godot 4.7.1:
+- Baseline before editing: existing Level Selection layout suite, 645 passed / 0 failed.
+- After integration: `tests/level_selection_layout_test.gd`, 645 passed / 0 failed; exit 0.
+- `tests/level_selection_test.gd`, 97 passed / 0 failed; exit 0.
+- Total after integration: 742 passed / 0 failed.
+- Six portrait sizes rendered: 1024×1536, 720×1280, 1086×1448, 1080×1920, 1080×2340 and 1080×2400. Actual 720×1280 and 1086×1448 captures were visually reviewed.
+- Checks retain fresh-player locks, returning-player progress, automatic unlocking, PLAY hit-testing, Help and Back navigation; title checks now verify the complete atlas region, preserved aspect ratio and hidden duplicate Label.
+- Real settings/progress SHA-256 values remained the same as recorded below.
+- Physical Android testing was not performed. A pixel-identical font match to the supplied crop is not claimed.
+
+This section supersedes the earlier integration notes that describe the title as a blank plate with a visible live Label. Reopen the Level Selection scene to refresh its texture; no new Inspector setup or signal wiring is required.
+
+Generation: built-in image generation tool under the imagegen skill. The existing local blank `heritage_courtyard/title.png` was supplied as the edit target after visual inspection. The user's latest crop guided the requested lettering and red/gold style; no original font was identified. The call requested `transparent_background: true`. No CLI/API fallback or raster editing through Python was used.
+
+Final prompt:
+
+Use case: text-localization. Asset type: one complete transparent CHOOSE YOUR LEVEL title crest PNG for the existing HistoryRoll Godot mobile game. Image 1 is the existing project's blank title crest and is the edit target. Preserve its warm polished red-and-gold historical-adventure illustration, open cream book, layered burgundy/red ribbon ends, golden book rays, thick beveled gold border, dark brown outlines and small central gold diamond. Add large, bold, chunky cream-white serif lettering with a strong dark chocolate outline and subtle warm brown lower shadow, reading EXACTLY 'CHOOSE YOUR LEVEL' on ONE line across the red plaque. The letters should follow the plaque's very gentle upward arc and match a friendly storybook board-game title, with thick readable strokes and comfortable side margins. Make the red fill slightly richer burgundy like the user's small title reference, with soft upper gloss and clear gold edging. The heading must be fully legible and correctly spelled. Keep the overall wide 3:1 composition (approximately 2172 by 724): open book/rays in the upper part, wide title plaque beneath, ribbons behind. Ensure the ENTIRE book, every ray tip, ribbon end and gold border is visible; add a small transparent safety margin so nothing touches or gets cut at the image edges. Important: NO leaves, NO laurels, NO foliage, NO flowers anywhere; the user explicitly wants this crest leaf-free. No other wording, no buttons, no portraits, no scenery, no duplicate logos, no watermark. Real transparent alpha outside the complete crest. Do not crop the book or golden rays. Deliver a finished banner WITH the exact title text baked into the PNG, not a blank title plate.
+
+
+
 Applied to the existing HistoryRoll scene on 21 November 2026 using the user's Philippine heritage courtyard reference. This is a close visual recreation assembled from separate artwork and live controls, not a pixel-identical extraction.
 
 ## Integration

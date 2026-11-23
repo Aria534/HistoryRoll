@@ -36,7 +36,7 @@ func _test_pixel_art_fresh_state() -> void:
 	_check(screen.level_buttons.size() == 6, "all six reusable level rows are cached")
 	_check(screen.get_node("Background").texture.resource_path.ends_with("heritage_courtyard/background.png"), "reference Philippine heritage courtyard background is active")
 	_check(screen.title_banner.get_node("TitleLabel").text == "CHOOSE YOUR LEVEL", "title banner text is exact")
-	_check(screen.title_banner.texture is AtlasTexture and screen.title_banner.texture.atlas.resource_path.ends_with("heritage_courtyard/title.png"), "title uses the leaf-free open-book crest")
+	_check(screen.title_banner.texture is AtlasTexture and screen.title_banner.texture.atlas.resource_path.ends_with("heritage_courtyard/title_with_text.png"), "title uses the complete leaf-free open-book crest with lettering")
 	_check(screen.play_button.texture_normal is AtlasTexture and screen.play_button.texture_normal.atlas.resource_path.ends_with("heritage_courtyard/play.png"), "PLAY uses the leaf-free red and gold button")
 	_check(screen.help_button.pressed.get_connections().size() == 1, "Help icon is connected")
 	_check(screen.get_node_or_null("%SettingsButton") == null, "Settings icon is removed")
