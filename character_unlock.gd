@@ -18,6 +18,9 @@ var scene_change_handler: Callable
 
 
 func _ready() -> void:
+	var audio_manager := get_node_or_null("/root/AudioManager")
+	if audio_manager != null and audio_manager.has_method("play_music"):
+		audio_manager.play_music("res://assets/audio/music/victory.ogg", 0.45)
 	if progress_manager == null:
 		progress_manager = get_node("/root/ProgressManager")
 	continue_button.pressed.connect(_on_continue_pressed)
