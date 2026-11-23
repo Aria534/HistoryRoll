@@ -59,7 +59,7 @@ func _apply_scene_theme() -> void:
 	for side: String in ["left", "top", "right", "bottom"]:
 		frame_margin.add_theme_constant_override("margin_" + side, 10 if compact else 14)
 	# Keep Back centered above the lower gold rim, clear of the scrolling cards.
-	frame_margin.add_theme_constant_override("margin_bottom", 24 if compact else 28)
+	frame_margin.add_theme_constant_override("margin_bottom", 44 if compact else 48)
 	var content: VBoxContainer = $SafeArea/WoodFrame/FrameMargin/Content
 	content.add_theme_constant_override("separation", 12)
 	hero_list.add_theme_constant_override("separation", 14)
