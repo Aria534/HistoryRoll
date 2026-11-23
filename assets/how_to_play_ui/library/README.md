@@ -87,3 +87,24 @@ Use case: ui-mockup. Asset type: blank illustrated How to Play library UI backin
 ### Final got_it.png prompt
 
 Use case: ui-mockup. Asset type: a single transparent blank green confirmation-button plate for the HistoryRoll How to Play screen. Image 1 is the user's latest How to Play library reference; match the reference GOT IT button precisely in shape and materials. Create only one wide green capsule button with rounded ends, a bright green top gloss, darker green lower shading, a thick polished double gold/cream beveled border, a chunky dark-brown outline and compact lower shadow. About 3.5:1 overall. Entire green center must be completely BLANK because a native Godot Button will draw GOT IT as live text. No leaves, no laurels, no foliage, no side ornaments, no arrows, no checkmark, no text, no letters, no numbers, no other objects, no background scenery, no watermark. Entire capsule fully visible and tightly framed with minimal transparent padding. Warm polished friendly illustrated mobile game style. Actual transparent alpha outside the button silhouette.
+
+
+## Background and navigation fit - 23 November 2026
+
+- Moved the existing Back and question controls inward to (64, 56) and (912, 56) on the 1086x1448 design canvas. Their 110x110 bounds now sit on opaque artwork rather than its transparent rounded corners.
+- Reduced question lettering from 80 to 64 design pixels and applied both navigation bounds after font/style overrides. This prevents saved Editor font minimums from enlarging the question button during its first layout pass.
+- Settings HelpAspect now uses AspectRatioContainer.STRETCH_FIT (2). Both available width and height constrain the illustration, keeping the full background, title, Back and question controls visible in shorter development windows.
+- Existing library PNG artwork, all eleven rules, GOT IT, Back behavior and Settings/Level Selection entry routes are retained. No images were regenerated.
+- Refreshed preview_with_instructions.png from the actual Godot Editor-mode Settings help render.
+
+Final verification executed with Godot 4.7.1:
+- Runtime How to Play suite: 1374 passed, 0 failed; exit 0.
+- Editor preview suite: 59 passed, 0 failed; exit 0.
+- Total: 1433 passed, 0 failed.
+- Runtime renders cover Settings and Level Selection at 1024x1536, 720x1280, 1086x1448, 1080x1920, 1080x2340, 1080x2400 and 1024x1055 (short development window).
+- New checks sample background alpha underneath each navigation control, compare the button bounds, and check actual main-game control visibility after navigating from Main Menu.
+- Reviewed the phone render, complete Editor preview and actual main-game Settings help capture. Pointer tests retain question focus, Back/GOT IT closing and blocking of underlying PLAY.
+- Final logs contain no script/parse errors. Editor-mode runs still report current_window/external-editor configuration and shutdown RID/ObjectDB warnings.
+- Settings and progress SHA-256 values remain unchanged. Physical Android testing was not performed.
+
+Run the existing project, open Settings -> How to Play or Level Selection -> ?, and check both top icons. No Inspector changes are required.

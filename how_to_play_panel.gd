@@ -113,8 +113,6 @@ func _update_layout() -> void:
 	_place(rows, art_rect, Rect2(235, 325, 615, 675), ui_scale)
 	_place(instructions, art_rect, Rect2(235, 325, 615, 675), ui_scale)
 	_place(close_button, art_rect, Rect2(340, 1035, 406, 136), ui_scale)
-	_place(help_back_button, art_rect, Rect2(42, 12, 110, 110), ui_scale)
-	_place(help_hint_button, art_rect, Rect2(930, 12, 110, 110), ui_scale)
 	heading.add_theme_font_override("font", TITLE_FONT)
 	heading.add_theme_font_size_override("font_size", maxi(22, roundi(64.0 * ui_scale)))
 	heading.add_theme_color_override("font_color", Color("FFF0C5"))
@@ -169,7 +167,7 @@ func _update_layout() -> void:
 		close_button.add_theme_color_override(state, Color("FFF2C7"))
 		help_hint_button.add_theme_color_override(state, Color("FFF2C7"))
 	help_hint_button.add_theme_font_override("font", TITLE_FONT)
-	help_hint_button.add_theme_font_size_override("font_size", maxi(24, roundi(80.0 * ui_scale)))
+	help_hint_button.add_theme_font_size_override("font_size", maxi(24, roundi(64.0 * ui_scale)))
 	help_hint_button.add_theme_color_override("font_outline_color", Color("4D2108"))
 	help_hint_button.add_theme_constant_override("outline_size", maxi(2, roundi(4.0 * ui_scale)))
 	for state: String in ["normal", "hover", "pressed", "focus"]:
@@ -177,6 +175,10 @@ func _update_layout() -> void:
 		icon.texture = HINT_ART
 		icon.modulate_color = Color(1.10, 1.07, 1.0) if state == "hover" or state == "focus" else Color.WHITE
 		help_hint_button.add_theme_stylebox_override(state, icon)
+	# Apply navigation bounds after fonts/styles so saved Editor theme minimums
+	# cannot leave the question button larger than Back on its first layout.
+	_place(help_back_button, art_rect, Rect2(64, 56, 110, 110), ui_scale)
+	_place(help_hint_button, art_rect, Rect2(912, 56, 110, 110), ui_scale)
 	_layout_revision += 1
 	call_deferred("_settle_rows", _layout_revision)
 

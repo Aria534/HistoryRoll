@@ -8,7 +8,7 @@ const HELP_SETTINGS := "user://historyroll_help_design_settings.cfg"
 const HELP_PROGRESS := "user://historyroll_help_design_progress.json"
 const VIEWPORTS := [
 	Vector2i(1024, 1536), Vector2i(720, 1280), Vector2i(1086, 1448),
-	Vector2i(1080, 1920), Vector2i(1080, 2340), Vector2i(1080, 2400),
+	Vector2i(1080, 1920), Vector2i(1080, 2340), Vector2i(1080, 2400), Vector2i(1024, 1055),
 ]
 var passed := 0
 var failed := 0
@@ -62,6 +62,8 @@ func _capture(viewport_size: Vector2i, from_settings: bool) -> void:
 	_check(stored_rows.get_child_count() == 11, "the PackedScene contains eleven rules before any ready callback")
 	for stored_row: HBoxContainer in stored_rows.get_children():
 		_check(not (stored_row.get_node("Description") as Label).text.is_empty(), "saved scene already contains " + stored_row.name + " text")
+	if from_settings:
+		_check(screen.get_node("HowToPlayOverlay/HelpAspect").stretch_mode == AspectRatioContainer.STRETCH_FIT, "Settings help artwork fits both available width and height")
 	viewport.add_child(screen)
 	await _settle()
 	var overlay: Control = screen.how_to_play_overlay if from_settings else screen.help_overlay
@@ -91,6 +93,9 @@ func _capture(viewport_size: Vector2i, from_settings: bool) -> void:
 	_check(previous_rect.end.y < panel.close_button.get_global_rect().position.y, label + " instructions do not overlap GOT IT")
 	for control: Control in [panel.frame, panel.heading, panel.close_button, panel.help_back_button, panel.help_hint_button]:
 		_check(_inside(control.get_global_rect(), viewport_size), label + " " + control.name + " stays on-screen")
+	for navigation: Control in [panel.help_back_button, panel.help_hint_button]:
+		_check(_artwork_covers_control(panel.frame, navigation), label + " " + navigation.name + " fits fully on the visible library background")
+	_check(panel.help_hint_button.size.is_equal_approx(panel.help_back_button.size), label + " Back and question icons keep matching button bounds")
 	var title_font: Font = panel.heading.get_theme_font("font")
 	var title_size: int = panel.heading.get_theme_font_size("font_size")
 	_check(title_font.get_string_size(panel.heading.text, HORIZONTAL_ALIGNMENT_LEFT, -1, title_size).x <= panel.heading.size.x, label + " title lettering fits its red plaque")
@@ -148,6 +153,26 @@ func _inside(rect: Rect2, viewport_size: Vector2i) -> bool:
 	return Rect2(Vector2.ZERO, Vector2(viewport_size)).grow(0.5).encloses(rect)
 
 
+func _artwork_covers_control(frame: TextureRect, control: Control) -> bool:
+	var art_rect := frame.get_global_rect()
+	var control_rect := control.get_global_rect()
+	if not art_rect.encloses(control_rect):
+		return false
+	var source := frame.texture.get_image()
+	if source == null or source.is_empty():
+		return false
+	# Check the image alpha, not just its rectangular bounds: rounded corners
+	# can leave a button over transparent pixels even when it is on-screen.
+	for sample_y: int in range(5):
+		for sample_x: int in range(5):
+			var fraction := Vector2(float(sample_x), float(sample_y)) / 4.0
+			var point := control_rect.position + control_rect.size * fraction
+			var pixel := Vector2i((point - art_rect.position) / art_rect.size * Vector2(source.get_size()))
+			if source.get_pixelv(pixel).a < 0.95:
+				return false
+	return true
+
+
 func _cleanup() -> void:
 	for path: String in [HELP_SETTINGS, HELP_PROGRESS]:
 		if FileAccess.file_exists(path):
@@ -181,6 +206,8 @@ func _test_main_game_help() -> void:
 		var panel = screen.get_node("HowToPlayOverlay/HelpAspect/Canvas" if from_settings else "UIRoot/HelpOverlay/Panel")
 		_check(overlay.is_visible_in_tree(), "main game opens populated help from " + destination)
 		_check(panel.rows.get_child_count() == 11, "main game contains all eleven visible instruction rows")
+		for control: Control in [panel.frame, panel.heading, panel.close_button, panel.help_back_button, panel.help_hint_button]:
+			_check(_inside(control.get_global_rect(), Vector2i(get_root().get_visible_rect().size)), "main game keeps " + control.name + " visible in the current window")
 		for row: HBoxContainer in panel.rows.get_children():
 			var description := row.get_node("Description") as Label
 			_check(description.is_visible_in_tree() and not description.text.is_empty(), "main game displays " + row.name)
@@ -228,6 +255,9 @@ func _test_editor_preview() -> void:
 		_check(panel.rows.get_child_count() == 11, "editor preview shows all eleven saved rules")
 		_check(panel.heading.is_visible_in_tree() and panel.heading.text == "HOW TO PLAY", "editor preview displays the title")
 		_check(panel.close_button.is_visible_in_tree() and panel.close_button.text == "GOT IT", "editor preview displays GOT IT")
+		_check(panel.help_hint_button.size.is_equal_approx(panel.help_back_button.size), "editor preview keeps matching top navigation button bounds: Back=%s Help=%s" % [panel.help_back_button.size, panel.help_hint_button.size])
+		for navigation: Control in [panel.help_back_button, panel.help_hint_button]:
+			_check(_artwork_covers_control(panel.frame, navigation), "editor preview keeps " + navigation.name + " inside the visible artwork")
 		for row: HBoxContainer in panel.rows.get_children():
 			var description := row.get_node("Description") as Label
 			_check(description.is_visible_in_tree() and not description.text.is_empty(), "editor preview displays " + row.name)
