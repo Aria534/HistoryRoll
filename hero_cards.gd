@@ -7,9 +7,9 @@ const LevelCatalog = preload("res://level_catalog.gd")
 const TITLE_FONT = preload("res://assets/fonts/BreeSerif-Regular.ttf")
 const STORY_FONT = preload("res://assets/fonts/TitanOne-Regular.ttf")
 const FRAME_ART = preload("res://assets/hero_cards_ui/heritage_village/frame.png")
-const TITLE_ART = preload("res://assets/hero_cards_ui/heritage_village/title.png")
+const TITLE_ART = preload("res://assets/hero_cards_ui/heritage_village/title_leaf_free.png")
 const CARD_ART = preload("res://assets/hero_cards_ui/heritage_village/card.png")
-const BACK_ART = preload("res://assets/hero_cards_ui/heritage_village/back.png")
+const BACK_ART = preload("res://assets/hero_cards_ui/heritage_village/back_leaf_free.png")
 const STORY_ARROW = preload("res://assets/main_menu_pixel/responsive/selection_arrow.svg")
 const BODY_FONT = preload("res://assets/fonts/Roboto-Variable.ttf")
 
@@ -58,6 +58,8 @@ func _apply_scene_theme() -> void:
 	var frame_margin: MarginContainer = $SafeArea/WoodFrame/FrameMargin
 	for side: String in ["left", "top", "right", "bottom"]:
 		frame_margin.add_theme_constant_override("margin_" + side, 10 if compact else 14)
+	# Keep Back centered above the lower gold rim, clear of the scrolling cards.
+	frame_margin.add_theme_constant_override("margin_bottom", 24 if compact else 28)
 	var content: VBoxContainer = $SafeArea/WoodFrame/FrameMargin/Content
 	content.add_theme_constant_override("separation", 12)
 	hero_list.add_theme_constant_override("separation", 14)
@@ -91,7 +93,7 @@ func _apply_scene_theme() -> void:
 	status_label.add_theme_color_override("font_color", INK)
 	status_label.add_theme_constant_override("outline_size", 0)
 
-	back_button.custom_minimum_size = Vector2(480, 112) if compact else Vector2(620, 128)
+	back_button.custom_minimum_size = Vector2(340, 96) if compact else Vector2(440, 104)
 	back_button.add_theme_font_override("font", TITLE_FONT)
 	back_button.add_theme_font_size_override("font_size", 36 if compact else 44)
 	back_button.add_theme_color_override("font_color", Color("FFF3D2"))
@@ -100,9 +102,9 @@ func _apply_scene_theme() -> void:
 	back_button.add_theme_color_override("font_outline_color", WOOD_DARK)
 	back_button.add_theme_constant_override("outline_size", 3)
 	for state: String in ["normal", "hover", "pressed"]:
-		var back := _make_texture_style(BACK_ART, 18.0)
-		back.content_margin_left = 76.0
-		back.content_margin_right = 76.0
+		var back := _make_texture_style(BACK_ART, 12.0)
+		back.content_margin_left = 32.0
+		back.content_margin_right = 32.0
 		if state == "hover":
 			back.modulate_color = Color(1.12, 1.08, 1.0)
 		elif state == "pressed":
