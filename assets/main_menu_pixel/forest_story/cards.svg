@@ -1,9 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
- <path fill="#783311" d="M2 19 18 11 39 16 61 21 53 58 17 60Z"/>
- <path fill="#ffd36c" d="M5 22 19 15 40 19 57 24 50 54 20 55Z"/>
- <path fill="#743414" d="M16 3H48V60H16Z"/>
- <path fill="#fff1b1" d="M20 6H45V56H20Z"/>
- <path fill="#eabb5a" d="M20 6H45V10H20ZM20 52H45V56H20Z"/>
- <path fill="#ac3e1f" d="M25 24H31V28H35V24H41V34H37V38H33V42H29V38H25V34H21V28H25Z"/>
- <path fill="#cc6328" d="M23 13H27V17H23ZM38 45H42V49H38Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 128 128">
+<title>Hero profile cards</title>
+<defs><linearGradient id="cream" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF8DA"/><stop offset="0.55" stop-color="#FFE8A4"/><stop offset="1" stop-color="#E9AA42"/></linearGradient></defs>
+<rect x="18" y="26" width="76" height="87" rx="8" transform="rotate(-12 56 69.5)" fill="#F5BB56" stroke="#54250F" stroke-width="7"/>
+<rect x="34" y="8" width="82" height="112" rx="10" fill="url(#cream)" stroke="#54250F" stroke-width="8"/>
+<path d="M46 23H104M46 106H104" fill="none" stroke="#C17A25" stroke-width="5" stroke-linecap="round"/>
+<circle cx="75" cy="49" r="16" fill="#78391F"/>
+<path d="M48 95C48 78 60 69 75 69S102 78 102 95V99H48Z" fill="#78391F"/>
+<path d="M70 72 75 80 80 72" fill="none" stroke="#FFE9B3" stroke-width="4" stroke-linejoin="round"/>
+<path d="M42 18V110" fill="none" stroke="#FFF9E5" stroke-width="3" stroke-linecap="round"/>
 </svg>

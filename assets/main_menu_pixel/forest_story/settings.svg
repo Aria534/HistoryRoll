@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
- <path fill="#733115" d="M25 0H41V8H49V12H57V24H64V41H57V49H49V57H41V64H24V57H15V49H7V41H0V24H7V15H15V7H25Z"/>
- <path fill="#f2b854" d="M26 3H39V11H47V16H54V26H61V39H53V47H46V54H38V61H26V53H17V46H10V38H3V26H11V17H18V10H26Z"/>
- <path fill="#fff1b4" d="M26 3H39V11H47V16H54V26H61V31H51V25H46V20H39V15H25V20H19V27H14V39H10V26H11V17H18V10H26Z"/>
- <path fill="#8e3f1b" d="M24 21H41V26H45V40H40V45H25V40H20V26H24Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 128 128">
+<title>Settings gear</title>
+<defs><linearGradient id="cream" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF8DA"/><stop offset="0.55" stop-color="#FFE8A4"/><stop offset="1" stop-color="#E9AA42"/></linearGradient></defs>
+<polygon points="48.31,26.12 54.45,9.84 73.55,9.84 79.69,26.12 79.69,26.12 95.55,18.95 109.05,32.45 101.88,48.31 101.88,48.31 118.16,54.45 118.16,73.55 101.88,79.69 101.88,79.69 109.05,95.55 95.55,109.05 79.69,101.88 79.69,101.88 73.55,118.16 54.45,118.16 48.31,101.88 48.31,101.88 32.45,109.05 18.95,95.55 26.12,79.69 26.12,79.69 9.84,73.55 9.84,54.45 26.12,48.31 26.12,48.31 18.95,32.45 32.45,18.95 48.31,26.12" fill="url(#cream)" stroke="#54250F" stroke-width="8" stroke-linejoin="round"/>
+<circle cx="64" cy="64" r="23" fill="#79381B" stroke="#FFF0B4" stroke-width="4"/>
+<circle cx="64" cy="64" r="16" fill="#54250F"/>
+<path d="M35 37 42 30M58 18H70M88 31 95 38" fill="none" stroke="#FFF9DB" stroke-width="4" stroke-linecap="round"/>
 </svg>

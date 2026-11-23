@@ -143,11 +143,12 @@ texture = SubResource("PlankCrop")
 expand_mode = 1
 
 [node name="ActionIcon" type="TextureRect" parent="StartButton"]
+texture_filter = 2
 layout_mode = 1
-anchor_left = 0.12
-anchor_top = 0.15
-anchor_right = 0.25
-anchor_bottom = 0.85
+anchor_left = 0.10
+anchor_top = 0.10
+anchor_right = 0.26
+anchor_bottom = 0.90
 mouse_filter = 2
 texture = ExtResource("8_play")
 expand_mode = 1
@@ -200,11 +201,12 @@ texture = SubResource("PlankCrop")
 expand_mode = 1
 
 [node name="ActionIcon" type="TextureRect" parent="HeroCardsButton"]
+texture_filter = 2
 layout_mode = 1
-anchor_left = 0.12
-anchor_top = 0.15
-anchor_right = 0.25
-anchor_bottom = 0.85
+anchor_left = 0.10
+anchor_top = 0.10
+anchor_right = 0.26
+anchor_bottom = 0.90
 mouse_filter = 2
 texture = ExtResource("9_cards")
 expand_mode = 1
@@ -257,11 +259,12 @@ texture = SubResource("PlankCrop")
 expand_mode = 1
 
 [node name="ActionIcon" type="TextureRect" parent="SettingsButton"]
+texture_filter = 2
 layout_mode = 1
-anchor_left = 0.12
-anchor_top = 0.15
-anchor_right = 0.25
-anchor_bottom = 0.85
+anchor_left = 0.10
+anchor_top = 0.10
+anchor_right = 0.26
+anchor_bottom = 0.90
 mouse_filter = 2
 texture = ExtResource("10_settings")
 expand_mode = 1
@@ -314,11 +317,12 @@ texture = SubResource("PlankCrop")
 expand_mode = 1
 
 [node name="ActionIcon" type="TextureRect" parent="QuitButton"]
+texture_filter = 2
 layout_mode = 1
-anchor_left = 0.12
-anchor_top = 0.15
-anchor_right = 0.25
-anchor_bottom = 0.85
+anchor_left = 0.10
+anchor_top = 0.10
+anchor_right = 0.26
+anchor_bottom = 0.90
 mouse_filter = 2
 texture = ExtResource("11_quit")
 expand_mode = 1

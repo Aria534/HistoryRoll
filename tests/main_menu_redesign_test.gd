@@ -82,6 +82,9 @@ func _test_main_menu_viewport(viewport_size: Vector2i) -> void:
 		_check(text_size.x <= caption.size.x and text_size.y < rect.size.y, "%s button %d lettering fits its wooden sign" % [label, index + 1])
 		var icon := button.get_node("ActionIcon") as TextureRect
 		_check(icon.texture != null and icon.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s button %d icon preserves pointer input" % [label, index + 1])
+		_check(icon.texture.get_width() >= 128 and icon.texture.get_height() >= 128, "%s button %d icon uses a high-resolution vector import" % [label, index + 1])
+		_check(icon.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR, "%s button %d icon keeps smooth readable outlines" % [label, index + 1])
+		_check(icon.get_global_rect().size.x >= 48.0 and icon.get_global_rect().size.y >= 48.0, "%s button %d icon has a clearly visible display area" % [label, index + 1])
 		_check(icon.get_global_rect().end.x < caption.get_global_rect().position.x, "%s button %d icon and lettering do not overlap" % [label, index + 1])
 		if index > 0:
 			var current_gap := rect.position.y - previous_rect.end.y
