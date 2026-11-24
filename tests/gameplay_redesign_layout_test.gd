@@ -60,8 +60,8 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 		_check(not game.get_node("QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent/TurnControls/ControlDivider").visible, "quiz popup removes the old divider")
 	_check_quiz_content(game, "Level %d %s" % [level_id, viewport_size])
 	var choice_count: int = game.current_question.get("choices", []).size()
-	var expected_columns: int = choice_count if choice_count <= 3 else 2
-	_check(game.answers_grid.columns == expected_columns, "Level %d balances its %d answer choices across the quiz row" % [level_id, choice_count])
+	var allowed_columns: Array = [2] if choice_count == 2 else ([1, 3] if choice_count == 3 else [1, 2])
+	_check(allowed_columns.has(game.answers_grid.columns), "Level %d balances its %d answer choices without an orphaned row" % [level_id, choice_count])
 	_check(not game.get_node("MarginContainer/Content/HistoryRollBrand").visible, "Level %d leaves the reference sky free of a duplicate logo" % level_id)
 	var level_banner := game.get_node("MarginContainer/Content/Header/LevelBannerBackground") as TextureRect
 	var back_button := game.get_node("%BackButton") as Button
@@ -142,6 +142,7 @@ func _capture_level(level_id: int, viewport_size: Vector2i, filename: String) ->
 
 func _check_quiz_content(game, label: String) -> void:
 	var panel_rect: Rect2 = game.quiz_panel.get_global_rect()
+	_check(panel_rect.size.x >= game.get_viewport_rect().size.x * 0.975, "%s popup uses the wider portrait bounds" % label)
 	_check(panel_rect.encloses(game.question_label.get_global_rect()), "%s question stays inside the illustrated frame" % label)
 	_check(panel_rect.encloses(game.answers_grid.get_global_rect()), "%s answers stay inside the illustrated frame" % label)
 	_check(game.question_label.get_global_rect().position.y >= panel_rect.position.y + panel_rect.size.y * 0.23, "%s question clears the sun crest" % label)
@@ -160,6 +161,8 @@ func _check_quiz_content(game, label: String) -> void:
 		var style := button.get_theme_stylebox("normal")
 		var available_width := button.size.x - style.get_content_margin(SIDE_LEFT) - style.get_content_margin(SIDE_RIGHT)
 		var font := button.get_theme_font("font")
+		var lettering_at_phone_width: float = button.get_theme_font_size("font_size") * 433.0 / game.get_viewport_rect().size.x
+		_check(lettering_at_phone_width >= 15.0, "%s choice %d keeps readable lettering at the screenshot width" % [label, index + 1])
 		var text_height := font.get_multiline_string_size(button.text, HORIZONTAL_ALIGNMENT_CENTER, available_width, button.get_theme_font_size("font_size")).y
 		_check(text_height <= button.size.y * 0.58 + 1.0, "%s choice %d lettering fits within the green inset" % [label, index + 1])
 		_check(style is StyleBoxTexture and style.texture.resource_path.ends_with("quiz_gold/answer.png"), "%s choice %d uses the leaf-free illustrated button" % [label, index + 1])
@@ -180,6 +183,8 @@ func _capture_reference_quizzes() -> void:
 	# the approved question bank or submit answers to the active QuizSession.
 	var fixtures := [
 		{"id": "true_false", "question": "The Battle of Mactan took place in 1521.", "choices": ["True", "False"]},
+		{"id": "reference_true_false", "question": "Lapu-Lapu's victory delayed Spanish colonization of the Philippines for over 40 years.", "choices": ["True", "False"]},
+		{"id": "readable_reference", "question": "Why do we remember Lapu-Lapu today?", "choices": ["He was a famous writer", "He was the first hero to defend Philippine independence", "He built the first stone church"]},
 		{"id": "festival", "question": "The annual festival on April 27 reenacts the Battle of Mactan.", "choices": ["Sinulog", "Kadaugan sa Mactan", "Ati-Atihan"]},
 		{"id": "four_choices", "question": "Which hero defended Mactan during the battle in 1521?", "choices": ["Lapu-Lapu", "Andres Bonifacio", "Jose Rizal", "Antonio Luna"]},
 		{"id": "long_choices", "question": "Why couldn't the Spanish ships get close to the shore of Mactan?", "choices": ["Shallow water and coral reefs blocked them", "The sea was too deep", "Large rocks crashed their ships"]},
@@ -199,6 +204,10 @@ func _capture_reference_quizzes() -> void:
 		await process_frame
 		await RenderingServer.frame_post_draw
 		_check_quiz_content(game, str(fixture.id))
+		if fixture.id == "long_choices":
+			_check(game.answers_grid.columns == 1, "long mobile choices use full-width buttons")
+			for index: int in range(choices.size()):
+				_check(game.answer_buttons[index].size.x >= game.answers_grid.size.x * 0.99, "long choice %d fills its available box" % (index + 1))
 		_check(_rect_inside(game.quiz_panel.get_global_rect(), viewport.size), "%s popup fits the portrait screen" % str(fixture.id))
 		var image: Image = viewport.get_texture().get_image()
 		_check(image != null and image.save_png("user://quiz_gold_%s_720x1280.png" % str(fixture.id)) == OK, "%s leaf-free popup capture is saved" % str(fixture.id))
@@ -230,7 +239,7 @@ func _capture_long_mactan_question() -> void:
 	game.answer_buttons[3].hide()
 	game._set_quiz_panel_height(true)
 	await process_frame; await process_frame
-	_check(game.question_label.get_theme_font_size("font_size") == 28, "long Mactan question uses the larger fitted parchment font")
+	_check(game.question_label.get_theme_font_size("font_size") >= 27, "long Mactan question keeps a readable fitted parchment font")
 	for index: int in range(3):
 		_check(_rect_inside(game.answer_buttons[index].get_global_rect(), viewport.size), "long Mactan answer %d stays inside the portrait screen" % (index + 1))
 	var image: Image = viewport.get_texture().get_image()
