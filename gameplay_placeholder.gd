@@ -211,9 +211,7 @@ func _begin_question(question_type: String) -> void:
 		_show_fatal_error("The current question has an invalid number of answer choices.")
 		return
 	_apply_question_typography(choices)
-	# Keep every supported question visually balanced. Three-choice questions use
-	# one complete row instead of leaving an orphaned button in a second row.
-	answers_grid.columns = choices.size() if choices.size() <= 3 else 2
+	# Typography chooses a balanced row or full-width answers for longer text.
 	for index: int in range(answer_buttons.size()):
 		var answer_button := answer_buttons[index]
 		answer_button.visible = index < choices.size()
@@ -256,6 +254,20 @@ func _apply_question_typography(choices: Array) -> void:
 		answer_font_size = 21
 	var answer_columns := choices.size() if choices.size() <= 3 else 2
 	var column_width := (content_width - answers_grid.get_theme_constant("h_separation") * (answer_columns - 1)) / maxi(1, answer_columns)
+	# Keep short choices together, but give long answers the full parchment width
+	# instead of squeezing three or more lines into a narrow button.
+	if choices.size() > 2:
+		for index: int in range(choices.size()):
+			var sample_button := answer_buttons[index]
+			var sample_style := sample_button.get_theme_stylebox("normal")
+			var sample_width := maxf(32.0, column_width - sample_style.get_content_margin(SIDE_LEFT) - sample_style.get_content_margin(SIDE_RIGHT))
+			var sample_font := sample_button.get_theme_font("font")
+			var sample_height := sample_font.get_multiline_string_size(str(choices[index]), HORIZONTAL_ALIGNMENT_CENTER, sample_width, answer_font_size).y
+			if sample_height > sample_font.get_height(answer_font_size) * 2.0 + 1.0:
+				answer_columns = 1
+				column_width = content_width
+				break
+	answers_grid.columns = answer_columns
 	for index: int in range(answer_buttons.size()):
 		var answer_button := answer_buttons[index]
 		answer_button.add_theme_font_size_override("font_size", answer_font_size)
@@ -604,8 +616,12 @@ func _update_question_popup_layout() -> void:
 	var choices: Array = current_question.get("choices", [])
 	if choices.size() < 2:
 		return
+	# Widen the existing popup while retaining enough room for its entrance
+	# overshoot; controls and artwork share the same responsive bounds.
+	quiz_panel.anchor_left = 0.01
+	quiz_panel.anchor_right = 0.99
 	_apply_question_typography(choices)
-	var answer_columns := choices.size() if choices.size() <= 3 else 2
+	var answer_columns := answers_grid.columns
 	var answer_rows := ceili(float(choices.size()) / answer_columns)
 	var answer_height := 0.0
 	for index: int in range(choices.size()):
