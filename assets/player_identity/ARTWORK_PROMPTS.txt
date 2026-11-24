@@ -1,0 +1,18 @@
+HistoryRoll player identity artwork
+Generated using the built-in image_gen tool; no CLI/API fallback.
+User images supplied the style reference. Existing artwork was not overwritten.
+New assets were copied into this project and their originals retained.
+
+NAME ENTRY BACKGROUND
+Saved as: res://assets/player_identity/name_entry_background.png
+Prompt:
+Create a finished portrait 1024 x 1536 raster background asset for HistoryRoll's PLAYER NAME ENTRY screen, matching the two user-provided antique Philippine educational game references. This is decorative art to sit BEHIND real editable Godot UI. Rich warm brown carved antique wooden outer frame, thin ornate gold border and curled corners, deep maroon accents, cream parchment interior, friendly polished hand-painted 2D game art. At the very top in the upper 5%-24% of the image, an elegant emblem with an open book, small die, Philippine sun and draped blue-white-red Philippine ribbon, with the exact readable word 'HistoryRoll'. Muted sepia silhouettes of Filipino heroes along the narrow left and right sides, old stone church/fort silhouettes near the bottom corners, books bottom left and ink/quill/sealed scroll bottom right. Crucial: keep the central parchment from x=15% to85%, y=29% to83% EMPTY and light cream, smooth enough for dark-brown text and a name field. This area will hold title, subtitle, input and buttons rendered by Godot. NO heading text, NO welcome text, NO input field, NO buttons, NO certificate text, NO other lettering. Do not place distracting scenery inside this blank central safe area. Crisp gold rim, warm parchment texture, readable quiet center, premium traditional educational adventure aesthetic. Reference images are style/composition inspiration only, adapt to portrait.
+
+CERTIFICATE BACKGROUND
+Saved as: res://assets/player_identity/certificate_background.png
+Prompt:
+Landscape 1536x1024 Certificate of Achievement BACKGROUND ART for HistoryRoll, matching an antique educational Filipino adventure game. Decorated warm cream parchment, very elegant thin ornate gold rectangular rim, curled gold corners, maroon edge border. At TOP centered at y2%-25% an emblem: book, small die, Philippine sun, laurel branches, red-white-blue Philippine ribbon and exact readable word 'HistoryRoll'. Narrow side margins x2%-19% and81%-98% contain three sepia silhouette busts on each side inspired by Filipino heroes: Lapulapu, Bonifacio, Rizal on left; Luna, elderly Melchora Aquino, Mabini on right. At bottom corners old Philippine fort and church landscapes with mountains. A golden open-book achievement medal with short maroon ribbons centered at bottom y80%-96%. CENTRAL AREA x20%-80%, y26%-78% MUST BE BLANK light cream parchment for live Godot Labels to render title, player's name and certificate wording. Do not draw any lines or other text inside this blank center. NO certificate heading, NO 'this certifies', NO fake player name, NO date or signature fields, NO buttons, NO watermark. Only HistoryRoll lettering at top. Polished crisp classic 2D painterly game artwork, gold, antique brown, dark maroon, cream, restrained parchment grain. Six hero silhouettes stay in their side columns and do not intrude on blank center. Flat front view, straight alignment. This is final asset art behind editable native UI, not a mockup in a device.
+
+Native SVG input/button styling extends the existing settings red_button.svg style.
+Fonts reuse the project's BreeSerif-Regular.ttf and Lora-Italic.ttf.
+All dynamic wording, player name, LineEdit and buttons are native Godot controls.
