@@ -26,6 +26,9 @@ class MockProgress:
 			return delegate.record_board_completion(level_id, final_score, stats)
 		return true
 
+	func is_certificate_unlocked() -> bool:
+		return delegate != null and delegate.is_certificate_unlocked()
+
 	func finish_level_results(level_id: int) -> bool:
 		finish_calls += 1
 		return delegate.finish_level_results(level_id) if delegate != null else true
@@ -194,7 +197,8 @@ func _test_saved_progression() -> void:
 		if level_id < 6:
 			_check(progress.is_level_unlocked(level_id + 1), "Level %d still unlocks the next level" % level_id)
 		_click(fixture.viewport, fixture.game.return_button.get_global_rect().get_center())
-		_check(fixture.requested == ["res://level_selection.tscn"], "Level %d keeps existing Continue navigation" % level_id)
+		var expected_scene := "res://certificate.tscn" if level_id == 6 else "res://level_selection.tscn"
+		_check(fixture.requested == [expected_scene], "Level %d Continue opens its approved destination" % level_id)
 		await _dispose(fixture)
 	var reward_count: int = progress.claimed_character_rewards.size()
 	var hero_count: int = progress.unlocked_characters.size()

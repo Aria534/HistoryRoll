@@ -1,0 +1,112 @@
+HistoryRoll player name and Certificate of Achievement
+Implemented: 2026-11-24, Godot 4.7.1
+
+FLOW
+Main Menu -> Start Game -> Player Name Entry -> Level Selection.
+Returning players see their saved name and can change it without resetting progress.
+Level 6 Results -> Continue -> Certificate, only when all six levels are completed.
+An earned certificate can be opened again using View Certificate on name entry.
+
+CREATED
+player_name_entry.tscn / player_name_entry.gd (+ Godot script UID)
+certificate.tscn / certificate.gd (+ Godot script UID)
+assets/player_identity/name_entry_background.png
+assets/player_identity/certificate_background.png
+assets/player_identity/name_field.svg
+assets/player_identity/green_button.svg
+assets/player_identity/identity_theme.tres
+assets/player_identity/ARTWORK_PROMPTS.txt
+tests/player_identity_test.gd (+ UID)
+
+MODIFIED
+main_menu_tscn.gd: changes only the default Start Game destination.
+progress_manager.gd: optional player_name field, shared validation/normalization,
+transactional name update on save failure, all-six-completions certificate query.
+gameplay_placeholder.gd: Level 6 Results Continue opens the earned certificate;
+all other results/error routes retain Level Selection.
+tests/main_menu_redesign_test.gd: updated Start Game route expectations.
+tests/level_selection_layout_test.gd: tests the actual name-entry navigation step.
+tests/level_completion_test.gd: verifies Level 6 certificate routing with real progress.
+tests/scene_music_test.gd: adds new-screen Music ON/OFF coverage.
+
+PRESERVED
+No project.godot/Autoload changes, no accounts, no internet requirement.
+Existing scenes/artwork/menus and gameplay rules are reused.
+The two pre-existing Editor edits in level_selection.tscn were left as found.
+The real progress and settings files retained their original SHA-256 hashes:
+progress: 7493D1B3ABDBF9A8A779E9D7357E7D94AA4CE9BD523818A374DB58F346D384CC
+settings: 27A5E3EDB4F0918F4713B9A2E16709CBA02FD6030E50457B85C632D2581AA45D
+
+SAVE COMPATIBILITY
+player_name is an additive optional field in the existing version-3 JSON.
+Missing/invalid name values default to empty; old progress is not rewritten just
+for opening the app. A confirmed valid edit saves through ProgressManager.
+There is no new migration, player account, reward, or progress reset.
+Names use Unicode letters/combining marks, ordinary spaces, hyphens, and straight
+or curly apostrophes. Outer/repeated ordinary spaces are normalized.
+The LineEdit and save validation both enforce the 30-character limit.
+
+CERTIFICATE
+Eligibility requires completed_levels to contain every ID from 1 through 6.
+highest_unlocked_level and game_completed alone cannot grant it.
+Existing completion records remain authoritative, including compatible old saves.
+No rewards are granted for viewing the certificate. Replays preserve one-time rewards.
+A legacy completer with no name is prompted to enter one before displaying the award.
+The player's name is a centered, dark-brown serif Label that shrinks to fit.
+All certificate wording is editable Label text; no date/signature fields.
+Certificate artwork keeps its landscape aspect inside the portrait application.
+Back returns to Level Selection. The existing music preferences apply.
+
+EDITOR / ANDROID
+Open player_name_entry.tscn or certificate.tscn directly in the 2D Editor.
+All headings, input, name, buttons and certificate text are real Control nodes.
+The @tool scripts show complete Editor previews and scale the presentation to fit.
+The native LineEdit enables the platform keyboard; Enter/Done submits the name.
+Android keyboard-height handling keeps input and Continue above the keyboard,
+temporarily hiding the welcome headings while typing.
+No manual signal connections or Autoload configuration are needed.
+
+EXECUTED TESTS
+Player identity runtime / actual renders: 135 passed, 0 failed.
+Player identity Editor previews: 6 passed, 0 failed.
+Main Menu redesign: 442 passed, 0 failed.
+Level Selection layout: 646 passed, 0 failed.
+All-level completion: 532 passed, 0 failed.
+Question-first gameplay: 115 passed, 0 failed.
+Direct progression integration: 7 passed, 0 failed.
+Six redesigned levels: 47 passed, 0 failed.
+Scene music ON/OFF: 154 passed, 0 failed.
+Total: 2,084 successful checks, 0 failed in the final runs.
+
+Verified: fresh/returning entry, invalid/empty/overlong names, Unicode and name
+punctuation, Back, Enter submit, real pointer navigation, duplicate-click guard,
+save failure rollback, malformed save fields, corrupt-save recovery, all-six
+certificate gating, old save compatibility, completion routing and repeat viewing.
+A separate fresh Godot process restored the name and existing progress from disk.
+Actual renders inspected at 1024x1536, 720x1280 and 1080x2400; live resize checked.
+Keyboard obstruction geometry was simulated at all three sizes.
+The existing completion suite exercises exact finishing rolls through all six boards.
+
+PREVIEWS (Godot user://)
+identity_entry_fresh_720x1280.png
+identity_certificate_earned_720x1280.png
+identity_entry_1024x1536.png / identity_entry_720x1280.png / identity_entry_1080x2400.png
+identity_certificate_1024x1536.png / identity_certificate_720x1280.png /
+identity_certificate_1080x2400.png
+identity_editor_PlayerNameEntry.png / identity_editor_Certificate.png
+
+LIMITATIONS
+Physical Android keyboard/audio/device testing was not performed.
+Save-failure and corrupt-file tests intentionally emit their existing warnings.
+Editor CLI tests emit the existing current_window/external-editor configuration
+and shutdown RID/ObjectDB diagnostics; final runtime runs have no script/parse errors.
+Generated sepia figures are decorative illustrations, not new historical source material.
+Export/printing/sharing of the certificate was not requested or added.
+
+MANUAL CHECK
+1. Run F5, then Start Game. Empty input must leave Continue disabled.
+2. Enter a name such as Ana Maria or Anne-Marie O'Connor; Continue opens Level Selection.
+3. Close/reopen the game: Start Game prefills the saved name.
+4. Edit the name and continue: earned levels, heroes and scores must stay as before.
+5. After completing all six levels, Continue from Level 6 Results opens the named
+   certificate. Return to Start Game -> name entry -> View Certificate to see it again.

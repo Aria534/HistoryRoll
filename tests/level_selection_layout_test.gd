@@ -218,8 +218,20 @@ func _test_main_menu_entry() -> void:
 	menu.start_button.pressed.emit()
 	await process_frame
 	await process_frame
+	var entry = current_scene
+	_check(entry != null and entry.scene_file_path == "res://player_name_entry.tscn", "actual Start Game opens Player Name Entry")
+	var test_progress = ProgressManagerScript.new()
+	test_progress.save_path = SAVE_PATH
+	if entry != null and entry.scene_file_path == "res://player_name_entry.tscn":
+		entry.progress_manager = test_progress
+		entry.name_input.text = "History Explorer"
+		entry.name_input.text_changed.emit(entry.name_input.text)
+		entry.continue_button.pressed.emit()
+		await process_frame
+		await process_frame
 	var screen = current_scene
-	_check(screen != null and screen.scene_file_path == "res://level_selection.tscn", "actual Main Menu Start Game opens the redesigned Level Selection")
+	_check(screen != null and screen.scene_file_path == "res://level_selection.tscn", "actual name Continue opens the redesigned Level Selection")
+	test_progress.free()
 	if screen != null and screen.scene_file_path == "res://level_selection.tscn":
 		var progress: Node = get_root().get_node("ProgressManager")
 		for level_id: int in range(1, 7):

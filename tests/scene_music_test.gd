@@ -25,6 +25,8 @@ func _run() -> void:
 		_write_settings(enabled)
 		await _test_loading_handoff(enabled)
 		await _test_scene("res://settings.tscn", AudioScript.MAIN_MENU_TRACK, enabled)
+		await _test_scene("res://player_name_entry.tscn", AudioScript.MAIN_MENU_TRACK, enabled)
+		await _test_scene("res://certificate.tscn", AudioScript.VICTORY_TRACK, enabled)
 		await _test_scene("res://character_unlock.tscn", AudioScript.VICTORY_TRACK, enabled)
 		await _test_scene("res://level_selection.tscn", AudioScript.LEVEL_SELECT_TRACK, enabled)
 		await _test_scene("res://hero_cards.tscn", AudioScript.MAIN_MENU_TRACK, enabled)

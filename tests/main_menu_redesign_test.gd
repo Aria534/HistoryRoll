@@ -120,8 +120,8 @@ func _test_main_menu_viewport(viewport_size: Vector2i) -> void:
 	release.position = center
 	release.button_index = MOUSE_BUTTON_LEFT
 	viewport.push_input(release, true)
-	_check(requested == ["res://level_selection.tscn"], "%s mouse/touch-emulation hit-test opens Level Selection" % label)
-	var routes := ["res://level_selection.tscn", "res://hero_cards.tscn", "res://settings.tscn"]
+	_check(requested == ["res://player_name_entry.tscn"], "%s mouse/touch-emulation hit-test opens Player Name Entry" % label)
+	var routes := ["res://player_name_entry.tscn", "res://hero_cards.tscn", "res://settings.tscn"]
 	for index: int in range(3):
 		menu._scene_transition_pending = false
 		menu._set_buttons_disabled(false)
@@ -178,7 +178,7 @@ func _test_touch_entry() -> void:
 	release.pressed = false
 	Input.parse_input_event(release)
 	await process_frame
-	_check(requested == ["res://level_selection.tscn"], "a simulated touch tap opens Level Selection through input emulation")
+	_check(requested == ["res://player_name_entry.tscn"], "a simulated touch tap opens Player Name Entry through input emulation")
 	Input.emulate_mouse_from_touch = was_emulating
 	menu.queue_free()
 	await process_frame
