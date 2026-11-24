@@ -12,6 +12,7 @@ enum GameplayState {
 }
 
 const LEVEL_SELECTION_SCENE: String = "res://level_selection.tscn"
+const CERTIFICATE_SCENE: String = "res://certificate.tscn"
 const LevelCatalog = preload("res://level_catalog.gd")
 const BoardRules = preload("res://board_rules.gd")
 const DiceRoller = preload("res://dice_roller.gd")
@@ -490,7 +491,10 @@ func _on_return_pressed() -> void:
 		_change_scene(LEVEL_SELECTION_SCENE)
 		return
 	progress_manager.finish_level_results(level_id)
-	_change_scene(LEVEL_SELECTION_SCENE)
+	if level_id == 6 and progress_manager.has_method("is_certificate_unlocked") and progress_manager.is_certificate_unlocked():
+		_change_scene(CERTIFICATE_SCENE)
+	else:
+		_change_scene(LEVEL_SELECTION_SCENE)
 
 
 func _change_scene(path: String) -> void:
