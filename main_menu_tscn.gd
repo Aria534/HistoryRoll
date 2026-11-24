@@ -3,7 +3,7 @@ extends Control
 const DESIGN_SIZE := Vector2(1086, 1448)
 const BUTTON_LABELS := ["Start Game", "Hero Cards", "Settings", "Quit"]
 
-@export_file("*.tscn") var start_game_scene: String = "res://level_selection.tscn"
+@export_file("*.tscn") var start_game_scene: String = "res://player_name_entry.tscn"
 @export_file("*.tscn") var hero_cards_scene: String = "res://hero_cards.tscn"
 @export_file("*.tscn") var settings_scene: String = "res://settings.tscn"
 
