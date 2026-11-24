@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://cw1x5l6irbcyv" path="res://assets/level_selection_pixel/parchment_forest/luna.png" id="9_luna"]
 [ext_resource type="Texture2D" uid="uid://ja7vw0klix6p" path="res://assets/level_selection_pixel/parchment_forest/aquino.png" id="10_aquino"]
 [ext_resource type="Texture2D" uid="uid://ce036u1vk5y6g" path="res://assets/level_selection_pixel/parchment_forest/mabini.png" id="11_mabini"]
-[ext_resource type="Texture2D" path="res://assets/level_selection_pixel/heritage_courtyard/title_with_text.png" id="12_title_frame"]
+[ext_resource type="Texture2D" uid="uid://d6gji10kwr07" path="res://assets/level_selection_pixel/heritage_courtyard/title_with_text.png" id="12_title_frame"]
 [ext_resource type="Texture2D" uid="uid://dgibt8etrc0cv" path="res://assets/level_selection_pixel/heritage_courtyard/play.png" id="13_play_frame"]
 [ext_resource type="Texture2D" uid="uid://bxhbf5bfmapv7" path="res://assets/level_selection_pixel/parchment_forest/icon_base.svg" id="14_help"]
 [ext_resource type="Texture2D" uid="uid://bcmryttwe3x27" path="res://assets/level_selection_pixel/parchment_forest/row.png" id="16_row_frame"]
@@ -543,6 +543,7 @@ color = Color(0.04, 0.025, 0.02, 1)
 
 [node name="Panel" type="Control" parent="UIRoot/HelpOverlay" unique_id=1484799434]
 layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
