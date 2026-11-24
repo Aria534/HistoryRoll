@@ -5,6 +5,7 @@ signal progress_changed
 const LevelCatalog = preload("res://level_catalog.gd")
 const DEFAULT_SAVE_PATH: String = "user://historyroll_progress.json"
 const SAVE_VERSION: int = 3
+const MAX_PLAYER_NAME_LENGTH: int = 30
 const DEFAULT_HERO_ID: String = "historyroll_explorer"
 const STAGE_RESULTS: String = "results"
 const STAGE_POST_STORY: String = "post_story"
@@ -12,6 +13,7 @@ const STAGE_CHARACTER_UNLOCK: String = "character_unlock"
 const STAGE_LEVEL_UNLOCK: String = "level_unlock_confirmation"
 
 var save_path: String = DEFAULT_SAVE_PATH
+var player_name: String = ""
 var highest_unlocked_level: int = 1
 var completed_levels: Array[int] = []
 var board_completed_levels: Array[int] = []
@@ -31,6 +33,54 @@ var game_completed: bool = false
 
 func _ready() -> void:
 	load_progress()
+
+
+
+# Additive optional save field: old version-3 saves retain every existing key
+# and default to an empty name until the player chooses one.
+static func normalize_player_name(value: String) -> String:
+	var normalized := value.strip_edges()
+	while normalized.contains("  "):
+		normalized = normalized.replace("  ", " ")
+	return normalized
+
+
+static func get_player_name_error(value: String) -> String:
+	var normalized := normalize_player_name(value)
+	if normalized.is_empty():
+		return "Please enter your name to continue."
+	if normalized.length() > MAX_PLAYER_NAME_LENGTH:
+		return "Please use 30 characters or fewer."
+	var allowed := RegEx.new()
+	allowed.compile("^[\\p{L}\\p{M} '\\x{2019}-]+$")
+	var letter := RegEx.new()
+	letter.compile("\\p{L}")
+	if allowed.search(normalized) == null or letter.search(normalized) == null:
+		return "Use letters, spaces, hyphens or apostrophes."
+	return ""
+
+
+func set_player_name(value: String) -> bool:
+	if not get_player_name_error(value).is_empty():
+		return false
+	var normalized := normalize_player_name(value)
+	if player_name == normalized:
+		return true
+	var previous_name := player_name
+	player_name = normalized
+	if not save_progress():
+		player_name = previous_name
+		return false
+	progress_changed.emit()
+	return true
+
+
+func is_certificate_unlocked() -> bool:
+	# Never trust a highest-level or legacy game_completed flag alone.
+	for level_id: int in range(1, 7):
+		if not is_level_completed(level_id):
+			return false
+	return true
 
 
 func is_level_unlocked(level_id: int) -> bool:
@@ -232,6 +282,7 @@ func save_progress() -> bool:
 		return false
 	var data := {
 		"version": SAVE_VERSION,
+		"player_name": player_name,
 		"highest_unlocked_level": highest_unlocked_level,
 		"completed_levels": completed_levels,
 		"board_completed_levels": board_completed_levels,
@@ -268,6 +319,9 @@ func load_progress() -> void:
 		progress_changed.emit()
 		return
 	var data: Dictionary = json.data
+	var saved_name: Variant = data.get("player_name", "")
+	if saved_name is String and get_player_name_error(saved_name).is_empty():
+		player_name = normalize_player_name(saved_name)
 	var loaded_version := int(data.get("version", 1))
 	if loaded_version < SAVE_VERSION:
 		_backup_save_before_migration(loaded_version)
@@ -391,6 +445,7 @@ func _add_unique_int(values: Array[int], value: int) -> void:
 
 
 func _reset_to_defaults() -> void:
+	player_name = ""
 	highest_unlocked_level = 1
 	completed_levels.clear()
 	board_completed_levels.clear()
