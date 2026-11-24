@@ -18,7 +18,7 @@ Modified:
 
 Existing nodes, signal handlers, popup entrance/exit Tweens, question-bank content, answer submission guards, score rules, happy/sad reactions, sounds, dice behavior, boards, hero tokens, progression, saves, navigation, Main Menu and Settings are retained. No new scene, node, Autoload or input action was added. Existing gameplay popup artwork is kept in its original location.
 
-All six levels share this scene and receive the same popup skin. Two or three choices use one row; four choices use a 2x2 grid. Longer text receives more height while the popup remains within the tested portrait screen. The Roll Dice control remains at the bottom of gameplay, outside the question panel. Old instruction and dice-card rows inside the popup remain hidden.
+All six levels share this scene and receive the same popup skin. The popup uses 98 percent of the portrait viewport width. True/False and short three-choice questions keep one row; short four-choice questions use a 2x2 grid. If a multiple-choice answer would require more than two lines in its narrow column, all choices use full-width rows instead. Longer text receives more height while the popup remains within the tested portrait screen. The Roll Dice control remains at the bottom of gameplay, outside the question panel. Old instruction and dice-card rows inside the popup remain hidden.
 
 Native Button states use the same blank illustrated texture with small hover/press/disabled color variations. Existing correct/incorrect tinting remains controlled by the original answer handler.
 
@@ -75,3 +75,19 @@ Use case: precise-object-edit. Asset type: a transparent blank question-popup fr
 ### answer.png
 
 Use case: precise-object-edit. Asset type: a single blank answer-button texture for the existing HistoryRoll quiz popup. Image 1 is the user's newest uploaded popup reference and is the exact answer-button style reference. Recreate ONLY ONE of its green answer buttons, completely blank: chunky horizontally rounded rectangle with rich dark leaf-green fill, lighter green upper inset gloss, thick polished golden-yellow beveled rim, strong dark-chocolate outline and a compact warm brown lower shadow. Shape should be a rounded rectangle with moderately curved corners, NOT a pill and not a wooden sign. Wide horizontal proportions about 3.5:1, fully visible with very narrow transparent padding. Match Image 1's friendly polished illustrated mobile-game UI, thick clear outlines, warm gold highlights, strong readable silhouette. The center must be completely empty for dynamic Godot answer text, with no decorative shapes inside. ABSOLUTELY NO LEAVES, LAURELS, foliage, vines, flowers, icons, words, letters, numbers, patterns, scenery or watermark. Preserve actual transparent alpha outside the button. Deliver ONE blank green-and-gold button only.
+
+
+## Width refinement - 24 November 2026
+
+Script-only update in gameplay_placeholder.gd: widen the existing popup from 92 to 98 percent of viewport width and select answer columns using actual wrapped-font measurements. The height calculation uses that same column count so wider choices stay inside the parchment. The existing textures, nodes, answer counts, scoring and progression are unchanged.
+
+Executed with Godot 4.7.1: gameplay_redesign_layout_test.gd 709 passed; question_popup_test.gd 12 passed; question_first_redesign_test.gd 115 passed. Total: 836 passed, 0 failed. Actual renders inspected include the user's long True/False reference question and long multiple-choice answers at 720x1280. The layout suite also checks all six levels at 1024x1536 and portrait sizes 1080x1920 and 1080x2400. Physical Android testing was not performed. Existing ObjectDB shutdown warnings remain. The real player save and settings retained their pre-test SHA-256 hashes.
+
+
+## Readability refinement - 24 November 2026
+
+Long answers no longer fall back to 21-23 px lettering. Answer text scales with the portrait viewport: 38 px at the project's 1024 px design width, with a 28 px minimum for the 720 px test viewport. Question lettering is also larger. Existing white lettering/dark outlines and the same font/artwork are retained. Answer boxes gain padding and height for wrapped text. Popup height now sums the actual row heights so a single wrapped answer does not unnecessarily enlarge every other row.
+
+The layout regression includes the exact 'Why do we remember Lapu-Lapu today?' question and checks readable lettering at the 433 px screenshot width, full text within the green insets, and separation from the decorative frame. The matching actual Godot render was visually inspected: user://quiz_gold_readable_reference_720x1280.png.
+
+Executed final checks: rendered gameplay layout 772 passed; question popup 12 passed; question-first gameplay 115 passed. Total: 899 passed, 0 failed. Player progress/settings hashes are unchanged from before testing. Physical Android testing is still pending. No scene, asset, scoring, navigation or save changes were needed.
