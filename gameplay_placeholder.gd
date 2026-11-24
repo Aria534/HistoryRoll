@@ -228,11 +228,12 @@ func _begin_question(question_type: String) -> void:
 func _apply_question_typography(choices: Array) -> void:
 	var question_text := question_label.text.strip_edges()
 	var question_length := question_text.length()
-	var question_font_size := 34
+	var text_scale := clampf(get_viewport_rect().size.x / 1024.0, 0.65, 1.25)
+	var question_font_size := clampi(roundi(40.0 * text_scale), 28, 50)
 	if question_length > 55:
-		question_font_size = 28
+		question_font_size = clampi(roundi(38.0 * text_scale), 27, 48)
 	if question_length > 95:
-		question_font_size = 23
+		question_font_size = clampi(roundi(36.0 * text_scale), 26, 45)
 	question_label.text = question_text
 	question_label.add_theme_font_size_override("font_size", question_font_size)
 	var panel_width := get_viewport_rect().size.x * (quiz_panel.anchor_right - quiz_panel.anchor_left)
@@ -244,14 +245,9 @@ func _apply_question_typography(choices: Array) -> void:
 	var question_text_height := question_font.get_multiline_string_size(question_text, HORIZONTAL_ALIGNMENT_CENTER, question_width, question_font_size).y
 	question_label.custom_minimum_size.y = maxf(74.0, ceilf(question_text_height) + 12.0)
 
-	var longest_choice := 0
-	for choice: Variant in choices:
-		longest_choice = maxi(longest_choice, str(choice).length())
-	var answer_font_size := 25
-	if longest_choice > 24:
-		answer_font_size = 23
-	if longest_choice > 36:
-		answer_font_size = 21
+	# Preserve readable lettering for long answers too: wrap and enlarge their
+	# boxes instead of shrinking the font to fit a narrow row.
+	var answer_font_size := clampi(roundi(38.0 * text_scale), 28, 48)
 	var answer_columns := choices.size() if choices.size() <= 3 else 2
 	var column_width := (content_width - answers_grid.get_theme_constant("h_separation") * (answer_columns - 1)) / maxi(1, answer_columns)
 	# Keep short choices together, but give long answers the full parchment width
@@ -278,7 +274,7 @@ func _apply_question_typography(choices: Array) -> void:
 		var answer_text_height := answer_font.get_multiline_string_size(answer_text, HORIZONTAL_ALIGNMENT_CENTER, answer_width, answer_font_size).y
 		# Keep wrapped lettering inside the illustrated green inset, including
 		# its transparent top/bottom padding and thick golden rim.
-		answer_button.custom_minimum_size.y = maxf(84.0, ceilf(answer_text_height / 0.58) + 12.0)
+		answer_button.custom_minimum_size.y = maxf(84.0 * maxf(1.0, text_scale), maxf(112.0 * text_scale, ceilf(answer_text_height / 0.58) + 16.0))
 
 
 func _on_answer_pressed(choice_index: int) -> void:
@@ -623,10 +619,17 @@ func _update_question_popup_layout() -> void:
 	_apply_question_typography(choices)
 	var answer_columns := answers_grid.columns
 	var answer_rows := ceili(float(choices.size()) / answer_columns)
+	# Grid rows have independent heights. Sum each row instead of assigning the
+	# tallest wrapped answer to every row and unnecessarily stretching the popup.
 	var answer_height := 0.0
-	for index: int in range(choices.size()):
-		answer_height = maxf(answer_height, answer_buttons[index].custom_minimum_size.y)
-	var content_height := question_label.custom_minimum_size.y + answer_height * answer_rows
+	for row: int in range(answer_rows):
+		var row_height := 0.0
+		for column: int in range(answer_columns):
+			var index := row * answer_columns + column
+			if index < choices.size():
+				row_height = maxf(row_height, answer_buttons[index].custom_minimum_size.y)
+		answer_height += row_height
+	var content_height := question_label.custom_minimum_size.y + answer_height
 	content_height += answers_grid.get_theme_constant("v_separation") * (answer_rows - 1)
 	content_height += $QuestionPopupLayer/QuizPanel/QuizMargin/QuizContent.get_theme_constant("separation")
 	if fixture_notice.visible:
