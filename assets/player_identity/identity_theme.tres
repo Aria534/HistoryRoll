@@ -1,125 +1,99 @@
-[gd_resource type="Theme" load_steps=13 format=3]
+[gd_resource type="Theme" format=3 uid="uid://bsaqcxq0p78cs"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/BreeSerif-Regular.ttf" id="1_font"]
-[ext_resource type="Texture2D" path="res://assets/settings_ui/waterfall/red_button.svg" id="2_red"]
-[ext_resource type="Texture2D" path="res://assets/player_identity/green_button.svg" id="3_green"]
-[ext_resource type="Texture2D" path="res://assets/player_identity/name_field.svg" id="4_input"]
-
-[sub_resource type="StyleBoxTexture" id="Red"]
-texture = ExtResource("2_red")
-modulate_color = Color(1, 1, 1, 1)
-texture_margin_left = 32.0
-texture_margin_right = 32.0
-texture_margin_top = 16.0
-texture_margin_bottom = 16.0
-content_margin_left = 28.0
-content_margin_right = 28.0
-content_margin_top = 14.0
-content_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="RedHover"]
-texture = ExtResource("2_red")
-modulate_color = Color(1.12, 1.10, 1.04, 1)
-texture_margin_left = 32.0
-texture_margin_right = 32.0
-texture_margin_top = 16.0
-texture_margin_bottom = 16.0
-content_margin_left = 28.0
-content_margin_right = 28.0
-content_margin_top = 14.0
-content_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="Pressed"]
-texture = ExtResource("2_red")
-modulate_color = Color(0.85, 0.85, 0.85, 1)
-texture_margin_left = 32.0
-texture_margin_right = 32.0
-texture_margin_top = 16.0
-texture_margin_bottom = 16.0
-content_margin_left = 28.0
-content_margin_right = 28.0
-content_margin_top = 14.0
-content_margin_bottom = 14.0
+[ext_resource type="FontFile" uid="uid://be0coy4o0ujk2" path="res://assets/fonts/BreeSerif-Regular.ttf" id="1_font"]
+[ext_resource type="Texture2D" uid="uid://bdcp1yyedohbd" path="res://assets/settings_ui/waterfall/red_button.svg" id="2_red"]
+[ext_resource type="Texture2D" uid="uid://bq8fgqxrois4e" path="res://assets/player_identity/green_button.svg" id="3_green"]
+[ext_resource type="Texture2D" uid="uid://0tm83j5m1xra" path="res://assets/player_identity/name_field.svg" id="4_input"]
 
 [sub_resource type="StyleBoxTexture" id="Disabled"]
+content_margin_left = 28.0
+content_margin_top = 14.0
+content_margin_right = 28.0
+content_margin_bottom = 14.0
 texture = ExtResource("3_green")
-modulate_color = Color(0.65, 0.65, 0.60, 1)
 texture_margin_left = 32.0
-texture_margin_right = 32.0
 texture_margin_top = 16.0
-texture_margin_bottom = 16.0
-content_margin_left = 28.0
-content_margin_right = 28.0
-content_margin_top = 14.0
-content_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="Green"]
-texture = ExtResource("3_green")
-modulate_color = Color(1, 1, 1, 1)
-texture_margin_left = 32.0
 texture_margin_right = 32.0
-texture_margin_top = 16.0
 texture_margin_bottom = 16.0
-content_margin_left = 28.0
-content_margin_right = 28.0
-content_margin_top = 14.0
-content_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="GreenHover"]
-texture = ExtResource("3_green")
-modulate_color = Color(1.12, 1.1, 1.04, 1)
-texture_margin_left = 32.0
-texture_margin_right = 32.0
-texture_margin_top = 16.0
-texture_margin_bottom = 16.0
-content_margin_left = 28.0
-content_margin_right = 28.0
-content_margin_top = 14.0
-content_margin_bottom = 14.0
-
-[sub_resource type="StyleBoxTexture" id="Input"]
-texture = ExtResource("4_input")
-modulate_color = Color(1, 1, 1, 1)
-texture_margin_left = 32.0
-texture_margin_right = 32.0
-texture_margin_top = 16.0
-texture_margin_bottom = 16.0
-content_margin_left = 28.0
-content_margin_right = 28.0
-content_margin_top = 14.0
-content_margin_bottom = 14.0
+modulate_color = Color(0.65, 0.65, 0.6, 1)
 
 [sub_resource type="StyleBoxFlat" id="Focus"]
-bg_color = Color(0,0,0,0)
+bg_color = Color(0, 0, 0, 0)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(1,0.9,0.5,1)
+border_color = Color(1, 0.9, 0.5, 1)
 corner_radius_top_left = 20
 corner_radius_top_right = 20
-corner_radius_bottom_left = 20
 corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxTexture" id="RedHover"]
+content_margin_left = 28.0
+content_margin_top = 14.0
+content_margin_right = 28.0
+content_margin_bottom = 14.0
+texture = ExtResource("2_red")
+texture_margin_left = 32.0
+texture_margin_top = 16.0
+texture_margin_right = 32.0
+texture_margin_bottom = 16.0
+modulate_color = Color(1.12, 1.1, 1.04, 1)
+
+[sub_resource type="StyleBoxTexture" id="Red"]
+content_margin_left = 28.0
+content_margin_top = 14.0
+content_margin_right = 28.0
+content_margin_bottom = 14.0
+texture = ExtResource("2_red")
+texture_margin_left = 32.0
+texture_margin_top = 16.0
+texture_margin_right = 32.0
+texture_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="Pressed"]
+content_margin_left = 28.0
+content_margin_top = 14.0
+content_margin_right = 28.0
+content_margin_bottom = 14.0
+texture = ExtResource("2_red")
+texture_margin_left = 32.0
+texture_margin_top = 16.0
+texture_margin_right = 32.0
+texture_margin_bottom = 16.0
+modulate_color = Color(0.85, 0.85, 0.85, 1)
+
+[sub_resource type="StyleBoxTexture" id="Input"]
+content_margin_left = 28.0
+content_margin_top = 14.0
+content_margin_right = 28.0
+content_margin_bottom = 14.0
+texture = ExtResource("4_input")
+texture_margin_left = 32.0
+texture_margin_top = 16.0
+texture_margin_right = 32.0
+texture_margin_bottom = 16.0
 
 [resource]
 default_font = ExtResource("1_font")
 default_font_size = 34
-Label/colors/font_color = Color(0.25,0.08,0.02,1)
-Button/colors/font_color = Color(1,0.96,0.81,1)
-Button/colors/font_hover_color = Color(1,1,0.92,1)
-Button/colors/font_pressed_color = Color(1,0.9,0.65,1)
-Button/colors/font_disabled_color = Color(0.84,0.80,0.66,1)
-Button/colors/font_outline_color = Color(0.16,0.06,0.02,1)
+Button/colors/font_color = Color(1, 0.96, 0.81, 1)
+Button/colors/font_disabled_color = Color(0.84, 0.8, 0.66, 1)
+Button/colors/font_hover_color = Color(1, 1, 0.92, 1)
+Button/colors/font_outline_color = Color(0.16, 0.06, 0.02, 1)
+Button/colors/font_pressed_color = Color(1, 0.9, 0.65, 1)
 Button/constants/outline_size = 2
-Button/styles/normal = SubResource("Red")
-Button/styles/hover = SubResource("RedHover")
-Button/styles/pressed = SubResource("Pressed")
 Button/styles/disabled = SubResource("Disabled")
 Button/styles/focus = SubResource("Focus")
-LineEdit/colors/font_color = Color(0.25,0.10,0.03,1)
-LineEdit/colors/font_placeholder_color = Color(0.52,0.34,0.17,1)
-LineEdit/colors/caret_color = Color(0.28,0.08,0.02,1)
-LineEdit/colors/selection_color = Color(0.72,0.45,0.10,0.4)
+Button/styles/hover = SubResource("RedHover")
+Button/styles/normal = SubResource("Red")
+Button/styles/pressed = SubResource("Pressed")
+Label/colors/font_color = Color(0.25, 0.08, 0.02, 1)
+LineEdit/colors/caret_color = Color(0.28, 0.08, 0.02, 1)
+LineEdit/colors/font_color = Color(0.25, 0.1, 0.03, 1)
+LineEdit/colors/font_placeholder_color = Color(0.52, 0.34, 0.17, 1)
+LineEdit/colors/selection_color = Color(0.72, 0.45, 0.1, 0.4)
 LineEdit/font_sizes/font_size = 40
-LineEdit/styles/normal = SubResource("Input")
 LineEdit/styles/focus = SubResource("Input")
+LineEdit/styles/normal = SubResource("Input")
