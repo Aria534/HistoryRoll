@@ -65,9 +65,20 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if not video_available or video_player.stream == null:
 		return
+	_fit_video_to_source()
 	var length := video_player.get_stream_length()
 	if length > 0.0:
 		progress_bar.value = clampf(video_player.stream_position / length * 100.0, 0.0, 100.0)
+
+
+func _fit_video_to_source() -> void:
+	var texture := video_player.get_video_texture()
+	if texture == null or texture.get_width() <= 0 or texture.get_height() <= 0:
+		return
+	var aspect: AspectRatioContainer = $VideoAspect
+	var source_ratio := texture.get_size().aspect()
+	if not is_equal_approx(aspect.ratio, source_ratio):
+		aspect.ratio = source_ratio
 
 
 func _connect_once(signal_value: Signal, callback: Callable) -> void:
@@ -121,6 +132,7 @@ func _start_video() -> void:
 	video_player.paused = false
 	if video_player.stream != null:
 		video_player.play()
+		_fit_video_to_source()
 	pause_resume_button.disabled = false
 	pause_resume_button.text = "PAUSE"
 	skip_button.disabled = false
