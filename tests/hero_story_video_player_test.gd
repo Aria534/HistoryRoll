@@ -18,16 +18,19 @@ func _run() -> void:
 	audio.set_sfx_enabled(true, false)
 	_test_mappings()
 	await _test_all_card_routes()
-	for story_level: int in [1, 2]:
+	for story_level: int in [1, 2, 3]:
 		await _test_player_flow(story_level)
 		await _test_layout(Vector2i(1024, 1536), "hero_story_%d_1024x1536.png" % story_level, story_level)
 		await _test_layout(Vector2i(720, 1280), "hero_story_%d_720x1280.png" % story_level, story_level)
-	await _test_locked_level()
+	for locked_level: int in [2, 3]:
+		await _test_locked_level(locked_level)
 	await _test_missing_video()
 	if OS.get_cmdline_user_args().has("--full-playback"):
 		await _test_natural_completion()
 	if OS.get_cmdline_user_args().has("--full-bonifacio"):
 		await _test_natural_completion(2)
+	if OS.get_cmdline_user_args().has("--full-rizal"):
+		await _test_natural_completion(3)
 	audio.stop_music(0.0)
 	audio.set_sfx_enabled(saved_sfx, false)
 	_cleanup()
@@ -95,24 +98,24 @@ func _test_player_flow(story_level: int = 1) -> void:
 
 
 func _test_missing_video() -> void:
-	var progress = ProgressManagerScript.new(); progress.save_path = SAVE_PATH; progress.selected_story_level = 3
+	var progress = ProgressManagerScript.new(); progress.save_path = SAVE_PATH; progress.selected_story_level = 4
 	var player = VideoPlayerScene.instantiate(); player.progress_manager = progress
 	get_root().add_child(player)
 	player.video_path = "res://assets/story_videos/test_missing_story.ogv"
 	player._load_video_stream()
 	_check(not player.video_available and player.ending_visible and player.ending_status_label.text.contains("COMING SOON"), "missing movies retain a safe placeholder")
-	_check(not progress.is_story_watched(3) and player.replay_button.disabled, "missing movies cannot be replayed or marked watched")
+	_check(not progress.is_story_watched(4) and player.replay_button.disabled, "missing movies cannot be replayed or marked watched")
 	player.progress_manager = null; player.queue_free(); await process_frame; progress.free()
 
 
-func _test_locked_level() -> void:
-	var progress = ProgressManagerScript.new(); progress.save_path = SAVE_PATH; progress.selected_story_level = 2
+func _test_locked_level(story_level: int = 2) -> void:
+	var progress = ProgressManagerScript.new(); progress.save_path = SAVE_PATH; progress.selected_story_level = story_level
 	var requested: Array[String] = []
 	var player = VideoPlayerScene.instantiate(); player.progress_manager = progress
 	player.scene_change_handler = func(path: String) -> void: requested.append(path)
 	get_root().add_child(player); await process_frame
-	_check(player.video_available and player.video_player.is_playing(), "Bonifacio movie can play while Level 2 remains locked")
-	_check(not progress.is_story_watched(2), "opening the Bonifacio movie does not mark it watched")
+	_check(player.video_available and player.video_player.is_playing(), "hero %d movie can play while its level remains locked" % story_level)
+	_check(not progress.is_story_watched(story_level), "opening hero %d movie does not mark it watched" % story_level)
 	_check(player.play_level_button.disabled and player.play_level_button.text == "LEVEL LOCKED", "locked level keeps Play Level disabled")
 	player._on_play_level_pressed()
 	_check(requested.is_empty() and progress.highest_unlocked_level == 1, "story never bypasses level progression")
