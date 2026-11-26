@@ -450,9 +450,10 @@ func _complete_level() -> void:
 	_set_state(GameplayState.LEVEL_COMPLETE)
 	question_popup_layer.hide()
 	_request_music("res://assets/audio/music/victory.ogg")
+	var statistics := get_gameplay_statistics()
 	if not completion_recorded:
 		completion_recorded = true
-		progress_manager.record_board_completion(level_id, score, get_gameplay_statistics())
+		progress_manager.record_board_completion(level_id, score, statistics)
 	results_label.text = (
 		"LEVEL %d COMPLETE!\n\nFinal score: %d\nCorrect answers: %d\nIncorrect answers: %d\n"
 		+ "Bonus score gained: %d\nSnake penalties: %d\nShields: %d collected / %d used"
@@ -462,11 +463,12 @@ func _complete_level() -> void:
 	]
 	return_button.text = "Continue"
 	return_button.disabled = false
-	results_panel.present_completion(level_id, score, bonus_score_increase)
+	results_panel.present_completion(level_id, score, bonus_score_increase, statistics)
 
 
 func get_gameplay_statistics() -> Dictionary:
 	return {
+		"answer_history": quiz_session.get_answer_history(),
 		"correct_answers": correct_answers,
 		"incorrect_answers": incorrect_answers,
 		"bonus_correct_answers": bonus_correct_answers,
@@ -492,6 +494,9 @@ func _on_back_pressed() -> void:
 
 func _on_return_pressed() -> void:
 	if state != GameplayState.LEVEL_COMPLETE or results_transition_started:
+		return
+	# Continue first visits every incorrect answer; only the final page leaves.
+	if not fatal_error_active and results_panel.advance_review():
 		return
 	results_transition_started = true
 	return_button.disabled = true
