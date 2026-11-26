@@ -257,7 +257,6 @@ func _draw() -> void:
 		var cell := BoardRules.tile_to_visual_cell(tile, columns, rows)
 		var tile_rect := Rect2(board_rect.position + Vector2(cell.x, cell.y) * cell_size, cell_size)
 		_draw_tile_content(tile, tile_rect)
-	_draw_corner_vines(board_rect)
 
 
 func _draw_wooden_frame(board_rect: Rect2) -> void:
