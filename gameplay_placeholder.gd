@@ -19,6 +19,7 @@ const DiceRoller = preload("res://dice_roller.gd")
 const QuizSession = preload("res://quiz_session.gd")
 const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 const LevelCompletionCard = preload("res://level_completion_card.gd")
+const HeroReactionSkin = preload("res://hero_reaction_skin.gd")
 const TERRACE_BACKGROUND: Texture2D = preload("res://assets/gameplay_ui/forest_parchment/background.png")
 
 @export var shuffle_questions: bool = true
@@ -95,9 +96,13 @@ var dice_roller
 var quiz_session = QuizSession.new()
 var question_popup_tween: Tween
 var reaction_tween: Tween
+var reaction_skin = HeroReactionSkin.new()
+var _reaction_generation := 0
 
 
 func _ready() -> void:
+	reaction_skin.configure(reaction_popup, reaction_face, reaction_title, reaction_score)
+	reaction_face.resized.connect(_align_reaction_face_pivot)
 	_request_music("res://assets/audio/music/gameplay.ogg")
 	dice_roller = DiceRoller.new(0, enable_test_dice_controls and OS.is_debug_build())
 	if progress_manager == null:
@@ -201,6 +206,8 @@ func _begin_question(question_type: String) -> void:
 	question_label.text = str(current_question.get("question_text", ""))
 	fixture_notice.visible = question_label.text.begins_with("DEVELOPMENT PLACEHOLDER")
 	fixture_notice.text = "DEVELOPMENT QUESTION FIXTURE — NOT FINAL CONTENT"
+	_reaction_generation += 1
+	reaction_skin.restore()
 	reaction_popup.hide()
 	turn_message_label.hide()
 	feedback_label.hide()
@@ -308,8 +315,9 @@ func _on_answer_pressed(choice_index: int) -> void:
 	_set_popup_height(520.0)
 	_update_status_labels()
 	_set_state(GameplayState.READY_TO_ROLL)
+	var feedback_generation := _reaction_generation
 	await get_tree().create_timer(0.95).timeout
-	if state == GameplayState.READY_TO_ROLL:
+	if state == GameplayState.READY_TO_ROLL and feedback_generation == _reaction_generation:
 		reaction_popup.hide()
 		await _hide_question_popup()
 
@@ -549,28 +557,33 @@ func _set_state(new_state: GameplayState) -> void:
 
 
 func _show_chibi_reaction(correct: bool, points: int) -> void:
+	_reaction_generation += 1
 	if reaction_tween != null and reaction_tween.is_valid():
 		reaction_tween.kill()
 	reaction_face.texture = _get_reaction_face_texture(correct)
 	reaction_face.modulate = Color.WHITE
 	reaction_title.text = "HOORAY!" if correct else "OH NO!"
 	reaction_score.text = "%s%d POINTS" % ["+" if correct else "-", points]
-	reaction_popup.add_theme_stylebox_override("panel", _make_reaction_style(correct))
+	if correct:
+		reaction_skin.apply_success()
+		quiz_panel.hide()
+	else:
+		reaction_popup.add_theme_stylebox_override("panel", _make_reaction_style(false))
 	reaction_popup.show()
 	reaction_popup.pivot_offset = reaction_popup.size * 0.5
-	reaction_popup.scale = Vector2(0.62, 0.62)
+	reaction_popup.scale = Vector2.ONE * 0.84
 	reaction_popup.modulate.a = 0.0
-	reaction_face.rotation = -0.08 if correct else 0.06
-	reaction_face.position.y = 0.0
+	reaction_face.rotation = -0.04 if correct else 0.04
+	_align_reaction_face_pivot()
 	reaction_tween = create_tween().set_parallel(true)
 	reaction_tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	reaction_tween.tween_property(reaction_popup, "scale", Vector2.ONE, 0.28)
 	reaction_tween.tween_property(reaction_popup, "modulate:a", 1.0, 0.18)
-	reaction_tween.tween_property(reaction_face, "rotation", 0.08 if correct else -0.035, 0.32)
-	if correct:
-		reaction_tween.tween_property(reaction_face, "position:y", -7.0, 0.25)
-	else:
-		reaction_tween.tween_property(reaction_face, "position:y", 7.0, 0.32)
+	reaction_tween.tween_property(reaction_face, "rotation", 0.025 if correct else -0.035, 0.32)
+
+
+func _align_reaction_face_pivot() -> void:
+	reaction_face.pivot_offset = reaction_face.size * 0.5
 
 
 func _get_reaction_face_texture(correct: bool) -> Texture2D:
@@ -701,6 +714,7 @@ func _update_gameplay_layout() -> void:
 	$BottomRollArea/RollButton/RollVisual/RollContents/DieIcon.custom_minimum_size = Vector2.ONE * roll_height * 0.58
 	_align_status_icons.call_deferred()
 	_update_question_popup_layout()
+	reaction_skin.update_layout()
 
 
 func _align_status_icons() -> void:
@@ -722,6 +736,7 @@ func _set_popup_height(popup_height: float) -> void:
 
 
 func _show_question_popup() -> void:
+	quiz_panel.show()
 	if question_popup_tween != null and question_popup_tween.is_valid():
 		question_popup_tween.kill()
 	question_popup_layer.show()
@@ -735,6 +750,7 @@ func _show_question_popup() -> void:
 
 
 func _hide_question_popup() -> void:
+	_reaction_generation += 1
 	if not question_popup_layer.visible:
 		return
 	if question_popup_tween != null and question_popup_tween.is_valid():
