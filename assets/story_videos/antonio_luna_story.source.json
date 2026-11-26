@@ -1,0 +1,125 @@
+{
+    "title":  "Antonio Luna — Maikling Kuwento ng Isang Heneral",
+    "hero":  "Antonio Luna",
+    "level_id":  4,
+    "created":  "2026-11-26",
+    "language":  "Filipino / Tagalog",
+    "type":  "Original narrated illustrated historical short",
+    "scene_count":  6,
+    "duration_seconds":  88.5,
+    "frame_count":  2124,
+    "resolution":  [
+                       1280,
+                       720
+                   ],
+    "frame_rate":  "24/1",
+    "original_script":  "docs/story_videos/antonio_luna/antonio_luna_script.md",
+    "scene_data":  "docs/story_videos/antonio_luna/antonio_luna_scenes.json",
+    "subtitles":  "docs/story_videos/antonio_luna/antonio_luna_subtitles.srt",
+    "illustration_prompts":  "docs/story_videos/antonio_luna/antonio_luna_asset_prompts.md",
+    "production_assets":  "assets/story/antonio_luna/tagalog_short/",
+    "renderer":  "tools/render_antonio_luna_story.ps1",
+    "illustrations":  "Six original image_gen realistic painterly plates. Gentle pan/zoom only; not full character animation. Scene 5 is an empty provincial plaza.",
+    "portrait_reference":  {
+                               "url":  "https://commons.wikimedia.org/wiki/File:Antonio_luna_small.jpg",
+                               "license":  "Public Domain Mark 1.0",
+                               "usage":  "Likeness guide only; the archival photo is not included in the film."
+                           },
+    "narration":  "Synthetic Tagalog speech generated from the original script using Google Translate TTS (tl); not a human performance or downloaded prerecorded narration.",
+    "narration_manifest":  "assets/story/antonio_luna/tagalog_short/narration_manifest.json",
+    "narration_tempo_changed":  false,
+    "music":  "No background score; voice narration only. Existing game music stops during movie playback.",
+    "historical_sources":  [
+                               {
+                                   "id":  "R1",
+                                   "title":  "Antonio Luna (1866–1899), NHCP biographical marker (2016)",
+                                   "publisher":  "National Historical Commission of the Philippines",
+                                   "url":  "https://philhistoricsites.nhcp.gov.ph/registry_database/antonio-luna-1866-1899/",
+                                   "reviewed":  "2026-11-26",
+                                   "supports":  [
+                                                    "Birth in Manila on 29 October 1866",
+                                                    "Pharmacy education and writing for La Solidaridad",
+                                                    "Military leadership and Academia Militar in 1898",
+                                                    "Army command in 1899",
+                                                    "Death in Cabanatuan on 5 June 1899"
+                                                ],
+                                   "access_note":  "NHCP registry marker text reviewed; no marker transcription is reproduced."
+                               },
+                               {
+                                   "id":  "R2",
+                                   "title":  "Sinilangang Pook ni Heneral Antonio Luna 1866–1899, NHC marker (1967)",
+                                   "publisher":  "National Historical Commission / NHCP registry",
+                                   "url":  "https://philhistoricsites.nhcp.gov.ph/registry_database/sinilangang-pook-ni-heneral-antonio-luna-1866-1899/",
+                                   "reviewed":  "2026-11-26",
+                                   "supports":  [
+                                                    "Birth date and Manila birthplace",
+                                                    "Pharmacist, chemist and writer",
+                                                    "Military appointment after return in 1898",
+                                                    "Death date and Cabanatuan location"
+                                                ],
+                                   "access_note":  "Registry marker text reviewed. Chemist is rendered as the age-appropriate broader term siyentista."
+                               },
+                               {
+                                   "id":  "R3",
+                                   "title":  "Death Place of General Antonio Luna, NHC commemorative marker (1966)",
+                                   "publisher":  "National Historical Commission / NHCP registry",
+                                   "url":  "https://philhistoricsites.nhcp.gov.ph/registry_database/death-place-of-general-antonio-luna/",
+                                   "reviewed":  "2026-11-26",
+                                   "supports":  [
+                                                    "Assassination in Cabanatuan on 5 June 1899"
+                                                ],
+                                   "access_note":  "Official registry search-indexed marker text reviewed; a direct page request timed out. Date and place also agree with R1 and R2. No unverified mastermind allegation is included."
+                               },
+                               {
+                                   "id":  "R4",
+                                   "title":  "Filipinos in History, Volume II — Antonio Luna",
+                                   "publisher":  "National Historical Institute; copy hosted by the Department of Foreign Affairs",
+                                   "url":  "https://dfa.gov.ph/images/AMabini/C__Managepoint_sessions_Diane_Rar1423.pdf",
+                                   "reviewed":  "2026-11-26",
+                                   "supports":  [
+                                                    "Scholar/scientist and military service",
+                                                    "Emphasis on army discipline",
+                                                    "Preparing defensive lines during the Philippine-American War"
+                                                ],
+                                   "access_note":  "Relevant search-indexed Antonio Luna excerpts reviewed. Direct PDF retrieval returned HTTP 403, so a complete PDF read is not claimed. The story uses only the broad discipline/defense points; no disputed tactical detail is added."
+                               }
+                           ],
+    "third_party_video_or_music_reused":  false,
+    "runtime_internet_required":  false,
+    "runtime_mapping":  "Existing level-4 VIDEO_PATHS entry in hero_story_video_player.gd; no runtime script or scene edits.",
+    "movie_audio_bus":  "SFX (existing Settings \u003e Sound Effects)",
+    "files":  [
+                  {
+                      "path":  "assets/story_videos/antonio_luna_story.mp4",
+                      "video_codec":  "H.264",
+                      "audio_codec":  "AAC",
+                      "size_bytes":  18354434,
+                      "sha256":  "2B8ADFDE0A89629BF0B65D6C023E4EB1897114C480A82B5BAE6E61E35D3A1887"
+                  },
+                  {
+                      "path":  "assets/story_videos/antonio_luna_story.ogv",
+                      "video_codec":  "Theora",
+                      "audio_codec":  "Vorbis",
+                      "size_bytes":  27702505,
+                      "sha256":  "973F70B5DF89CC6BE637CF08EA51AD7E7C932C1C52C42419A6A988C30A7128D1"
+                  }
+              ],
+    "verification":  {
+                         "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio mixer",
+                         "movie_tests_passed":  210,
+                         "movie_tests_failed":  0,
+                         "content_checks_passed":  242,
+                         "content_checks_failed":  0,
+                         "full_mp4_and_ogv_decode":  "passed",
+                         "natural_playback_seconds":  88.894,
+                         "sfx_capture_frames":  61440,
+                         "sfx_capture_peak":  0.5762,
+                         "integrated_loudness_lufs":  -16.9,
+                         "true_peak_dbfs":  -1.3,
+                         "visual_review":  "All six encoded scene frames, plus native Godot captures at 720x1280 and 1024x1536",
+                         "real_progress_and_settings_unchanged":  true,
+                         "speaker_listening_test":  false,
+                         "physical_android_test":  false,
+                         "remaining_warning":  "One ObjectDB shutdown leak warning in the test run; headless editor import reports existing external-editor configuration errors."
+                     }
+}

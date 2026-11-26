@@ -44,9 +44,9 @@
   scripts, scenes, gameplay or progression rules needed modification.
 
 The existing Hero Cards WATCH STORY actions select the corresponding local movie
-for Lapu-Lapu, Andres Bonifacio or Jose Rizal.
+for Lapu-Lapu, Andres Bonifacio, Jose Rizal or Antonio Luna.
 The game does not open YouTube, stream a URL, or require internet to play it.
-Video/audio streams were downloaded and converted using temporary portable tools;
+For the first three linked channel videos, streams were downloaded and converted using temporary tools;
 the downloader, encoder, original downloads and temporary network metadata are
 outside the project and are not runtime dependencies.
 
@@ -71,11 +71,10 @@ video resource. A previously built APK must be exported again to receive it.
 
 Place final Godot-compatible Ogg Theora videos in this folder using these names:
 
-- `antonio_luna_story.ogv`
 - `melchora_aquino_story.ogv`
 - `mabini_story.ogv`
 
-These three final movies are not installed yet. Their safe "Story Video Coming Soon"
+These two final movies are not installed yet. Their safe "Story Video Coming Soon"
 states remain available; opening a missing movie does not mark it watched.
 Each installed movie keeps its own native aspect ratio.
 
@@ -201,3 +200,77 @@ Godot --path . --script res://tests/hero_story_video_player_test.gd --audio-driv
 For a manual check, stop the previous running game, press F5, open Hero Cards,
 choose Jose Rizal and press WATCH STORY. Enable Sound Effects for movie audio.
 Re-export the Android APK to include the new offline video.
+
+## Installed Antonio Luna short — 26 November 2026
+
+- Title: **Antonio Luna — Maikling Kuwento ng Isang Heneral**.
+- Master for direct review: `res://assets/story_videos/antonio_luna_story.mp4`.
+- Native Godot runtime: `res://assets/story_videos/antonio_luna_story.ogv`.
+- Exactly six scenes, **88.5 seconds**, **1280x720**, **24 fps / 2,124 frames**.
+- Original realistic AI-generated illustrations, gentle pan/zoom and contained fades.
+  This is an illustrated narrated short; it does not animate character limbs or lips.
+- Original-script **synthetic Tagalog narration**, with 17 audio-timed Filipino
+  subtitle cues burned into both formats. No YouTube footage, third-party film
+  narration, music or streaming service is used by this Luna short.
+- Archival likeness guide only: [Antonio luna small.jpg](https://commons.wikimedia.org/wiki/File:Antonio_luna_small.jpg),
+  Public Domain Mark 1.0. The photograph is not included as footage.
+- Historical sources, asset provenance, codec details and SHA-256 hashes:
+  `antonio_luna_story.source.json`. Research links are not playback dependencies.
+- Content package: `docs/story_videos/antonio_luna/` contains the final script,
+  storyboard, measured scene JSON, SRT and exact image-generation prompts.
+- Local production assets: `assets/story/antonio_luna/tagalog_short/` contains six
+  source plates, 17 used narration clips and their manifest. Existing English Luna
+  production assets are preserved. Unused new audition takes remain in the local
+  temporary production directory, outside the shipped project.
+- Offline rebuild: `tools/render_antonio_luna_story.ps1 -FFmpegPath <ffmpeg.exe>`.
+  The renderer uses local art, narration and the project's licensed Roboto font.
+  Generated intermediate scene clips and audio mixes go to the Windows temp folder.
+
+### Integration and review
+
+The missing `antonio_luna_story.ogv` was why Level 4 previously showed no actual
+movie. Its existing `VIDEO_PATHS[4]` mapping was already correct. No gameplay,
+progression, Settings, `.tscn`, or runtime navigation script needed changes.
+
+1. Stop the old running game and press **F5**.
+2. Open **Hero Cards**, find **Antonio Luna**, then press **WATCH STORY**.
+3. Keep **Settings > Sound Effects ON** for the existing movie audio bus.
+4. Pause/Resume, Skip, Replay and Back remain available.
+
+The movie is reviewable even while Level 4 gameplay is locked. Watching or
+replaying it does not bypass level unlocking. The full landscape frame is
+letterboxed inside the existing portrait player. Re-export an Android APK to
+include the new local OGV; an older APK will not contain this video.
+
+### Verification actually executed
+
+| Check | Passed | Failed |
+| --- | ---: | ---: |
+| Godot movie suite, installed levels 1–4 and full Luna playback | 210 | 0 |
+| Six-scene content, measured source audio and subtitle validation | 242 | 0 |
+
+- Both MP4 and OGV decoded fully through FFmpeg with `-xerror` and no decode errors.
+- Native Godot playback reached the actual finished signal after **88.894 seconds**
+  of test time (media duration **88.500 seconds**), then showed the normal ending.
+- Luna movie SFX capture: **61,440 frames**, **peak 0.5762**. Global background music
+  did not overlap the movie. This verifies the decoded signal, not physical speakers.
+- Whole OGV audio measured **−16.9 LUFS**, **−1.3 dBFS true peak**, without clipping.
+- All six encoded scene samples were visually inspected, including respectful
+  death-scene treatment and the concluding message. Actual native movie captures
+  were also inspected at **720x1280** and **1024x1536**:
+  `user://hero_story_4_playing_720x1280.png` and
+  `user://hero_story_4_playing_1024x1536.png`.
+- Tests exercised automatic playback, actual decoded frame advancement, native
+  audio, Pause/Resume, Skip, Replay, Back, watched-save reload, locked-level access,
+  safe missing-file behavior and natural completion using an isolated test save.
+- Real progress and Settings SHA-256 hashes matched their pre-test values.
+- No playback script/parse errors occurred. One ObjectDB instance warning remains
+  at test shutdown. Headless Editor import exits successfully but reports the
+  existing external-text-editor configuration errors.
+- Physical Android playback and a speaker listening test were **not** performed.
+
+Run the optional complete Luna playback test:
+
+```text
+Godot --path . --script res://tests/hero_story_video_player_test.gd --audio-driver Dummy -- --full-luna
+```
