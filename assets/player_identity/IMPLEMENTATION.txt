@@ -110,3 +110,48 @@ MANUAL CHECK
 4. Edit the name and continue: earned levels, heroes and scores must stay as before.
 5. After completing all six levels, Continue from Level 6 Results opens the named
    certificate. Return to Start Game -> name entry -> View Certificate to see it again.
+
+NAME ENTRY REFINEMENT - 2026-11-26
+The initial verification counts above describe the original implementation.
+This refinement changes only name entry, its dedicated artwork and identity tests.
+- A leaf-free background removes the two gold laurels beside the HistoryRoll logo.
+  Its 1024x1536 native proportions and other scenery are preserved. The original
+  background remains available. ARTWORK_PROMPTS.txt records the complete edit prompt.
+- The existing WelcomeHeading node is hidden in both runtime and @tool previews.
+  The only heading is "Enter your name to begin your journey."
+- The centered input is 544x84 design pixels, reduced from its previous 644x100.
+  The compact form retains the existing keyboard avoidance and touch targets.
+- A mouse press or touch on the existing native LineEdit enters edit mode.
+  The I-beam pointer and a steady 3-pixel caret make readiness clear. The placeholder
+  hides while editing and returns after editing ends. No new nodes were created.
+- Name validation, 30-character limit, saving, Back, Continue, certificate gating,
+  native Android keyboard enablement and all navigation destinations are preserved.
+- No .tscn, shared theme, ProgressManager or gameplay changes were made.
+
+FINAL VERIFICATION
+Godot 4.7.1 Compatibility renderer, Dummy audio driver:
+145 runtime assertions passed, 0 failed; runtime process exited successfully.
+Includes actual single-click/tap events followed by typed key events, focus exit,
+empty/valid/invalid/returning names, preserved saves, real Main Menu -> Name Entry
+-> Level Selection -> Main Menu navigation, and certificate rules.
+Rendered and inspected 720x1280, 1024x1536 and 1080x2400 layouts, including the
+empty focused caret, typed name and generated background. Keyboard obstruction
+geometry was simulated at all three sizes; physical Android testing was not done.
+The Editor-preview run rendered the updated screen and passed all 6 assertions,
+but the Editor CLI process crashed during shutdown (Windows exit -1073741819).
+It also reported current_window/external-editor configuration errors. Do not
+interpret its assertion count as a clean Editor process exit. The runtime test
+reported one ObjectDB instance at shutdown; no script or parse errors were found.
+Corrupt-save and failed-save checks intentionally emitted their expected warnings.
+
+Real progress/settings hashes remained unchanged:
+progress: 450461A8D2F634242041991B30FA6904944F36810E408BA9ABAF779CE97EB4B7
+settings: 27A5E3EDB4F0918F4713B9A2E16709CBA02FD6030E50457B85C632D2581AA45D
+
+MANUAL CHECK
+Stop the previous game and press F5 -> Start Game. Check the leaf-free logo,
+journey prompt and smaller name field. Click/tap the field once: the placeholder
+clears and the caret appears immediately. Type a valid name and Continue; Back
+returns without saving an unconfirmed edit. No Inspector setup is required.
+On a physical Android device, also verify the native keyboard opens and the
+input/Continue remain above it.

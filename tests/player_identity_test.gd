@@ -108,6 +108,29 @@ func _test_entry() -> void:
 	_check(not screen.certificate_button.visible, "fresh player cannot view an unearned certificate")
 	await _capture(viewport, "identity_entry_fresh_720x1280.png")
 	_check(screen.name_input.max_length == 30 and screen.name_input.virtual_keyboard_enabled, "input enables native Android keyboard and a 30-character limit")
+	_check(not screen.get_node("%WelcomeHeading").visible and screen.get_node("%Subtitle").text == "Enter your name to begin your journey.", "name entry displays only the journey prompt instead of Welcome")
+	_check(screen.get_node("Presentation/Artwork").texture.resource_path.ends_with("name_entry_background_no_leaves.png"), "name entry uses the background without logo laurel leaves")
+	_check(screen.name_input.size.x < screen.form.size.x * 0.9 and screen.name_input.get_global_rect().size.y >= 44.0, "name field is narrower while retaining a touch-friendly height")
+	viewport.gui_release_focus()
+	_click(viewport, screen.name_input.get_global_rect().get_center())
+	await _frames()
+	_check(screen.name_input.has_focus() and screen.name_input.is_editing(), "one mouse click immediately enters name editing")
+	await _capture(viewport, "identity_entry_caret_empty_720x1280.png")
+	_type_text(viewport, "Ana")
+	await _frames()
+	_check(screen.name_input.text == "Ana" and screen.character_count.text == "3 / 30" and not screen.continue_button.disabled, "real keyboard typing after one click updates the name and Continue")
+	await _capture(viewport, "identity_entry_focused_720x1280.png")
+	viewport.gui_release_focus()
+	_input(screen, "")
+	_tap(viewport, screen.name_input.get_global_rect().get_center())
+	await _frames()
+	_check(screen.name_input.has_focus() and screen.name_input.is_editing(), "one touchscreen tap also enters name editing")
+	_type_text(viewport, "Maria")
+	await _frames()
+	_check(screen.name_input.text == "Maria" and not screen.continue_button.disabled, "typing after a tap uses the same native name field")
+	screen.back_button.grab_focus()
+	await _frames()
+	_check(not screen.name_input.is_editing() and not screen.name_input.caret_force_displayed and screen.name_input.placeholder_text == "Enter your name...", "leaving the name field removes its typing caret and restores the placeholder")
 	for value: String in ["   ", "Ana2", "-"]:
 		_input(screen, value)
 		_check(screen.continue_button.disabled and not screen.validation_label.text.is_empty(), "invalid input disables Continue and explains validation")
@@ -227,7 +250,7 @@ func _test_layout(dimensions: Vector2i) -> void:
 	entry._keyboard_height = 0
 	entry._apply_layout()
 	await _frames()
-	_check(entry.get_node("%WelcomeHeading").visible and _inside(entry.form.get_global_rect(), dimensions), "closing the keyboard restores the complete form")
+	_check(not entry.get_node("%WelcomeHeading").visible and entry.get_node("%Subtitle").visible and _inside(entry.form.get_global_rect(), dimensions), "closing the keyboard restores the journey prompt without bringing Welcome back")
 	entry.queue_free()
 	await _frames()
 	var certificate = CertificateScene.instantiate()
@@ -283,7 +306,7 @@ func _test_editor() -> void:
 		await _frames()
 		_check(screen.size == Vector2(1024,1536), "editable scene fills the Editor preview")
 		if screen.has_node("%WelcomeHeading"):
-			_check(not screen.get_node("%WelcomeHeading").text.is_empty() and screen.name_input.placeholder_text == "Enter your name...", "Editor preview has real welcome text and an editable input")
+			_check(not screen.get_node("%WelcomeHeading").visible and screen.get_node("%Subtitle").visible and screen.get_node("%Subtitle").text == "Enter your name to begin your journey." and screen.name_input.placeholder_text == "Enter your name...", "Editor preview has only the journey prompt and an editable input")
 		else:
 			_check(screen.player_name_label.text == "Player Name", "Editor certificate keeps a labeled preview name")
 		await _capture(viewport, "identity_editor_%s.png" % screen.name)
@@ -308,6 +331,23 @@ func _click(viewport: SubViewport, point: Vector2) -> void:
 		var event := InputEventMouseButton.new()
 		event.position = point
 		event.button_index = MOUSE_BUTTON_LEFT
+		event.pressed = down
+		viewport.push_input(event, true)
+
+func _type_text(viewport: SubViewport, value: String) -> void:
+	for index in value.length():
+		var key := InputEventKey.new()
+		key.pressed = true
+		key.unicode = value.unicode_at(index)
+		viewport.push_input(key, true)
+		var release := key.duplicate() as InputEventKey
+		release.pressed = false
+		viewport.push_input(release, true)
+
+func _tap(viewport: SubViewport, point: Vector2) -> void:
+	for down: bool in [true, false]:
+		var event := InputEventScreenTouch.new()
+		event.position = point
 		event.pressed = down
 		viewport.push_input(event, true)
 

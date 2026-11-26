@@ -3,6 +3,7 @@ extends Control
 
 const ProgressScript = preload("res://progress_manager.gd")
 const DESIGN_SIZE := Vector2(1024, 1536)
+const NAME_ENTRY_BACKGROUND: Texture2D = preload("res://assets/player_identity/name_entry_background_no_leaves.png")
 const LEVEL_SELECTION_SCENE := "res://level_selection.tscn"
 const MAIN_MENU_SCENE := "res://main_menu_tscn.tscn"
 const CERTIFICATE_SCENE := "res://certificate.tscn"
@@ -22,6 +23,14 @@ var scene_transition_pending := false
 var _keyboard_height := 0
 
 func _ready() -> void:
+	$Presentation/Artwork.texture = NAME_ENTRY_BACKGROUND
+	name_input.custom_minimum_size = Vector2(544.0, 84.0)
+	name_input.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	name_input.mouse_default_cursor_shape = Control.CURSOR_IBEAM
+	name_input.focus_mode = Control.FOCUS_ALL
+	# Keep a clear caret visible throughout editing, including the first click.
+	name_input.caret_blink = false
+	name_input.add_theme_constant_override("caret_width", 3)
 	resized.connect(_apply_layout)
 	_apply_layout()
 	_apply_layout.call_deferred()
@@ -36,6 +45,8 @@ func _ready() -> void:
 	name_input.max_length = ProgressScript.MAX_PLAYER_NAME_LENGTH
 	name_input.text = progress_manager.player_name
 	name_input.caret_column = name_input.text.length()
+	name_input.gui_input.connect(_on_name_input_gui_input)
+	name_input.editing_toggled.connect(_on_name_editing_toggled)
 	name_input.text_changed.connect(_on_name_changed)
 	name_input.text_submitted.connect(func(_value: String): _on_continue_pressed())
 	continue_button.pressed.connect(_on_continue_pressed)
@@ -70,13 +81,30 @@ func _apply_layout() -> void:
 	if _keyboard_height > 0 and get_window().size.y > 0:
 		keyboard_top -= float(_keyboard_height) / get_window().size.y * size.y
 	var keyboard_open := _keyboard_height > 0
-	%WelcomeHeading.visible = not keyboard_open
+	%WelcomeHeading.hide()
 	%Subtitle.visible = not keyboard_open
 	var minimum_height := form.get_combined_minimum_size().y
-	form.size = Vector2(644.0, minimum_height if keyboard_open else maxf(653.0, minimum_height))
-	var form_bottom := presentation.position.y + (545.0 + form.size.y) * ui_scale
+	form.size = Vector2(644.0, minimum_height if keyboard_open else maxf(500.0, minimum_height))
+	var form_bottom := presentation.position.y + (610.0 + form.size.y) * ui_scale
 	var lift := maxf(0.0, form_bottom - keyboard_top + 24.0 * ui_scale) if _keyboard_height > 0 else 0.0
-	form.position.y = 545.0 - lift / ui_scale
+	form.position.y = 610.0 - lift / ui_scale
+
+func _on_name_editing_toggled(editing: bool) -> void:
+	# Keep the ready-to-type marker clear even before the first typed character.
+	name_input.caret_force_displayed = editing
+	name_input.placeholder_text = "" if editing else "Enter your name..."
+
+func _on_name_input_gui_input(event: InputEvent) -> void:
+	if scene_transition_pending or not name_input.editable:
+		return
+	var pointer_pressed := false
+	if event is InputEventMouseButton:
+		pointer_pressed = event.pressed and event.button_index == MOUSE_BUTTON_LEFT
+	elif event is InputEventScreenTouch:
+		pointer_pressed = event.pressed
+	if pointer_pressed:
+		name_input.grab_focus()
+		name_input.edit()
 
 func _on_name_changed(value: String) -> void:
 	var error := ProgressScript.get_player_name_error(value)

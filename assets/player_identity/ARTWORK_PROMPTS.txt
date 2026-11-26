@@ -16,3 +16,11 @@ Landscape 1536x1024 Certificate of Achievement BACKGROUND ART for HistoryRoll, m
 Native SVG input/button styling extends the existing settings red_button.svg style.
 Fonts reuse the project's BreeSerif-Regular.ttf and Lora-Italic.ttf.
 All dynamic wording, player name, LineEdit and buttons are native Godot controls.
+
+NAME ENTRY LEAF-FREE REFINEMENT - 2026-11-26
+Mode: built-in image_gen edit, transparent_background=false.
+Edit target: existing assets/player_identity/name_entry_background.png.
+Saved as: res://assets/player_identity/name_entry_background_no_leaves.png.
+The original background and certificate artwork are retained unchanged.
+Full prompt:
+Use case: precise-object-edit. Edit target: the supplied existing HistoryRoll player-name-entry background PNG, portrait 1024x1536. Remove ONLY the pair of golden laurel LEAF BRANCHES immediately to the left and right of the HistoryRoll logo near the top center (the branches curving upward beside the red logo plate, approximately x=23%-34% and x=67%-77%, y=7%-21%). Reconstruct the Philippine ribbon, quiet parchment and small background details naturally behind those removed leaves. Keep the logo word exactly 'HistoryRoll' and preserve its size, position, readable lettering, red plate, open book, white die, Philippine sun and stars, and blue-white-red ribbon. Preserve the antique brown wooden outer frame and its gold curled corner ornaments, all six sepia hero illustrations along both sides, central light parchment, lower books, fort, church, quill, ink bottle, sealed scroll, maroon accents and existing overall color/style/composition. Do NOT remove hero portraits. Do NOT add new objects. Keep the entire central parchment blank: no Welcome, no headings, no input field, no buttons, no other text. This is an existing production background asset, not a screenshot/mockup. Match original 2:3 proportions and 1024x1536 size. Make a very localized removal of the two logo leaf branches; preserve all other artwork as closely as possible. No watermark.
