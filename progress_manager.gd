@@ -3,6 +3,7 @@ extends Node
 signal progress_changed
 
 const LevelCatalog = preload("res://level_catalog.gd")
+const AnswerReview = preload("res://answer_review.gd")
 const DEFAULT_SAVE_PATH: String = "user://historyroll_progress.json"
 const SAVE_VERSION: int = 3
 const MAX_PLAYER_NAME_LENGTH: int = 30
@@ -24,6 +25,8 @@ var claimed_character_rewards: Array[int] = []
 var selected_hero: String = DEFAULT_HERO_ID
 var best_scores: Dictionary = {}
 var last_level_stats: Dictionary = {}
+# Additive version-3 field: latest completed attempt per level, not lifetime totals.
+var level_answer_reviews: Dictionary = {}
 var selected_level: int = 1
 var selected_story_level: int = 1
 var pending_progression_level: int = 0
@@ -137,6 +140,8 @@ func record_board_completion(level_id: int, final_score: int, statistics: Dictio
 	last_level_stats = statistics.duplicate(true)
 	last_level_stats["level_id"] = level_id
 	last_level_stats["final_score"] = maxi(0, final_score)
+	if statistics.has("answer_history"):
+		level_answer_reviews[score_key] = AnswerReview.from_statistics(level_id, statistics)
 	_add_unique_int(completed_levels, level_id)
 	var reward := LevelCatalog.get_character_reward(level_id)
 	var character_id := str(reward.get("id", ""))
@@ -153,6 +158,10 @@ func record_board_completion(level_id: int, final_score: int, statistics: Dictio
 	save_progress()
 	progress_changed.emit()
 	return true
+
+
+func get_level_answer_review(level_id: int) -> Dictionary:
+	return (level_answer_reviews.get(str(level_id), {}) as Dictionary).duplicate(true)
 
 
 # Compatibility entry point. Under version 2, board completion intentionally
@@ -293,6 +302,7 @@ func save_progress() -> bool:
 		"selected_hero": selected_hero,
 		"best_scores": best_scores,
 		"last_level_stats": last_level_stats,
+		"level_answer_reviews": level_answer_reviews,
 		"selected_level": selected_level,
 		"selected_story_level": selected_story_level,
 		"pending_progression_level": pending_progression_level,
@@ -372,6 +382,18 @@ func _load_version_two(data: Dictionary) -> void:
 		best_scores = (data.get("best_scores", {}) as Dictionary).duplicate(true)
 	if data.get("last_level_stats", {}) is Dictionary:
 		last_level_stats = (data.get("last_level_stats", {}) as Dictionary).duplicate(true)
+	var saved_reviews: Variant = data.get("level_answer_reviews", {})
+	if saved_reviews is Dictionary:
+		for raw_key: Variant in saved_reviews:
+			var key := str(raw_key)
+			if not key.is_valid_int():
+				continue
+			var reviewed_level := int(key)
+			if not LevelCatalog.has_level(reviewed_level) or not is_level_completed(reviewed_level):
+				continue
+			var review := AnswerReview.from_saved(saved_reviews[raw_key], reviewed_level)
+			if not review.is_empty():
+				level_answer_reviews[str(reviewed_level)] = review
 	selected_level = clampi(int(data.get("selected_level", 1)), 1, highest_unlocked_level)
 	selected_story_level = clampi(int(data.get("selected_story_level", selected_level)), 1, LevelCatalog.get_highest_level_id())
 	if not LevelCatalog.has_level(selected_level):
@@ -456,6 +478,7 @@ func _reset_to_defaults() -> void:
 	selected_hero = DEFAULT_HERO_ID
 	best_scores.clear()
 	last_level_stats.clear()
+	level_answer_reviews.clear()
 	selected_level = 1
 	selected_story_level = 1
 	pending_progression_level = 0
