@@ -119,7 +119,7 @@ func _test_level(level_id: int, viewport_size: Vector2i) -> void:
 	_check(progress.completion_calls == 1 and progress.recorded_score == game.score, "%s final score is saved once" % label)
 	_check(progress.recorded_statistics.correct_answers == 1, "%s gameplay statistics are preserved" % label)
 	_check(game.roll_button.disabled and game.back_button.disabled and not game.question_popup_layer.visible, "%s board input and question popup are closed" % label)
-	_check(not card.summary_label.visible and game.results_label.text.contains("LEVEL %d COMPLETE!" % level_id), "%s original statistics summary is retained behind the new presentation" % label)
+	_check(card.summary_label.visible and game.results_label.text == "Correct: 1     Incorrect: 0", "%s correct and incorrect totals are visible" % label)
 	_check(game.return_button.text == "Continue" and not game.return_button.disabled, "%s Continue is available" % label)
 	_check(_inside(card.get_card_rect(), viewport_size), "%s complete artwork fits portrait viewport" % label)
 	_check(is_equal_approx(card.artwork.size.aspect(), card.artwork.texture.get_size().aspect()), "%s artwork is not stretched" % label)
