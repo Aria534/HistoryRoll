@@ -4,11 +4,13 @@ var _questions: Array[Dictionary] = []
 var _order: Array[int] = []
 var _cursor: int = -1
 var _answered: bool = false
+var _answer_history: Array[Dictionary] = []
 
 
 func configure(source_questions: Array, shuffle_questions: bool = true) -> bool:
 	_questions.clear()
 	_order.clear()
+	_answer_history.clear()
 	_cursor = -1
 	_answered = false
 
@@ -56,12 +58,27 @@ func submit_answer(choice_index: int) -> Dictionary:
 
 	_answered = true
 	var correct := choice_index == int(question.get("correct_index", -1))
+	# Copy the accepted answer now, before the next question or UI can change.
+	_answer_history.append({
+		"level": int(question.get("level", 0)),
+		"question_id": str(question.get("question_id", "")),
+		"question_text": str(question.get("question_text", "")),
+		"selected_index": choice_index,
+		"correct_index": int(question.get("correct_index", -1)),
+		"selected_answer": str(choices[choice_index]),
+		"correct_answer": str(choices[int(question.correct_index)]),
+		"correct": correct,
+	})
 	return {
 		"accepted": true,
 		"correct": correct,
 		"explanation": str(question.get("explanation", "")),
 		"correct_index": int(question.get("correct_index", -1)),
 	}
+
+
+func get_answer_history() -> Array[Dictionary]:
+	return _answer_history.duplicate(true)
 
 
 func _is_valid_question(question: Dictionary) -> bool:
