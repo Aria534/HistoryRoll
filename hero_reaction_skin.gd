@@ -2,6 +2,7 @@ extends RefCounted
 ## Styles the existing happy/sad answer popup without changing scene nodes.
 
 const FRAME: Texture2D = preload("res://assets/gameplay_ui/reaction_popup/success_frame.png")
+const INCORRECT_FRAME: Texture2D = preload("res://assets/gameplay_ui/reaction_popup/incorrect_frame.png")
 const LETTERING: Font = preload("res://assets/fonts/TitanOne-Regular.ttf")
 const POPUP_PROPERTIES := [
 	"anchor_left", "anchor_top", "anchor_right", "anchor_bottom",
@@ -51,6 +52,11 @@ func apply_success() -> void:
 	_active = true
 	update_layout()
 
+
+func apply_incorrect() -> void:
+	_frame_texture = INCORRECT_FRAME
+	_active = true
+	update_layout()
 
 
 func restore() -> void:

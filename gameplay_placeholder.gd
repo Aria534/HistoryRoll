@@ -566,9 +566,9 @@ func _show_chibi_reaction(correct: bool, points: int) -> void:
 	reaction_score.text = "%s%d POINTS" % ["+" if correct else "-", points]
 	if correct:
 		reaction_skin.apply_success()
-		quiz_panel.hide()
 	else:
-		reaction_popup.add_theme_stylebox_override("panel", _make_reaction_style(false))
+		reaction_skin.apply_incorrect()
+	quiz_panel.hide()
 	reaction_popup.show()
 	reaction_popup.pivot_offset = reaction_popup.size * 0.5
 	reaction_popup.scale = Vector2.ONE * 0.84
