@@ -18,11 +18,11 @@ func _run() -> void:
 	audio.set_sfx_enabled(true, false)
 	_test_mappings()
 	await _test_all_card_routes()
-	for story_level: int in [1, 2, 3]:
+	for story_level: int in [1, 2, 3, 4]:
 		await _test_player_flow(story_level)
 		await _test_layout(Vector2i(1024, 1536), "hero_story_%d_1024x1536.png" % story_level, story_level)
 		await _test_layout(Vector2i(720, 1280), "hero_story_%d_720x1280.png" % story_level, story_level)
-	for locked_level: int in [2, 3]:
+	for locked_level: int in [2, 3, 4]:
 		await _test_locked_level(locked_level)
 	await _test_missing_video()
 	if OS.get_cmdline_user_args().has("--full-playback"):
@@ -31,6 +31,8 @@ func _run() -> void:
 		await _test_natural_completion(2)
 	if OS.get_cmdline_user_args().has("--full-rizal"):
 		await _test_natural_completion(3)
+	if OS.get_cmdline_user_args().has("--full-luna"):
+		await _test_natural_completion(4)
 	audio.stop_music(0.0)
 	audio.set_sfx_enabled(saved_sfx, false)
 	_cleanup()
