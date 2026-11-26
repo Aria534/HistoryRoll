@@ -20,7 +20,7 @@ const QuizSession = preload("res://quiz_session.gd")
 const QuizQuestionBank = preload("res://quiz_question_bank.gd")
 const LevelCompletionCard = preload("res://level_completion_card.gd")
 const HeroReactionSkin = preload("res://hero_reaction_skin.gd")
-const ROLL_PIXEL_FONT: Font = preload("res://assets/fonts/PixelifySans.ttf")
+const ROLL_PIXEL_FONT: Font = preload("res://assets/gameplay_ui/forest_parchment/roll_font.tres")
 const TERRACE_BACKGROUND: Texture2D = preload("res://assets/gameplay_ui/forest_parchment/background.png")
 
 @export var shuffle_questions: bool = true
@@ -553,7 +553,7 @@ func _set_state(new_state: GameplayState) -> void:
 	if state != GameplayState.ANSWER_FEEDBACK:
 		next_turn_button.hide()
 	var roll_title: Label = $BottomRollArea/RollButton/RollVisual/RollContents/RollTitle
-	roll_title.text = roll_button.text.to_upper()
+	roll_title.text = roll_button.text
 	roll_title.modulate = Color("#C9DDE5") if roll_button.disabled else Color.WHITE
 
 
@@ -712,6 +712,7 @@ func _update_gameplay_layout() -> void:
 	var roll_height := screen_size.y * 0.11
 	var roll_title: Label = $BottomRollArea/RollButton/RollVisual/RollContents/RollTitle
 	roll_title.add_theme_font_override("font", ROLL_PIXEL_FONT)
+	roll_title.add_theme_constant_override("outline_size", 2)
 	roll_title.add_theme_font_size_override("font_size", clampi(int(width * 0.082), 40, 88))
 	$BottomRollArea/RollButton/RollVisual/RollContents/DieIcon.custom_minimum_size = Vector2.ONE * roll_height * 0.58
 	_align_status_icons.call_deferred()
