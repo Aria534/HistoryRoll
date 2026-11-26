@@ -81,7 +81,7 @@ func _apply_scene_theme() -> void:
 	title_label.custom_minimum_size.y = title_height
 	title_label.add_theme_stylebox_override("normal", title)
 	title_label.add_theme_font_override("font", TITLE_FONT)
-	title_label.add_theme_font_size_override("font_size", clampi(int(width * 0.056), 34, 58))
+	title_label.add_theme_font_size_override("font_size", clampi(int(width * 0.078), 44, 76))
 	title_label.add_theme_color_override("font_color", Color("FFF3D2"))
 	title_label.add_theme_color_override("font_outline_color", WOOD_DARK)
 	title_label.add_theme_constant_override("outline_size", 4)
