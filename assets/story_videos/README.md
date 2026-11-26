@@ -28,8 +28,23 @@
 - The existing Level 2 video mapping already uses this filename. No runtime
   scripts, scenes, gameplay rules or level-unlock logic needed modification.
 
+## Installed Jose Rizal story
+
+- Source: [Jose Rizal Short Story - Tagalog Version](https://www.youtube.com/watch?v=jChjPmuEATw)
+- Creator: Great Day Channel
+- Requested by the user on 26 November 2026.
+- Runtime file: `res://assets/story_videos/rizal_story.ogv`
+- Source credits and media details: `rizal_story.source.json`
+- Duration: 149.633333 seconds (about 2 minutes 30 seconds).
+- Encoding: Ogg Theora, 960x540, 30 fps; Vorbis audio, stereo, 44.1 kHz.
+- Size: 38,128,410 bytes.
+- The source picture and original audio were re-encoded for offline Godot playback.
+  The complete landscape composition is preserved without cropping or stretching.
+- The existing Level 3 video mapping already uses this filename. No runtime
+  scripts, scenes, gameplay or progression rules needed modification.
+
 The existing Hero Cards WATCH STORY actions select the corresponding local movie
-for Lapu-Lapu or Andres Bonifacio.
+for Lapu-Lapu, Andres Bonifacio or Jose Rizal.
 The game does not open YouTube, stream a URL, or require internet to play it.
 Video/audio streams were downloaded and converted using temporary portable tools;
 the downloader, encoder, original downloads and temporary network metadata are
@@ -56,12 +71,11 @@ video resource. A previously built APK must be exported again to receive it.
 
 Place final Godot-compatible Ogg Theora videos in this folder using these names:
 
-- `rizal_story.ogv`
 - `antonio_luna_story.ogv`
 - `melchora_aquino_story.ogv`
 - `mabini_story.ogv`
 
-These four final movies are not installed yet. Their safe "Story Video Coming Soon"
+These three final movies are not installed yet. Their safe "Story Video Coming Soon"
 states remain available; opening a missing movie does not mark it watched.
 Each installed movie keeps its own native aspect ratio.
 
@@ -146,3 +160,44 @@ Godot --path . --script res://tests/hero_story_video_player_test.gd --audio-driv
 For a manual check, stop the old running game, press F5, open Hero Cards, choose
 Andres Bonifacio and press WATCH STORY. Keep Sound Effects ON for movie audio.
 Re-export the Android APK to include the new local movie.
+
+## Rizal verification executed on 26 November 2026
+
+Godot 4.7.1, desktop Compatibility renderer and Dummy audio mixer:
+
+| Suite | Passed | Failed |
+| --- | ---: | ---: |
+| Hero Story video player, all three installed movies and full Rizal playback | 164 | 0 |
+| Scene music ON/OFF and transitions | 154 | 0 |
+| Total | 318 | 0 |
+
+- The complete Rizal movie reached its native finished signal after 152.791
+  seconds of test time (media duration: 149.633333 seconds).
+- Actual Rizal audio reached the SFX bus: 61,440 captured frames, peak 0.5267.
+  This verifies a non-silent decoded signal, rather than physical speaker output.
+- Lapu-Lapu, Bonifacio and Rizal passed automatic playback, Pause/Resume,
+  Skip, Replay, Back, watched-state persistence and Play Level access checks.
+- Rizal's story played while Level 3 stayed locked. Watching the story did not
+  unlock gameplay. All progress writes used an isolated test file.
+- Actual Rizal video frames were rendered and visually inspected at 1024x1536
+  and 720x1280, preserving the complete landscape picture without stretching:
+  `user://hero_story_3_playing_1024x1536.png` and
+  `user://hero_story_3_playing_720x1280.png`.
+- FFmpeg decoded the entire new video and audio without errors.
+- Real player progress and Settings retained their original SHA-256 hashes.
+- No script errors occurred in the final test runs. Shutdown still reported
+  ObjectDB warnings (one instance in video tests, two in scene-music tests).
+  Headless Editor import also reported the existing external-editor setting error.
+- Only the new movie, UID, source credits, regression tests and this guide changed.
+  No runtime script, scene, export preset or APK was changed.
+  Physical Android playback was not tested.
+
+Run the Rizal full-playback check:
+
+```text
+Godot --path . --script res://tests/hero_story_video_player_test.gd --audio-driver Dummy -- --full-rizal
+```
+
+For a manual check, stop the previous running game, press F5, open Hero Cards,
+choose Jose Rizal and press WATCH STORY. Enable Sound Effects for movie audio.
+Re-export the Android APK to include the new offline video.
