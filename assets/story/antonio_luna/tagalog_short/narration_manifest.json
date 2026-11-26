@@ -1,0 +1,164 @@
+{
+    "language":  "tl",
+    "provider":  "Google Translate TTS",
+    "original_script":  "docs/story_videos/antonio_luna/antonio_luna_script.md",
+    "runtime_network_required":  false,
+    "synthetic_voice":  true,
+    "speech_duration_seconds":  81.192,
+    "timeline_seconds":  88.5,
+    "clips":  [
+                  {
+                      "index":  1,
+                      "start_seconds":  0.3,
+                      "end_seconds":  3.828,
+                      "text":  "Si Antonio Luna ay isinilang sa Maynila",
+                      "spoken_text":  "Si Antonio Luna ay isinilang sa Maynila",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_01.mp3",
+                      "audio_duration_seconds":  3.528
+                  },
+                  {
+                      "index":  2,
+                      "start_seconds":  4.008,
+                      "end_seconds":  10.728,
+                      "text":  "noong 29 Oktubre 1866.",
+                      "spoken_text":  "noong dalawampu\u0027t siyam ng Oktubre, isang libo walong daan at animnapu\u0027t anim.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_02.mp3",
+                      "audio_duration_seconds":  6.72
+                  },
+                  {
+                      "index":  3,
+                      "start_seconds":  11.8,
+                      "end_seconds":  15.976,
+                      "text":  "Bago naging heneral, si Luna ay\nsiyentista,",
+                      "spoken_text":  "Bago naging heneral, si Luna ay siyentista,",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_04.mp3",
+                      "audio_duration_seconds":  4.176
+                  },
+                  {
+                      "index":  4,
+                      "start_seconds":  16.156,
+                      "end_seconds":  20.476,
+                      "text":  "parmasyutiko o eksperto sa gamot, at\nmanunulat.",
+                      "spoken_text":  "parmasyutiko o eksperto sa gamot, at manunulat.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_05.mp3",
+                      "audio_duration_seconds":  4.32
+                  },
+                  {
+                      "index":  5,
+                      "start_seconds":  20.656,
+                      "end_seconds":  23.608,
+                      "text":  "Sumulat siya sa La Solidaridad.",
+                      "spoken_text":  "Sumulat siya sa La Solidaridad.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_06_short.mp3",
+                      "audio_duration_seconds":  2.952
+                  },
+                  {
+                      "index":  6,
+                      "start_seconds":  24.3,
+                      "end_seconds":  29.676,
+                      "text":  "Sa pamahalaang rebolusyonaryo, naging\npinunong militar si Luna.",
+                      "spoken_text":  "Sa pamahalaang rebolusyonaryo, naging pinunong militar si Luna.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_07_short.mp3",
+                      "audio_duration_seconds":  5.376
+                  },
+                  {
+                      "index":  7,
+                      "start_seconds":  29.856,
+                      "end_seconds":  32.904,
+                      "text":  "Nagtatag siya ng akademyang militar.",
+                      "spoken_text":  "Nagtatag siya ng akademyang militar.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_08_short.mp3",
+                      "audio_duration_seconds":  3.048
+                  },
+                  {
+                      "index":  8,
+                      "start_seconds":  33.084,
+                      "end_seconds":  36.756,
+                      "text":  "Ipinaglaban niya ang kalayaan ng\nPilipinas.",
+                      "spoken_text":  "Ipinaglaban niya ang kalayaan ng Pilipinas.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_09_short.mp3",
+                      "audio_duration_seconds":  3.672
+                  },
+                  {
+                      "index":  9,
+                      "start_seconds":  37.8,
+                      "end_seconds":  43.536,
+                      "text":  "Sa Digmaang Pilipino-Amerikano, inayos ni\nHeneral Luna ang hukbo.",
+                      "spoken_text":  "Sa Digmaang Pilipino-Amerikano, inayos ni Heneral Luna ang hukbo.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_10_short.mp3",
+                      "audio_duration_seconds":  5.736
+                  },
+                  {
+                      "index":  10,
+                      "start_seconds":  43.716,
+                      "end_seconds":  50.388,
+                      "text":  "Mahalaga sa kaniya ang disiplina,\npagsasanay, at maayos na pamumuno",
+                      "spoken_text":  "Mahalaga sa kaniya ang disiplina, pagsasanay, at maayos na pamumuno",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_11.mp3",
+                      "audio_duration_seconds":  6.672
+                  },
+                  {
+                      "index":  11,
+                      "start_seconds":  50.568,
+                      "end_seconds":  54.192,
+                      "text":  "upang mapalakas ang pagtatanggol sa bayan.",
+                      "spoken_text":  "upang mapalakas ang pagtatanggol sa bayan.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_12.mp3",
+                      "audio_duration_seconds":  3.624
+                  },
+                  {
+                      "index":  12,
+                      "start_seconds":  54.8,
+                      "end_seconds":  63.608,
+                      "text":  "Ngunit noong 5 Hunyo 1899, pinaslang si\nHeneral Antonio Luna",
+                      "spoken_text":  "Ngunit noong ikalima ng Hunyo, isang libo walong daan at siyamnapu\u0027t siyam, pinaslang si Heneral Antonio Luna",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_13.mp3",
+                      "audio_duration_seconds":  8.808
+                  },
+                  {
+                      "index":  13,
+                      "start_seconds":  63.788,
+                      "end_seconds":  67.1,
+                      "text":  "sa Cabanatuan, Nueva Ecija.",
+                      "spoken_text":  "sa Cabanatuan, Nueva Ecija.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_14.mp3",
+                      "audio_duration_seconds":  3.312
+                  },
+                  {
+                      "index":  14,
+                      "start_seconds":  67.28,
+                      "end_seconds":  72.464,
+                      "text":  "Nawala ang isang pinuno na naglingkod para\nsa kalayaan ng bayan.",
+                      "spoken_text":  "Nawala ang isang pinuno na naglingkod para sa kalayaan ng bayan.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_15.mp3",
+                      "audio_duration_seconds":  5.184
+                  },
+                  {
+                      "index":  15,
+                      "start_seconds":  73.3,
+                      "end_seconds":  78.1,
+                      "text":  "Naalala natin siya bilang matapang at\ndeterminadong pinuno.",
+                      "spoken_text":  "Naalala natin siya bilang matapang at determinadong pinuno.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_16.mp3",
+                      "audio_duration_seconds":  4.8
+                  },
+                  {
+                      "index":  16,
+                      "start_seconds":  78.28,
+                      "end_seconds":  83.128,
+                      "text":  "Ang katapangan at pagmamahal sa bayan ni\nHeneral Antonio Luna",
+                      "spoken_text":  "Ang katapangan at pagmamahal sa bayan ni Heneral Antonio Luna",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_17.mp3",
+                      "audio_duration_seconds":  4.848
+                  },
+                  {
+                      "index":  17,
+                      "start_seconds":  83.308,
+                      "end_seconds":  88.3,
+                      "text":  "ay patuloy na nagbibigay-inspirasyon sa\nmga Pilipino.",
+                      "spoken_text":  "ay patuloy na nagbibigay-inspirasyon sa mga Pilipino.",
+                      "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_18.mp3",
+                      "audio_duration_seconds":  4.416
+                  }
+              ]
+}
