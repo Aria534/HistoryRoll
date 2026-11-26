@@ -13,7 +13,23 @@
 - The original video's picture and audio were re-encoded for Godot playback.
   Its composition was kept; no portrait crop or stretching was applied.
 
-The existing Hero Cards WATCH STORY action selects this local movie for Lapu-Lapu.
+## Installed Andres Bonifacio story
+
+- Source: [Andres Bonifacio - Short Story Tagalog](https://www.youtube.com/watch?v=Biys0BdyO5g)
+- Creator: Great Day Channel
+- Requested by the user on 26 November 2026.
+- Runtime file: `res://assets/story_videos/bonifacio_story.ogv`
+- Source credits and media details: `bonifacio_story.source.json`
+- Duration: 147.666667 seconds (about 2 minutes 28 seconds).
+- Encoding: Ogg Theora, 960x540, 30 fps; Vorbis audio, stereo, 44.1 kHz.
+- Size: 42,714,898 bytes.
+- The source picture and audio were re-encoded for offline Godot playback.
+  The full landscape composition is preserved, without portrait cropping or stretching.
+- The existing Level 2 video mapping already uses this filename. No runtime
+  scripts, scenes, gameplay rules or level-unlock logic needed modification.
+
+The existing Hero Cards WATCH STORY actions select the corresponding local movie
+for Lapu-Lapu or Andres Bonifacio.
 The game does not open YouTube, stream a URL, or require internet to play it.
 Video/audio streams were downloaded and converted using temporary portable tools;
 the downloader, encoder, original downloads and temporary network metadata are
@@ -21,7 +37,7 @@ outside the project and are not runtime dependencies.
 
 ## Shared player
 
-The existing `hero_story_video_player.gd` and scene are reused. The script now
+The existing `hero_story_video_player.gd` and scene are reused. The script
 fits the existing `VideoAspect` container to the decoded frame's native ratio.
 A landscape movie appears fully within the portrait application with black space
 above and below. The application orientation, node hierarchy and visual scene
@@ -40,13 +56,12 @@ video resource. A previously built APK must be exported again to receive it.
 
 Place final Godot-compatible Ogg Theora videos in this folder using these names:
 
-- `bonifacio_story.ogv`
 - `rizal_story.ogv`
 - `antonio_luna_story.ogv`
 - `melchora_aquino_story.ogv`
 - `mabini_story.ogv`
 
-These five final movies are not installed yet. Their safe "Story Video Coming Soon"
+These four final movies are not installed yet. Their safe "Story Video Coming Soon"
 states remain available; opening a missing movie does not mark it watched.
 Each installed movie keeps its own native aspect ratio.
 
@@ -88,3 +103,46 @@ Godot --path . --script res://tests/hero_story_video_player_test.gd --audio-driv
 For a manual check, stop the previous running game, press F5, open Hero Cards,
 choose Lapu-Lapu and press WATCH STORY. Enable Sound Effects in Settings to hear
 the original movie audio.
+
+## Bonifacio verification executed on 26 November 2026
+
+Godot 4.7.1, desktop Compatibility renderer and Dummy audio mixer:
+
+| Suite | Passed | Failed |
+| --- | ---: | ---: |
+| Hero Story video player, both installed movies and full Bonifacio playback | 118 | 0 |
+| Scene music ON/OFF and transitions | 154 | 0 |
+| Total | 272 | 0 |
+
+- The complete Bonifacio movie reached its native finished signal after
+  151.142 seconds of test time (media duration: 147.666667 seconds).
+- Actual movie audio reached the SFX bus: 61,440 captured frames, peak 0.6542.
+  This verifies decoded audio, rather than physical speaker output.
+- Both installed movies passed automatic playback, Pause/Resume, Skip, Replay,
+  Back, watched-state persistence and existing Play Level access checks.
+- Bonifacio's story played with Level 2 locked; watching it did not unlock
+  gameplay. Tests used an isolated progress file.
+- Rendered Bonifacio frames were visually inspected at 1024x1536 and 720x1280:
+  `user://hero_story_2_playing_1024x1536.png` and
+  `user://hero_story_2_playing_720x1280.png`.
+  The full landscape frame remains centered without stretching or cropping.
+- FFmpeg decoded the entire new video and audio without errors.
+- Real progress and Settings files retained their original SHA-256 hashes.
+- No script errors occurred in the final test runs. The existing scene-music
+  suite still reports two ObjectDB instances at shutdown. The headless Editor
+  import reports its pre-existing external-editor configuration error.
+- Regression tests now cover both installed movies, an explicit missing-file
+  fixture and optional full Bonifacio playback. Full-playback checks wait for
+  decoder initialization before querying native stream duration.
+- No runtime GDScript, scene layout, export preset or APK changed.
+  Physical Android playback was not tested.
+
+Run the Bonifacio full-playback check:
+
+```text
+Godot --path . --script res://tests/hero_story_video_player_test.gd --audio-driver Dummy -- --full-bonifacio
+```
+
+For a manual check, stop the old running game, press F5, open Hero Cards, choose
+Andres Bonifacio and press WATCH STORY. Keep Sound Effects ON for movie audio.
+Re-export the Android APK to include the new local movie.
