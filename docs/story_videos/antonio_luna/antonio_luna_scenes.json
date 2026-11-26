@@ -1,0 +1,668 @@
+{
+    "schema_version":  1,
+    "hero_id":  "antonio_luna",
+    "title":  "Antonio Luna — Maikling Kuwento ng Isang Heneral",
+    "language":  "fil-PH",
+    "audience":  "Grade 6",
+    "content_scope":  "Antonio Luna only",
+    "format":  {
+                   "orientation":  "landscape",
+                   "aspect_ratio":  "16:9",
+                   "width":  1280,
+                   "height":  720,
+                   "fps":  24,
+                   "total_duration_seconds":  88.5,
+                   "total_frames":  2124,
+                   "scene_count":  6,
+                   "offline_playback":  true,
+                   "runtime_network_dependencies":  [
+
+                                                    ]
+               },
+    "status":  {
+                   "content_package":  "complete",
+                   "video":  "rendered",
+                   "timing_basis":  "Measured MP3 narration durations; 0.30-second scene lead-in, 0.18-second intra-scene gaps, no narration speed-up.",
+                   "voice":  "Original script synthesized in Tagalog with Google Translate TTS (tl); not a human recording. Source clips are local; playback requires no network.",
+                   "illustrations":  "Six original AI-generated realistic painted plates, visually reviewed. Scene 5 was edited to remove the foreground person.",
+                   "encoder":  "FFmpeg 9.1: 1280x720, 24 fps, 2,124 frames, 88.5 seconds; H.264/AAC MP4 and native Ogg Theora/Vorbis.",
+                   "game_integration":  "Existing level-4 mapping is res://assets/story_videos/antonio_luna_story.ogv; no scene or runtime logic changes required."
+               },
+    "character_consistency":  {
+                                  "lock":  "One consistent historically inspired Antonio Luna, Filipino man in his early thirties, natural adult proportions, medium warm-brown complexion, broad oval face, deep-set dark-brown eyes, strong straight eyebrows, short neatly side-parted black hair, and a prominent neatly groomed dark mustache; no beard. Use the SAME face, mustache, hairline, build, and eye shape across every scene. Base likeness on archival Antonio Luna portrait references, never an actor or another hero. Skin, fabric colors and lighting are illustrative reconstructions, not claims about exact archival colors.",
+                                  "workflow":  "Generate scene 6\u0027s portrait first. Approve its likeness and use that same portrait as a character reference for scenes 1–4; scene 5 is an empty setting. Preserve the six scene order in the final film. A reference portrait is a production asset, not an extra film scene.",
+                                  "costume_note":  "Civilian dress in scenes 1–2; the same period-inspired officer uniform in scenes 3–4 and 6. Exact colors and incidental background figures are illustrative, not separately documented biographical facts."
+                              },
+    "narration_direction":  {
+                                "delivery":  "Filipino/Tagalog, malinaw, mahinahon, magiliw at angkop sa Grade 6; third-person narrator only; no character dialogue.",
+                                "recording_format":  "Local MP3 sources; mixed to 48kHz mono PCM, loudness normalized to -17 LUFS / -1.5 dBTP, without tempo alteration.",
+                                "music":  "No background music used in this short; narrated voice only. Existing global music pauses during movie playback.",
+                                "pronunciation":  [
+                                                      {
+                                                          "written":  "29 Oktubre 1866",
+                                                          "spoken":  "dalawampu\u0027t siyam ng Oktubre, isang libo walong daan at animnapu\u0027t anim"
+                                                      },
+                                                      {
+                                                          "written":  "1898",
+                                                          "spoken":  "isang libo walong daan at siyamnapu\u0027t walo"
+                                                      },
+                                                      {
+                                                          "written":  "1899",
+                                                          "spoken":  "isang libo walong daan at siyamnapu\u0027t siyam"
+                                                      },
+                                                      {
+                                                          "written":  "5 Hunyo 1899",
+                                                          "spoken":  "ikalima ng Hunyo, isang libo walong daan at siyamnapu\u0027t siyam"
+                                                      },
+                                                      {
+                                                          "written":  "La Solidaridad",
+                                                          "spoken":  "La So-li-da-ri-dad"
+                                                      },
+                                                      {
+                                                          "written":  "Cabanatuan, Nueva Ecija",
+                                                          "spoken":  "Ka-ba-na-tu-an, Nwe-va E-si-ha"
+                                                      }
+                                                  ]
+                            },
+    "subtitle_style":  {
+                           "file":  "antonio_luna_subtitles.srt",
+                           "encoding":  "UTF-8",
+                           "max_lines":  2,
+                           "max_characters_per_line":  42,
+                           "target_max_characters_per_second":  18,
+                           "font":  "Roboto Bold (project\u0027s existing licensed Roboto-Variable.ttf)",
+                           "font_size_px":  34,
+                           "text_color":  "#FFFFFF",
+                           "outline_color":  "#25180E",
+                           "outline_width_px":  2.5,
+                           "background":  "No strip; high contrast white text, dark outline and shadow over quiet bottom area.",
+                           "safe_area":  {
+                                             "left_px":  64,
+                                             "right_px":  64,
+                                             "bottom_px":  36
+                                         },
+                           "avoid":  "No overlapping title and captions; no automatic word-by-word bouncing; no subtitles baked into generated illustrations."
+                       },
+    "title_overlay":  {
+                          "scene_id":  1,
+                          "start_seconds":  0,
+                          "end_seconds":  4,
+                          "text":  "Antonio Luna — Maikling Kuwento ng Isang Heneral",
+                          "layout":  "Top-right quiet area; two lines if needed, minimum 30px; does not replace narration or add a title scene."
+                      },
+    "ending_message":  {
+                           "scene_id":  6,
+                           "text":  "Ang katapangan at pagmamahal sa bayan ni Heneral Antonio Luna ay patuloy na nagbibigay-inspirasyon sa mga Pilipino.",
+                           "is_historical_quotation":  false,
+                           "display":  "Delivered verbatim by the narrator and the last two subtitle cues. Do not add another end-card scene or a duplicate competing text layer."
+                       },
+    "rights":  {
+                   "narration":  "Original educational wording; closing sentence supplied by the user.",
+                   "images":  "Original AI-generated plates. Archival likeness reference: https://commons.wikimedia.org/wiki/File:Antonio_luna_small.jpg (Public Domain Mark 1.0); not reused as video footage.",
+                   "audio":  "Synthetic Tagalog speech generated from this original script through Google Translate TTS (tl); no prerecorded third-party narration, music or YouTube media reused.",
+                   "research_links":  "Citations only; not streaming dependencies or permission to reuse linked media."
+               },
+    "references":  [
+                       {
+                           "id":  "R1",
+                           "title":  "Antonio Luna (1866–1899), NHCP biographical marker (2016)",
+                           "publisher":  "National Historical Commission of the Philippines",
+                           "url":  "https://philhistoricsites.nhcp.gov.ph/registry_database/antonio-luna-1866-1899/",
+                           "reviewed":  "2026-11-26",
+                           "supports":  [
+                                            "Birth in Manila on 29 October 1866",
+                                            "Pharmacy education and writing for La Solidaridad",
+                                            "Military leadership and Academia Militar in 1898",
+                                            "Army command in 1899",
+                                            "Death in Cabanatuan on 5 June 1899"
+                                        ],
+                           "access_note":  "NHCP registry marker text reviewed; no marker transcription is reproduced."
+                       },
+                       {
+                           "id":  "R2",
+                           "title":  "Sinilangang Pook ni Heneral Antonio Luna 1866–1899, NHC marker (1967)",
+                           "publisher":  "National Historical Commission / NHCP registry",
+                           "url":  "https://philhistoricsites.nhcp.gov.ph/registry_database/sinilangang-pook-ni-heneral-antonio-luna-1866-1899/",
+                           "reviewed":  "2026-11-26",
+                           "supports":  [
+                                            "Birth date and Manila birthplace",
+                                            "Pharmacist, chemist and writer",
+                                            "Military appointment after return in 1898",
+                                            "Death date and Cabanatuan location"
+                                        ],
+                           "access_note":  "Registry marker text reviewed. Chemist is rendered as the age-appropriate broader term siyentista."
+                       },
+                       {
+                           "id":  "R3",
+                           "title":  "Death Place of General Antonio Luna, NHC commemorative marker (1966)",
+                           "publisher":  "National Historical Commission / NHCP registry",
+                           "url":  "https://philhistoricsites.nhcp.gov.ph/registry_database/death-place-of-general-antonio-luna/",
+                           "reviewed":  "2026-11-26",
+                           "supports":  [
+                                            "Assassination in Cabanatuan on 5 June 1899"
+                                        ],
+                           "access_note":  "Official registry search-indexed marker text reviewed; a direct page request timed out. Date and place also agree with R1 and R2. No unverified mastermind allegation is included."
+                       },
+                       {
+                           "id":  "R4",
+                           "title":  "Filipinos in History, Volume II — Antonio Luna",
+                           "publisher":  "National Historical Institute; copy hosted by the Department of Foreign Affairs",
+                           "url":  "https://dfa.gov.ph/images/AMabini/C__Managepoint_sessions_Diane_Rar1423.pdf",
+                           "reviewed":  "2026-11-26",
+                           "supports":  [
+                                            "Scholar/scientist and military service",
+                                            "Emphasis on army discipline",
+                                            "Preparing defensive lines during the Philippine-American War"
+                                        ],
+                           "access_note":  "Relevant search-indexed Antonio Luna excerpts reviewed. Direct PDF retrieval returned HTTP 403, so a complete PDF read is not claimed. The story uses only the broad discipline/defense points; no disputed tactical detail is added."
+                       }
+                   ],
+    "scenes":  [
+                   {
+                       "id":  1,
+                       "title":  "Pagkilala kay Antonio Luna",
+                       "start_seconds":  0,
+                       "end_seconds":  11.5,
+                       "duration_seconds":  11.5,
+                       "narration":  "Si Antonio Luna ay isinilang sa Maynila noong 29 Oktubre 1866.",
+                       "subtitle":  "Si Antonio Luna ay isinilang sa Maynila noong 29 Oktubre 1866.",
+                       "subtitle_cues":  [
+                                             {
+                                                 "index":  1,
+                                                 "start_seconds":  0.3,
+                                                 "end_seconds":  3.828,
+                                                 "text":  "Si Antonio Luna ay isinilang sa Maynila",
+                                                 "spoken_text":  "Si Antonio Luna ay isinilang sa Maynila",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_01.mp3",
+                                                 "audio_duration_seconds":  3.528
+                                             },
+                                             {
+                                                 "index":  2,
+                                                 "start_seconds":  4.008,
+                                                 "end_seconds":  10.728,
+                                                 "text":  "noong 29 Oktubre 1866.",
+                                                 "spoken_text":  "noong dalawampu\u0027t siyam ng Oktubre, isang libo walong daan at animnapu\u0027t anim.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_02.mp3",
+                                                 "audio_duration_seconds":  6.72
+                                             }
+                                         ],
+                       "visual_prompt":  "One consistent historically inspired Antonio Luna, Filipino man in his early thirties, natural adult proportions, medium warm-brown complexion, broad oval face, deep-set dark-brown eyes, strong straight eyebrows, short neatly side-parted black hair, and a prominent neatly groomed dark mustache; no beard. Use the SAME face, mustache, hairline, build, and eye shape across every scene. Base likeness on archival Antonio Luna portrait references, never an actor or another hero. Skin, fabric colors and lighting are illustrative reconstructions, not claims about exact archival colors. Cinematic realistic hand-painted historical illustration, restrained brush texture, natural anatomy, warm late-afternoon or lamplit lighting, muted gold, umber, deep indigo and cream palette, historically plausible late-19th-century Philippine architecture and objects. Landscape 16:9; deliver at 1280x720, or prepare a 1920x1080 plate for proportional downsampling and gentle camera overscan. Keep the bottom 18% quiet for live Filipino subtitles. No baked-in text, captions, watermarks, logos or borders. Establish a quiet late-19th-century Manila street with stone-and-timber houses, capiz windows and a distant church roof. Adult Antonio Luna stands in three-quarter view at the left, thoughtful and approachable, with open space to the right for the title overlay. This is a retrospective introduction portrait, NOT a reenactment showing an adult man in 1866; no childbirth scene. Warm morning light. No chibi, anime, caricature, modern uniforms or equipment, medals or rank insignia invented for this story, present-day vehicles, electrical lighting, readable fabricated documents, invented dialogue, identifiable film actors, movie stills, blood, wounds, bodies, firing weapons, triumphal battle scenes or anachronistic national symbols. Character reference: the supplied generated portrait establishes Luna\u0027s face and painterly treatment ONLY. Create a NEW scene. Replace the uniform and cap with a plain dark civilian suit, white shirt and restrained tie; his short dark side-parted hair is visible. No cap, no military uniform and no Philippine flag in this scene. A quiet old Manila street of stone-and-timber houses and capiz windows, warm light, Luna at left, empty quiet space upper right for title. This adult introduction is NOT a scene of his birth in 1866. One full landscape 16:9 frame, no text or collage. Match the reference person\u0027s age, face and prominent mustache precisely.",
+                       "setting":  "Isang pangkalahatang tanawin ng lumang Maynila sa huling bahagi ng ika-19 na siglo; ang petsa ng kapanganakan ay impormasyong isinasalaysay, hindi petsa ng adult portrait.",
+                       "character_appearance":  "Adult Luna sa payak na madilim na amerikana, puting kamisa at simpleng kurbata. Walang unipormeng militar sa eksenang ito.",
+                       "animation":  {
+                                         "type":  "slow_push_in",
+                                         "zoom_start":  1.04,
+                                         "zoom_end":  1.08,
+                                         "center_start":  [
+                                                              0.5,
+                                                              0.5
+                                                          ],
+                                         "center_end":  [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                         "layer_notes":  "Pan/zoom ng buong painted plate lamang; walang animated limbs, cloud layers o lip-sync.",
+                                         "coordinate_system":  "normalized source center, x/y in [0,1]; zoom \u003e= 1; preserve 16:9, no stretching",
+                                         "easing":  "linear camera move; eased opacity only",
+                                         "fade_in_seconds":  0.3,
+                                         "fade_out_seconds":  0.2,
+                                         "transition_accounting":  "Fades are contained within this scene\u0027s allocated frames. No extra transition frames and no seventh scene."
+                                     },
+                       "historical_claims":  [
+                                                 "birth_date:1866-10-29",
+                                                 "birthplace:Manila"
+                                             ],
+                       "reference_ids":  [
+                                             "R1",
+                                             "R2"
+                                         ],
+                       "historical_guardrail":  "Ang pang-adultong larawan ay pagpapakilala lamang. Huwag lagyan ng label na 1866 ang buong reconstructed street scene.",
+                       "media_production":  {
+                                                "illustration":  "generated_and_visually_reviewed",
+                                                "narration":  "synthetic_tl_generated",
+                                                "illustration_file":  "res://assets/story/antonio_luna/tagalog_short/scene_01.png",
+                                                "narration_sources":  [
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_01.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_02.mp3"
+                                                                      ]
+                                            },
+                       "frame_start":  0,
+                       "frame_count":  276,
+                       "composition":  "Luna sa kaliwa ng lumang kalye ng Maynila, civilian suit at puting kamisa; bakanteng kanan para sa title."
+                   },
+                   {
+                       "id":  2,
+                       "title":  "Ang Kanyang Talino",
+                       "start_seconds":  11.5,
+                       "end_seconds":  24,
+                       "duration_seconds":  12.5,
+                       "narration":  "Bago naging heneral, si Luna ay siyentista, parmasyutiko o eksperto sa gamot, at manunulat. Sumulat siya sa La Solidaridad.",
+                       "subtitle":  "Bago naging heneral, si Luna ay siyentista, parmasyutiko o eksperto sa gamot, at manunulat. Sumulat siya sa La Solidaridad.",
+                       "subtitle_cues":  [
+                                             {
+                                                 "index":  3,
+                                                 "start_seconds":  11.8,
+                                                 "end_seconds":  15.976,
+                                                 "text":  "Bago naging heneral, si Luna ay\nsiyentista,",
+                                                 "spoken_text":  "Bago naging heneral, si Luna ay siyentista,",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_04.mp3",
+                                                 "audio_duration_seconds":  4.176
+                                             },
+                                             {
+                                                 "index":  4,
+                                                 "start_seconds":  16.156,
+                                                 "end_seconds":  20.476,
+                                                 "text":  "parmasyutiko o eksperto sa gamot, at\nmanunulat.",
+                                                 "spoken_text":  "parmasyutiko o eksperto sa gamot, at manunulat.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_05.mp3",
+                                                 "audio_duration_seconds":  4.32
+                                             },
+                                             {
+                                                 "index":  5,
+                                                 "start_seconds":  20.656,
+                                                 "end_seconds":  23.608,
+                                                 "text":  "Sumulat siya sa La Solidaridad.",
+                                                 "spoken_text":  "Sumulat siya sa La Solidaridad.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_06_short.mp3",
+                                                 "audio_duration_seconds":  2.952
+                                             }
+                                         ],
+                       "visual_prompt":  "One consistent historically inspired Antonio Luna, Filipino man in his early thirties, natural adult proportions, medium warm-brown complexion, broad oval face, deep-set dark-brown eyes, strong straight eyebrows, short neatly side-parted black hair, and a prominent neatly groomed dark mustache; no beard. Use the SAME face, mustache, hairline, build, and eye shape across every scene. Base likeness on archival Antonio Luna portrait references, never an actor or another hero. Skin, fabric colors and lighting are illustrative reconstructions, not claims about exact archival colors. Cinematic realistic hand-painted historical illustration, restrained brush texture, natural anatomy, warm late-afternoon or lamplit lighting, muted gold, umber, deep indigo and cream palette, historically plausible late-19th-century Philippine architecture and objects. Landscape 16:9; deliver at 1280x720, or prepare a 1920x1080 plate for proportional downsampling and gentle camera overscan. Keep the bottom 18% quiet for live Filipino subtitles. No baked-in text, captions, watermarks, logos or borders. Show the same adult Luna seated at a wooden desk, studying scientific books and writing with a dip pen beside a small period microscope and plain glass pharmacy bottles. One hand rests on an open book; the other holds the pen naturally. A capiz-window glow and a shaded oil lamp light the room. Pages contain indistinct marks rather than invented quotations or legible research claims. No military cap or officer uniform. No chibi, anime, caricature, modern uniforms or equipment, medals or rank insignia invented for this story, present-day vehicles, electrical lighting, readable fabricated documents, invented dialogue, identifiable film actors, movie stills, blood, wounds, bodies, firing weapons, triumphal battle scenes or anachronistic national symbols. Identity reference: supplied image 1 establishes the same Luna face and civilian clothing; create a NEW study-room scene, not a copy of its street. Use natural adult proportions and the exact same large mustache, hairline, eyebrows and face. He wears a plain dark waistcoat and white shirt, no officer uniform or cap. Show his face in clear three-quarter view, seated at a desk, one anatomically correct hand resting on an open scientific book and one holding a dip pen over paper. Include a small late-19th-century brass microscope and a few simple pharmacy glass bottles, warm oil-lamp light and capiz windows. Do not create legible text or an invented chemical formula. Landscape 16:9, lower 18% uncluttered for subtitles, no collage, one full cinematic realistic illustration.",
+                       "setting":  "Tahimik na study room na kumakatawan sa mga taon niya ng pag-aaral at pagsusulat bago ang pamumunong militar; hindi ipinipilit ang eksaktong laboratoryo o gusali.",
+                       "character_appearance":  "Parehong mukha at bigote; madilim na waistcoat at amerikana sa puting kamisa. Nakaupo, may likas na postura at normal na kamay.",
+                       "animation":  {
+                                         "type":  "slow_pan_right",
+                                         "zoom_start":  1.07,
+                                         "zoom_end":  1.07,
+                                         "center_start":  [
+                                                              0.49,
+                                                              0.5
+                                                          ],
+                                         "center_end":  [
+                                                            0.51,
+                                                            0.5
+                                                        ],
+                                         "layer_notes":  "Pan/zoom ng buong painted plate lamang; walang animated limbs, cloud layers o lip-sync.",
+                                         "coordinate_system":  "normalized source center, x/y in [0,1]; zoom \u003e= 1; preserve 16:9, no stretching",
+                                         "easing":  "linear camera move; eased opacity only",
+                                         "fade_in_seconds":  0.2,
+                                         "fade_out_seconds":  0.2,
+                                         "transition_accounting":  "Fades are contained within this scene\u0027s allocated frames. No extra transition frames and no seventh scene."
+                                     },
+                       "historical_claims":  [
+                                                 "scientist",
+                                                 "pharmacist",
+                                                 "writer",
+                                                 "La Solidaridad contributor"
+                                             ],
+                       "reference_ids":  [
+                                             "R1",
+                                             "R2",
+                                             "R4"
+                                         ],
+                       "historical_guardrail":  "Huwag banggitin ang isang tiyak na taon ng doktorado: magkaiba ang mga popular na sanggunian at hindi ito kailangan sa kuwento. Walang claim na siya ang nakaimbento ng isang gamot.",
+                       "media_production":  {
+                                                "illustration":  "generated_and_visually_reviewed",
+                                                "narration":  "synthetic_tl_generated",
+                                                "illustration_file":  "res://assets/story/antonio_luna/tagalog_short/scene_02.png",
+                                                "narration_sources":  [
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_04.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_05.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_06_short.mp3"
+                                                                      ]
+                                            },
+                       "frame_start":  276,
+                       "frame_count":  300,
+                       "composition":  "Luna sa mesa, may bukas na scientific book, dip pen, microscope at pharmacy bottles; capiz-window at oil-lamp light."
+                   },
+                   {
+                       "id":  3,
+                       "title":  "Paglilingkod sa Bayan",
+                       "start_seconds":  24,
+                       "end_seconds":  37.5,
+                       "duration_seconds":  13.5,
+                       "narration":  "Sa pamahalaang rebolusyonaryo, naging pinunong militar si Luna. Nagtatag siya ng akademyang militar. Ipinaglaban niya ang kalayaan ng Pilipinas.",
+                       "subtitle":  "Sa pamahalaang rebolusyonaryo, naging pinunong militar si Luna. Nagtatag siya ng akademyang militar. Ipinaglaban niya ang kalayaan ng Pilipinas.",
+                       "subtitle_cues":  [
+                                             {
+                                                 "index":  6,
+                                                 "start_seconds":  24.3,
+                                                 "end_seconds":  29.676,
+                                                 "text":  "Sa pamahalaang rebolusyonaryo, naging\npinunong militar si Luna.",
+                                                 "spoken_text":  "Sa pamahalaang rebolusyonaryo, naging pinunong militar si Luna.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_07_short.mp3",
+                                                 "audio_duration_seconds":  5.376
+                                             },
+                                             {
+                                                 "index":  7,
+                                                 "start_seconds":  29.856,
+                                                 "end_seconds":  32.904,
+                                                 "text":  "Nagtatag siya ng akademyang militar.",
+                                                 "spoken_text":  "Nagtatag siya ng akademyang militar.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_08_short.mp3",
+                                                 "audio_duration_seconds":  3.048
+                                             },
+                                             {
+                                                 "index":  8,
+                                                 "start_seconds":  33.084,
+                                                 "end_seconds":  36.756,
+                                                 "text":  "Ipinaglaban niya ang kalayaan ng\nPilipinas.",
+                                                 "spoken_text":  "Ipinaglaban niya ang kalayaan ng Pilipinas.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_09_short.mp3",
+                                                 "audio_duration_seconds":  3.672
+                                             }
+                                         ],
+                       "visual_prompt":  "One consistent historically inspired Antonio Luna, Filipino man in his early thirties, natural adult proportions, medium warm-brown complexion, broad oval face, deep-set dark-brown eyes, strong straight eyebrows, short neatly side-parted black hair, and a prominent neatly groomed dark mustache; no beard. Use the SAME face, mustache, hairline, build, and eye shape across every scene. Base likeness on archival Antonio Luna portrait references, never an actor or another hero. Skin, fabric colors and lighting are illustrative reconstructions, not claims about exact archival colors. Cinematic realistic hand-painted historical illustration, restrained brush texture, natural anatomy, warm late-afternoon or lamplit lighting, muted gold, umber, deep indigo and cream palette, historically plausible late-19th-century Philippine architecture and objects. Landscape 16:9; deliver at 1280x720, or prepare a 1920x1080 plate for proportional downsampling and gentle camera overscan. Keep the bottom 18% quiet for live Filipino subtitles. No baked-in text, captions, watermarks, logos or borders. Place the same Luna beside a wooden planning table in a late-1898 Philippine revolutionary military headquarters, opening onto a modest training courtyard. Adult Filipino officers quietly examine an unlabeled hand-drawn map and notebooks; soldiers prepare for instruction outside. Luna\u0027s gesture indicates an organized lesson, not an invented speech, oath or conversation. Warm interior light; calm purposeful expressions. Avoid identifying other historical leaders. No chibi, anime, caricature, modern uniforms or equipment, medals or rank insignia invented for this story, present-day vehicles, electrical lighting, readable fabricated documents, invented dialogue, identifiable film actors, movie stills, blood, wounds, bodies, firing weapons, triumphal battle scenes or anachronistic national symbols. Identity and uniform reference: use the supplied illustration of Luna to keep exactly the same broad oval face, dark handlebar mustache, skin tone, eyebrows and short dark hair, and the same dark high-collar period Filipino officer tunic, brass buttons and light cream military cap. Create a NEW scene showing Luna at a simple planning desk in a late-1898 Philippine revolutionary military headquarters with open capiz windows onto a modest training courtyard. Two anonymous adult Filipino officers listen; no other named historical people. Luna\u0027s hands rest naturally over an unlabeled paper map, not a modern geographical map. Historically inspired generic reconstruction of service and military education, not a claimed exact meeting. No invented dialogue, no printed text, no other hero portraits, no chibi. Natural adult anatomy, consistent realistic painterly style, warm oil-lamp and window lighting. A single 16:9 cinematic frame, lower 18 percent uncluttered for subtitles, no collage.",
+                       "setting":  "Pangkalahatang headquarters at training courtyard sa Luzon, 1898. Composite illustration ito, hindi isang sinasabing eksaktong pulong.",
+                       "character_appearance":  "Parehong Luna sa payak na madilim na high-collared officer coat, simpleng sinturon, pantalon at bota. Panatilihin ang parehong uniform design sa scenes 3–6.",
+                       "animation":  {
+                                         "type":  "slow_push_in",
+                                         "zoom_start":  1.04,
+                                         "zoom_end":  1.09,
+                                         "center_start":  [
+                                                              0.5,
+                                                              0.49
+                                                          ],
+                                         "center_end":  [
+                                                            0.5,
+                                                            0.49
+                                                        ],
+                                         "layer_notes":  "Pan/zoom ng buong painted plate lamang; walang animated limbs, cloud layers o lip-sync.",
+                                         "coordinate_system":  "normalized source center, x/y in [0,1]; zoom \u003e= 1; preserve 16:9, no stretching",
+                                         "easing":  "linear camera move; eased opacity only",
+                                         "fade_in_seconds":  0.2,
+                                         "fade_out_seconds":  0.2,
+                                         "transition_accounting":  "Fades are contained within this scene\u0027s allocated frames. No extra transition frames and no seventh scene."
+                                     },
+                       "historical_claims":  [
+                                                 "military leadership:1898",
+                                                 "Academia Militar:1898",
+                                                 "defense of Philippine independence"
+                                             ],
+                       "reference_ids":  [
+                                             "R1",
+                                             "R2"
+                                         ],
+                       "historical_guardrail":  "Sinusuportahan ng 2016 NHCP marker ang pagtatatag ng Academia Militar noong 1898. Huwag ipagkamali ang pagsapi sa pamunuang militar sa pag-angking sumali siya sa Katipunan noong 1896.",
+                       "media_production":  {
+                                                "illustration":  "generated_and_visually_reviewed",
+                                                "narration":  "synthetic_tl_generated",
+                                                "illustration_file":  "res://assets/story/antonio_luna/tagalog_short/scene_03.png",
+                                                "narration_sources":  [
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_07_short.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_08_short.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_09_short.mp3"
+                                                                      ]
+                                            },
+                       "frame_start":  576,
+                       "frame_count":  324,
+                       "composition":  "Luna sa planning desk kasama ang dalawang anonymous adult officers; may training courtyard sa likod. Generic reconstruction lamang."
+                   },
+                   {
+                       "id":  4,
+                       "title":  "Matapang na Heneral",
+                       "start_seconds":  37.5,
+                       "end_seconds":  54.5,
+                       "duration_seconds":  17,
+                       "narration":  "Sa Digmaang Pilipino-Amerikano, inayos ni Heneral Luna ang hukbo. Mahalaga sa kaniya ang disiplina, pagsasanay, at maayos na pamumuno upang mapalakas ang pagtatanggol sa bayan.",
+                       "subtitle":  "Sa Digmaang Pilipino-Amerikano, inayos ni Heneral Luna ang hukbo. Mahalaga sa kaniya ang disiplina, pagsasanay, at maayos na pamumuno upang mapalakas ang pagtatanggol sa bayan.",
+                       "subtitle_cues":  [
+                                             {
+                                                 "index":  9,
+                                                 "start_seconds":  37.8,
+                                                 "end_seconds":  43.536,
+                                                 "text":  "Sa Digmaang Pilipino-Amerikano, inayos ni\nHeneral Luna ang hukbo.",
+                                                 "spoken_text":  "Sa Digmaang Pilipino-Amerikano, inayos ni Heneral Luna ang hukbo.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_10_short.mp3",
+                                                 "audio_duration_seconds":  5.736
+                                             },
+                                             {
+                                                 "index":  10,
+                                                 "start_seconds":  43.716,
+                                                 "end_seconds":  50.388,
+                                                 "text":  "Mahalaga sa kaniya ang disiplina,\npagsasanay, at maayos na pamumuno",
+                                                 "spoken_text":  "Mahalaga sa kaniya ang disiplina, pagsasanay, at maayos na pamumuno",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_11.mp3",
+                                                 "audio_duration_seconds":  6.672
+                                             },
+                                             {
+                                                 "index":  11,
+                                                 "start_seconds":  50.568,
+                                                 "end_seconds":  54.192,
+                                                 "text":  "upang mapalakas ang pagtatanggol sa bayan.",
+                                                 "spoken_text":  "upang mapalakas ang pagtatanggol sa bayan.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_12.mp3",
+                                                 "audio_duration_seconds":  3.624
+                                             }
+                                         ],
+                       "visual_prompt":  "One consistent historically inspired Antonio Luna, Filipino man in his early thirties, natural adult proportions, medium warm-brown complexion, broad oval face, deep-set dark-brown eyes, strong straight eyebrows, short neatly side-parted black hair, and a prominent neatly groomed dark mustache; no beard. Use the SAME face, mustache, hairline, build, and eye shape across every scene. Base likeness on archival Antonio Luna portrait references, never an actor or another hero. Skin, fabric colors and lighting are illustrative reconstructions, not claims about exact archival colors. Cinematic realistic hand-painted historical illustration, restrained brush texture, natural anatomy, warm late-afternoon or lamplit lighting, muted gold, umber, deep indigo and cream palette, historically plausible late-19th-century Philippine architecture and objects. Landscape 16:9; deliver at 1280x720, or prepare a 1920x1080 plate for proportional downsampling and gentle camera overscan. Keep the bottom 18% quiet for live Filipino subtitles. No baked-in text, captions, watermarks, logos or borders. Show General Luna calmly organizing adult Filipino soldiers at an earthwork defensive camp in Luzon during the 1899 Philippine-American War. A few soldiers stack sandbags and timber while others listen attentively to a practical demonstration; period rifles remain lowered or safely stacked. Emphasize preparation, order, cooperation and purposeful leadership. No visible enemies, active gunfire, explosions, injuries or claimed victory. Golden late-afternoon light with restrained contrast. No chibi, anime, caricature, modern uniforms or equipment, medals or rank insignia invented for this story, present-day vehicles, electrical lighting, readable fabricated documents, invented dialogue, identifiable film actors, movie stills, blood, wounds, bodies, firing weapons, triumphal battle scenes or anachronistic national symbols. Identity reference: use the same Antonio Luna face and officer uniform as the supplied image: broad oval face, large dark handlebar mustache, strong eyebrows, natural adult Filipino build, dark high-collar officer tunic, pale cream cap. Create a NEW exterior defensive-preparation scene, not another desk. Generic rural Luzon camp during the Philippine-American War, 1899: Luna stands in three-quarter view, calmly supervising adult Filipino soldiers arranging simple sandbags and timber earthworks. Hands natural, no commanding theatrical pose, no invented speech. Rifles may be safely stacked or lowered, period clothing only; no helmets, modern uniforms, combat, explosions, bodies, wounded people or weapons firing. Warm morning light across green fields and bamboo, quiet resolute educational tone. Historically inspired reconstruction, not a claim to illustrate a particular named battle or victory. One realistic painterly cinematic frame, 16:9, leave bottom 18% visually quiet for subtitles. No chibi, actor likeness, film recreation, text or collage.",
+                       "setting":  "Pangkalahatang defensive camp sa Luzon, 1899; hindi muling pagsasadula ng isang partikular na labanan o tagumpay.",
+                       "character_appearance":  "Parehong mukha, officer coat, sinturon at bota. Maaaring hawak ang kaparehong simpleng cap; walang dagdag na medalya, dekorasyon o modernong insignia.",
+                       "animation":  {
+                                         "type":  "slow_pan_left",
+                                         "zoom_start":  1.08,
+                                         "zoom_end":  1.08,
+                                         "center_start":  [
+                                                              0.53,
+                                                              0.5
+                                                          ],
+                                         "center_end":  [
+                                                            0.47,
+                                                            0.5
+                                                        ],
+                                         "layer_notes":  "Pan/zoom ng buong painted plate lamang; walang animated limbs, cloud layers o lip-sync.",
+                                         "coordinate_system":  "normalized source center, x/y in [0,1]; zoom \u003e= 1; preserve 16:9, no stretching",
+                                         "easing":  "linear camera move; eased opacity only",
+                                         "fade_in_seconds":  0.2,
+                                         "fade_out_seconds":  0.2,
+                                         "transition_accounting":  "Fades are contained within this scene\u0027s allocated frames. No extra transition frames and no seventh scene."
+                                     },
+                       "historical_claims":  [
+                                                 "Philippine-American War:1899",
+                                                 "army organization",
+                                                 "discipline",
+                                                 "defensive preparation"
+                                             ],
+                       "reference_ids":  [
+                                             "R1",
+                                             "R4"
+                                         ],
+                       "historical_guardrail":  "Ilarawan ang disiplina nang hindi ginagawang cartoon na galit o nananakit si Luna. Hindi inaangking nanalo siya sa isang labanan o nagsalita ng isang sikat na linya.",
+                       "media_production":  {
+                                                "illustration":  "generated_and_visually_reviewed",
+                                                "narration":  "synthetic_tl_generated",
+                                                "illustration_file":  "res://assets/story/antonio_luna/tagalog_short/scene_04.png",
+                                                "narration_sources":  [
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_10_short.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_11.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_12.mp3"
+                                                                      ]
+                                            },
+                       "frame_start":  900,
+                       "frame_count":  408,
+                       "composition":  "Luna sa rural defensive camp, may adult soldiers na naghahanda ng sandbags at timber. Walang labanan o putukan."
+                   },
+                   {
+                       "id":  5,
+                       "title":  "Ang Pagpanaw ng Heneral",
+                       "start_seconds":  54.5,
+                       "end_seconds":  73,
+                       "duration_seconds":  18.5,
+                       "narration":  "Ngunit noong 5 Hunyo 1899, pinaslang si Heneral Antonio Luna sa Cabanatuan, Nueva Ecija. Nawala ang isang pinuno na naglingkod para sa kalayaan ng bayan.",
+                       "subtitle":  "Ngunit noong 5 Hunyo 1899, pinaslang si Heneral Antonio Luna sa Cabanatuan, Nueva Ecija. Nawala ang isang pinuno na naglingkod para sa kalayaan ng bayan.",
+                       "subtitle_cues":  [
+                                             {
+                                                 "index":  12,
+                                                 "start_seconds":  54.8,
+                                                 "end_seconds":  63.608,
+                                                 "text":  "Ngunit noong 5 Hunyo 1899, pinaslang si\nHeneral Antonio Luna",
+                                                 "spoken_text":  "Ngunit noong ikalima ng Hunyo, isang libo walong daan at siyamnapu\u0027t siyam, pinaslang si Heneral Antonio Luna",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_13.mp3",
+                                                 "audio_duration_seconds":  8.808
+                                             },
+                                             {
+                                                 "index":  13,
+                                                 "start_seconds":  63.788,
+                                                 "end_seconds":  67.1,
+                                                 "text":  "sa Cabanatuan, Nueva Ecija.",
+                                                 "spoken_text":  "sa Cabanatuan, Nueva Ecija.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_14.mp3",
+                                                 "audio_duration_seconds":  3.312
+                                             },
+                                             {
+                                                 "index":  14,
+                                                 "start_seconds":  67.28,
+                                                 "end_seconds":  72.464,
+                                                 "text":  "Nawala ang isang pinuno na naglingkod para\nsa kalayaan ng bayan.",
+                                                 "spoken_text":  "Nawala ang isang pinuno na naglingkod para sa kalayaan ng bayan.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_15.mp3",
+                                                 "audio_duration_seconds":  5.184
+                                             }
+                                         ],
+                       "visual_prompt":  "One consistent historically inspired Antonio Luna, Filipino man in his early thirties, natural adult proportions, medium warm-brown complexion, broad oval face, deep-set dark-brown eyes, strong straight eyebrows, short neatly side-parted black hair, and a prominent neatly groomed dark mustache; no beard. Use the SAME face, mustache, hairline, build, and eye shape across every scene. Base likeness on archival Antonio Luna portrait references, never an actor or another hero. Skin, fabric colors and lighting are illustrative reconstructions, not claims about exact archival colors. Cinematic realistic hand-painted historical illustration, restrained brush texture, natural anatomy, warm late-afternoon or lamplit lighting, muted gold, umber, deep indigo and cream palette, historically plausible late-19th-century Philippine architecture and objects. Landscape 16:9; deliver at 1280x720, or prepare a 1920x1080 plate for proportional downsampling and gentle camera overscan. Keep the bottom 18% quiet for live Filipino subtitles. No baked-in text, captions, watermarks, logos or borders. A respectful solemn view of an empty late-19th-century plaza in Cabanatuan, Nueva Ecija, with period stone-and-timber public buildings and a shaded walkway. Use soft warm evening light fading gently toward muted amber and umber. Keep the square quiet and dignified. No killing, weapons in use, attackers, bodies, wounds, blood or invented confrontation. Do not copy a modern church facade and label it as the exact 1899 building. No chibi, anime, caricature, modern uniforms or equipment, medals or rank insignia invented for this story, present-day vehicles, electrical lighting, readable fabricated documents, invented dialogue, identifiable film actors, movie stills, blood, wounds, bodies, firing weapons, triumphal battle scenes or anachronistic national symbols. Style reference only: match the warm realistic painterly illustration of the supplied Manila street, but create an entirely NEW EMPTY late-19th-century provincial central-Luzon town plaza evocative of Cabanatuan, Nueva Ecija, in June 1899. Wide quiet cobbled or earth courtyard, modest stone-and-timber Spanish-colonial buildings, capiz windows, a few trees, gentle distant hills, muted late-afternoon amber light, contemplative and respectful. No named modern landmark, no precise architectural reconstruction of a present-day cathedral. Absolutely NO people, no Luna portrait in this scene, no bodies, blood, weapons, attackers, fighting, crime details, funeral or invented ceremony. The narrator will state the verified date and place; do not bake text, dates or plaques into the art. One 16:9 landscape cinematic illustration, lower 18 percent uncluttered for readable subtitles. No chibi or collage.",
+                       "setting":  "Tahimik na lumang plaza sa Cabanatuan, Nueva Ecija, 1899. Hindi ipinapakitang eksaktong reconstruction ng modernong cathedral facade.",
+                       "character_appearance":  "Hindi kailangan ang katawan ni Luna. Sa opsiyonal na portrait inset, ang kaparehong mukha lamang ang gagamitin; walang bangkay o sugat.",
+                       "animation":  {
+                                         "type":  "very_slow_pull_back",
+                                         "zoom_start":  1.07,
+                                         "zoom_end":  1.04,
+                                         "center_start":  [
+                                                              0.5,
+                                                              0.5
+                                                          ],
+                                         "center_end":  [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                         "layer_notes":  "Pan/zoom ng buong painted plate lamang; walang animated limbs, cloud layers o lip-sync.",
+                                         "coordinate_system":  "normalized source center, x/y in [0,1]; zoom \u003e= 1; preserve 16:9, no stretching",
+                                         "easing":  "linear camera move; eased opacity only",
+                                         "fade_in_seconds":  0.2,
+                                         "fade_out_seconds":  0.4,
+                                         "transition_accounting":  "Fades are contained within this scene\u0027s allocated frames. No extra transition frames and no seventh scene."
+                                     },
+                       "historical_claims":  [
+                                                 "death_date:1899-06-05",
+                                                 "death_place:Cabanatuan, Nueva Ecija",
+                                                 "circumstance:assassination"
+                                             ],
+                       "reference_ids":  [
+                                             "R1",
+                                             "R2",
+                                             "R3"
+                                         ],
+                       "historical_guardrail":  "Gamitin ang \u0027pinaslang\u0027, hindi \u0027namatay sa sakit\u0027, \u0027namatay sa labanan\u0027, o \u0027binitay\u0027. Walang ituturong utak ng pagpaslang at walang inimbentong usapan.",
+                       "media_production":  {
+                                                "illustration":  "generated_and_visually_reviewed",
+                                                "narration":  "synthetic_tl_generated",
+                                                "illustration_file":  "res://assets/story/antonio_luna/tagalog_short/scene_05.png",
+                                                "narration_sources":  [
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_13.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_14.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_15.mp3"
+                                                                      ]
+                                            },
+                       "frame_start":  1308,
+                       "frame_count":  444,
+                       "composition":  "Tahimik at walang taong provincial plaza, stone-and-timber houses at muted afternoon light. Walang katawan o pagsasadula ng pagpatay.",
+                       "final_edit_prompt":  "EDIT this image into a completely EMPTY historical town plaza. REMOVE the entire foreground man from the image, including all face, hair, mustache, body, arms, suit, shirt and tie. There must be ZERO people or portraits anywhere in the final image. Reconstruct the area he occupied as a quiet open courtyard with earth and stone paving, trees and a modest stone-and-timber building with capiz windows continuing naturally into the background. Keep the warm muted amber afternoon lighting, realistic painterly illustration, late nineteenth-century provincial central Luzon setting, distant hills, 16:9 composition. This is the respectful empty Cabanatuan setting for a historical death narration, not a scene showing the deceased. No bodies, human silhouettes, blood, weapons, writing or text. Lower 18 percent quiet for later subtitles."
+                   },
+                   {
+                       "id":  6,
+                       "title":  "Ang Kanyang Pamana",
+                       "start_seconds":  73,
+                       "end_seconds":  88.5,
+                       "duration_seconds":  15.5,
+                       "narration":  "Naalala natin siya bilang matapang at determinadong pinuno. Ang katapangan at pagmamahal sa bayan ni Heneral Antonio Luna ay patuloy na nagbibigay-inspirasyon sa mga Pilipino.",
+                       "subtitle":  "Naalala natin siya bilang matapang at determinadong pinuno. Ang katapangan at pagmamahal sa bayan ni Heneral Antonio Luna ay patuloy na nagbibigay-inspirasyon sa mga Pilipino.",
+                       "subtitle_cues":  [
+                                             {
+                                                 "index":  15,
+                                                 "start_seconds":  73.3,
+                                                 "end_seconds":  78.1,
+                                                 "text":  "Naalala natin siya bilang matapang at\ndeterminadong pinuno.",
+                                                 "spoken_text":  "Naalala natin siya bilang matapang at determinadong pinuno.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_16.mp3",
+                                                 "audio_duration_seconds":  4.8
+                                             },
+                                             {
+                                                 "index":  16,
+                                                 "start_seconds":  78.28,
+                                                 "end_seconds":  83.128,
+                                                 "text":  "Ang katapangan at pagmamahal sa bayan ni\nHeneral Antonio Luna",
+                                                 "spoken_text":  "Ang katapangan at pagmamahal sa bayan ni Heneral Antonio Luna",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_17.mp3",
+                                                 "audio_duration_seconds":  4.848
+                                             },
+                                             {
+                                                 "index":  17,
+                                                 "start_seconds":  83.308,
+                                                 "end_seconds":  88.3,
+                                                 "text":  "ay patuloy na nagbibigay-inspirasyon sa\nmga Pilipino.",
+                                                 "spoken_text":  "ay patuloy na nagbibigay-inspirasyon sa mga Pilipino.",
+                                                 "audio_file":  "res://assets/story/antonio_luna/tagalog_short/narration/cue_18.mp3",
+                                                 "audio_duration_seconds":  4.416
+                                             }
+                                         ],
+                       "visual_prompt":  "Use case: historical-scene / identity-preserve. Create ONE finished cinematic historical illustration for Scene 6 of an original educational Antonio Luna short film. The supplied archival black-and-white photograph is ONLY a likeness and uniform reference, not an image to reproduce as a photo. Depict the SAME General Antonio Luna recognizable by his broad oval face, deep-set brown eyes, strong brows, short dark hair and prominent thick handlebar mustache, adult Filipino man aged about 32, natural realistic proportions, no beard, not a film actor. Chest-up portrait on the left third, looking calmly slightly toward the right, wearing a dark indigo period high-collared officer tunic and a plain light cream period cap inspired by the photograph; keep details restrained and do not add medals or fantastical rank symbols. Peaceful late-19th-century Philippine landscape behind him, modest historical houses, warm sunrise light over distant green hills. A Philippine flag drapes softly in the right background: BLUE above RED, white triangle at the hoist with one golden sun and three stars, dignified and secondary. This is a symbolic commemorative illustration, not a reenactment of a flag raising. Painterly-realistic illustrated historical storytelling, beautiful warm amber lighting, muted gold, umber, indigo and cream, fine brushwork and natural skin texture, gentle atmospheric depth, age-appropriate for Grade 6. Wide 16:9 LANDSCAPE composition, intended 1280x720. Keep face, cap and flag comfortably within the central safe framing so slight camera zoom and 16:9 cropping do not cut them. Bottom 18% quiet and low detail for live Filipino subtitles. No letters, words, captions, title, logo, watermark, border, collage, chibi, anime, caricature, modern clothes, modern weapons, neon effects or graphic violence. Only one complete landscape frame.",
+                       "setting":  "Payapang historical landscape at simbolikong commemorative portrait; hindi archival footage ng isang partikular na seremonya.",
+                       "character_appearance":  "Parehong adult Luna at uniporme mula sa scenes 3–4, mahinahong three-quarter portrait, natural na proporsyon at kaparehong bigote.",
+                       "animation":  {
+                                         "type":  "slow_push_in",
+                                         "zoom_start":  1.04,
+                                         "zoom_end":  1.07,
+                                         "center_start":  [
+                                                              0.5,
+                                                              0.5
+                                                          ],
+                                         "center_end":  [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                         "layer_notes":  "Pan/zoom ng buong painted plate lamang; walang animated limbs, cloud layers o lip-sync.",
+                                         "coordinate_system":  "normalized source center, x/y in [0,1]; zoom \u003e= 1; preserve 16:9, no stretching",
+                                         "easing":  "linear camera move; eased opacity only",
+                                         "fade_in_seconds":  0.2,
+                                         "fade_out_seconds":  0.2,
+                                         "transition_accounting":  "Fades are contained within this scene\u0027s allocated frames. No extra transition frames and no seventh scene."
+                                     },
+                       "historical_claims":  [
+                                                 "legacy:courage",
+                                                 "legacy:leadership",
+                                                 "legacy:determination to defend independence"
+                                             ],
+                       "reference_ids":  [
+                                             "R1",
+                                             "R4"
+                                         ],
+                       "historical_guardrail":  "Ang pamana ay buod na pang-edukasyon. Ang huling mensahe ay narrator text na hiniling ng user, hindi isang makasaysayang sipi ni Antonio Luna.",
+                       "media_production":  {
+                                                "illustration":  "generated_and_visually_reviewed",
+                                                "narration":  "synthetic_tl_generated",
+                                                "illustration_file":  "res://assets/story/antonio_luna/tagalog_short/scene_06.png",
+                                                "narration_sources":  [
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_16.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_17.mp3",
+                                                                          "res://assets/story/antonio_luna/tagalog_short/narration/cue_18.mp3"
+                                                                      ]
+                                            },
+                       "frame_start":  1752,
+                       "frame_count":  372,
+                       "composition":  "Portrait ni Luna sa kaliwa, peaceful fields at Philippine flag sa kanan. Parehong mukha at uniporme; hopeful sunrise."
+                   }
+               ],
+    "production":  {
+                       "date":  "2026-11-26",
+                       "image_tool":  "image_gen",
+                       "narration_service":  "Google Translate TTS, tl",
+                       "narration_endpoint":  "https://translate.google.com/translate_tts",
+                       "master":  "res://assets/story_videos/antonio_luna_story.mp4",
+                       "runtime":  "res://assets/story_videos/antonio_luna_story.ogv",
+                       "renderer":  "tools/render_antonio_luna_story.ps1",
+                       "character_reference":  {
+                                                   "url":  "https://commons.wikimedia.org/wiki/File:Antonio_luna_small.jpg",
+                                                   "license":  "Public Domain Mark 1.0",
+                                                   "usage":  "Likeness guide only; the archival photo is not included in the film."
+                                               }
+                   }
+}
