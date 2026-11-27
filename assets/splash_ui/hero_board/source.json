@@ -1,105 +1,169 @@
 {
-  "schema_version": 1,
-  "feature": "HistoryRoll hero-board loading screen",
-  "created": "2026-11-27",
-  "reference": "User-provided HistoryRoll loading-screen image in this conversation",
-  "generation_tool": "image_gen (built-in mode)",
-  "scope": "Loading-screen presentation; existing Main Menu and gameplay systems unchanged",
-  "files": [
-    {
-      "path": "res://assets/splash_ui/hero_board/hero_header.png",
-      "role": "Transparent six-hero ensemble and HistoryRoll / Snake & Ladder scroll",
-      "width": 1536,
-      "height": 1024,
-      "prompt": "Use case: ui-mockup. Asset type: transparent foreground logo/header for the existing HistoryRoll Android portrait loading screen. Use the attached USER loading-screen image as the visual reference; create ONLY its upper hero ensemble and main parchment logo, without the scenery, board, tagline or loading bar. Match the cheerful polished hand-drawn 2D educational cartoon look, bright clean colors, warm gold scroll shading and dark brown outlines (NOT pixel art, NOT chibi). Exactly six Filipino hero busts above and behind a large golden parchment scroll: back left Lapulapu with long dark hair, red headband, earring and upright spear; back center Andres Bonifacio in white shirt and red neckerchief with one fist raised; back right Jose Rizal in dark formal suit; front left Apolinario Mabini in dark formal suit; front center elderly Melchora Aquino with white-gray hair and cream shawl; front right mustached Antonio Luna in a blue historical military uniform and cap. Keep every face clear and distinct; natural cartoon proportions, friendly resolute Grade-6 appropriate expressions. Green leaves and a golden sunburst behind the busts, all part of this ONE header. Scroll lettering must be exact and legible: 'HistoryRoll' large dark brown/gold outlined serif, below it 'Snake & Ladder' in smaller dark brown serif, one small ivory die on each side of the subtitle. Landscape 3:2 or 1.5:1 canvas, tightly frame the entire ensemble and scroll with only a 2 percent transparent safety margin, no clipped spear or hair. True transparent background. No other words, no tagline, no subject banner, no sky, no scenery, no board, no progress bar, no extra people or badges."
-    },
-    {
-      "path": "res://assets/splash_ui/hero_board/background.png",
-      "role": "Philippine-themed sky, nipa hut, stone gate, flag and garden scenery",
-      "width": 1024,
-      "height": 1536,
-      "prompt": "Use case: ui-mockup. Asset type: background-only scenery for a colorful Filipino educational game's PORTRAIT loading screen, 2:3 portrait canvas. Match the attached generated header's polished 2D cartoon art treatment, clean dark brown outlines, bright blue and fresh green palette, soft warm gold shading. Draw a very bright cyan-blue sky with fluffy white clouds and a few rounded leafy tree canopies framing the upper left/right edges. A simple wooden nipa hut on stilts near the lower-left edge, a small Manila Intramuros/Fort Santiago-inspired stone gate near the lower-right with a Philippine flag (blue above red, white triangle, golden sun and three stars). Green bushes and a cheerful grassy garden foreground, distant soft hills; no modern buildings. IMPORTANT COMPOSITION: the central upper 55 percent is mostly open blue sky for a SEPARATE LARGE HERO LOGO overlay; center lower 45 percent is mostly simple clear green lawn for a SEPARATE winding board overlay, so keep landmarks and props at the outer sides, not the center. A small hourglass on a stone plinth at extreme lower-left, small scroll and compass along the bottom-left edge, one ivory die and two closed books at extreme bottom-right. Keep bottom-center 7 percent clear lawn for a real loading bar added later in Godot. A little colorful garden foliage and small pink flowers at corners are okay. No board, no road, no tiles, no text, no logos, no people or portraits, no banner, no progress bar or frame, no UI buttons. It is only the background layer; do not reproduce any part of the header reference.",
-      "style_reference": "Generated hero_header.png"
-    },
-    {
-      "path": "res://assets/splash_ui/hero_board/winding_board.png",
-      "role": "Transparent five-lane blank winding path, two snakes, two ladders and START sign",
-      "width": 1536,
-      "height": 1024,
-      "prompt": "Use case: ui-mockup. Asset type: ONE transparent decorative Snakes and Ladders board illustration for the LOWER part of a mobile HistoryRoll loading screen. Polished bright 2D cartoon illustration with clean warm-brown outlines, matching a cheerful Philippine educational game. This is a wide shallow 3/4-perspective winding ribbon board, not a square grid: FIVE separate horizontal switchback lanes, connected with smooth U-turn bends alternately on right and left; the path starts at BOTTOM LEFT and ends at TOP RIGHT. Exactly SIX broad blank red-and-ivory alternating square/trapezoid tiles on each horizontal lane, FIVE lanes and THIRTY blank tiles in total. Topmost lane recedes slightly in perspective, bottommost lane is closest; pale stone curb edging, small vivid green grass gaps visible BETWEEN the lanes. Keep cells large, broad and clearly separated. IMPORTANT: leave ALL tile faces completely BLANK, with absolutely NO numbers, letters, symbols or question marks on them; the game will render the correct sequential numbers later. One small wood sign saying exactly 'START' outside the bottom-left entrance. Add two friendly bright green cartoon snakes with distinct single heads, yellow bellies and small red tongues connecting distant lanes, and two honey-gold wooden ladders diagonally bridging lanes, like a genuine playful snakes-and-ladders board. Place the snake/ladder artwork near connecting bends and keep the center of every straight tile as unobstructed as possible for later text. Snakes must have continuous anatomically coherent bodies, no extra heads or separate arrowhead tails. The route is the only composition: no trees, hut, buildings, people, titles, dice, books, loading bar or extra scenery. TIGHTLY frame the complete board inside a landscape 3:2 canvas with true transparent background and a very small safety margin; do not clip the START sign, snakes or curb. Warm cream, coral-red, light stone, green snakes and golden ladders, clean soft shadows only immediately under the board. No numbers anywhere.",
-      "final_edit_prompt": "EDIT this transparent winding board. Correct its structure: it currently has only FOUR horizontal lanes; the final board MUST have exactly FIVE horizontal lanes, with SIX BLANK red/cream tile faces in EACH lane (30 blank cells). Add one whole extra lane and its connecting U-turn, not extra columns. Count the FIVE horizontal rows from TOP to BOTTOM at approximately y=12%, 30%, 48%, 66%, 84% of the canvas. Keep a SINGLE continuous serpentine ribbon path starting at bottom-left and ending at top-right, with alternate right and left U-turns connecting adjacent rows. Make every lane a little shorter vertically to fit all FIVE rows within this same landscape canvas. Exactly 6 broad blank tiles across each row; no extra blank tile divisions on the U-turns. Preserve cheerful polished 2D cartoon treatment, alternating coral-red/cream faces, light stone curbs, green grassy gaps, TWO friendly green snakes with single coherent bodies and TWO golden wooden ladders. Keep centers of tiles unobscured for later numbers. Keep the small START sign outside bottom-left; no other text, numbers, icons or scenery. Output must have true TRANSPARENT alpha everywhere outside the board, grass gaps and sign, with no colored rectangle or dark matte; only a very short soft shadow immediately below stone edges. Tight composition, don't clip any board edge. The critical correction is FIVE ROWS, SIX CELLS PER ROW.",
-      "review_note": "First generation had four rows; the final edited asset has five rows / six cells per row. Tile numbers are drawn from 1 to 30 by the existing Explorers node's new splash_board_art.gd script."
-    },
-    {
-      "path": "res://assets/splash_ui/hero_board/tagline_plate.svg",
-      "role": "Code-native wooden/gold caption backing"
-    },
-    {
-      "path": "res://assets/splash_ui/hero_board/bar_track.svg",
-      "role": "Code-native gold/brown frame for the actual ProgressBar"
-    }
-  ],
-  "font": {
-    "path": "res://assets/fonts/BreeSerif-Regular.ttf",
-    "license": "res://assets/fonts/BreeSerif-OFL.txt",
-    "note": "Existing licensed project font reused for captions and decorative tile numbers."
-  },
-  "integration": {
-    "scene": "res://splash_screen.tscn",
-    "controller": "res://splash_screen.gd",
-    "board_lettering": "res://splash_board_art.gd",
-    "existing_nodes_preserved": 14,
-    "minimum_intro_duration_seconds": 9,
-    "progress": "Existing threaded Main Menu resource load combined with elapsed presentation time; actual live ProgressBar, no baked loading percentage.",
-    "navigation": "Existing Main Menu opens once after resources and minimum intro duration are ready.",
-    "music": "Existing AudioManager startup playback and saved ON/OFF behavior retained.",
-    "editor": "Same existing scene and node names; the decorative numbering script uses @tool so numbers are also visible in the Editor. Previous discovery artwork is retained."
-  },
-  "verification": {
-    "godot": "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
-    "startup_layout_checks": {
-      "passed": 218,
-      "failed": 0
-    },
-    "music_checks": {
-      "passed": 154,
-      "failed": 0
-    },
-    "viewports": [
-      [
-        1024,
-        1536
-      ],
-      [
-        720,
-        1280
-      ],
-      [
-        1086,
-        1448
-      ],
-      [
-        1080,
-        1920
-      ],
-      [
-        1080,
-        2340
-      ],
-      [
-        1080,
-        2400
-      ]
-    ],
-    "visual_review": [
-      "720x1280 complete frame",
-      "720x1280 one-second partial loading frame",
-      "1024x1536 complete frame",
-      "1086x1448 complete frame"
-    ],
-    "measured_intro_seconds": 9.335,
-    "real_progress_and_settings_unchanged": true,
-    "physical_android_test": false,
-    "remaining_diagnostics": "Existing external-text-editor configuration errors during headless Editor import; ObjectDB shutdown warnings remain in test logs. Final runtime suites reported no script/parse errors and no failed checks."
-  }
+    "schema_version":  1,
+    "feature":  "HistoryRoll hero-board loading screen",
+    "created":  "2026-11-27",
+    "reference":  "User-provided HistoryRoll loading-screen image in this conversation",
+    "generation_tool":  "image_gen (built-in mode)",
+    "scope":  "Loading-screen presentation; existing Main Menu and gameplay systems unchanged",
+    "files":  [
+                  {
+                      "path":  "res://assets/splash_ui/hero_board/hero_header.png",
+                      "role":  "Transparent six-hero ensemble and HistoryRoll / Snake \u0026 Ladder scroll",
+                      "width":  1536,
+                      "height":  1024,
+                      "prompt":  "Use case: ui-mockup. Asset type: transparent foreground logo/header for the existing HistoryRoll Android portrait loading screen. Use the attached USER loading-screen image as the visual reference; create ONLY its upper hero ensemble and main parchment logo, without the scenery, board, tagline or loading bar. Match the cheerful polished hand-drawn 2D educational cartoon look, bright clean colors, warm gold scroll shading and dark brown outlines (NOT pixel art, NOT chibi). Exactly six Filipino hero busts above and behind a large golden parchment scroll: back left Lapulapu with long dark hair, red headband, earring and upright spear; back center Andres Bonifacio in white shirt and red neckerchief with one fist raised; back right Jose Rizal in dark formal suit; front left Apolinario Mabini in dark formal suit; front center elderly Melchora Aquino with white-gray hair and cream shawl; front right mustached Antonio Luna in a blue historical military uniform and cap. Keep every face clear and distinct; natural cartoon proportions, friendly resolute Grade-6 appropriate expressions. Green leaves and a golden sunburst behind the busts, all part of this ONE header. Scroll lettering must be exact and legible: \u0027HistoryRoll\u0027 large dark brown/gold outlined serif, below it \u0027Snake \u0026 Ladder\u0027 in smaller dark brown serif, one small ivory die on each side of the subtitle. Landscape 3:2 or 1.5:1 canvas, tightly frame the entire ensemble and scroll with only a 2 percent transparent safety margin, no clipped spear or hair. True transparent background. No other words, no tagline, no subject banner, no sky, no scenery, no board, no progress bar, no extra people or badges."
+                  },
+                  {
+                      "path":  "res://assets/splash_ui/hero_board/background.png",
+                      "role":  "Philippine-themed sky, nipa hut, stone gate, flag and garden scenery",
+                      "width":  1024,
+                      "height":  1536,
+                      "prompt":  "Use case: ui-mockup. Asset type: background-only scenery for a colorful Filipino educational game\u0027s PORTRAIT loading screen, 2:3 portrait canvas. Match the attached generated header\u0027s polished 2D cartoon art treatment, clean dark brown outlines, bright blue and fresh green palette, soft warm gold shading. Draw a very bright cyan-blue sky with fluffy white clouds and a few rounded leafy tree canopies framing the upper left/right edges. A simple wooden nipa hut on stilts near the lower-left edge, a small Manila Intramuros/Fort Santiago-inspired stone gate near the lower-right with a Philippine flag (blue above red, white triangle, golden sun and three stars). Green bushes and a cheerful grassy garden foreground, distant soft hills; no modern buildings. IMPORTANT COMPOSITION: the central upper 55 percent is mostly open blue sky for a SEPARATE LARGE HERO LOGO overlay; center lower 45 percent is mostly simple clear green lawn for a SEPARATE winding board overlay, so keep landmarks and props at the outer sides, not the center. A small hourglass on a stone plinth at extreme lower-left, small scroll and compass along the bottom-left edge, one ivory die and two closed books at extreme bottom-right. Keep bottom-center 7 percent clear lawn for a real loading bar added later in Godot. A little colorful garden foliage and small pink flowers at corners are okay. No board, no road, no tiles, no text, no logos, no people or portraits, no banner, no progress bar or frame, no UI buttons. It is only the background layer; do not reproduce any part of the header reference.",
+                      "style_reference":  "Generated hero_header.png"
+                  },
+                  {
+                      "path":  "res://assets/splash_ui/hero_board/winding_board.png",
+                      "role":  "Transparent five-lane blank winding path, two snakes, two ladders and START sign",
+                      "width":  1536,
+                      "height":  1024,
+                      "prompt":  "Use case: ui-mockup. Asset type: ONE transparent decorative Snakes and Ladders board illustration for the LOWER part of a mobile HistoryRoll loading screen. Polished bright 2D cartoon illustration with clean warm-brown outlines, matching a cheerful Philippine educational game. This is a wide shallow 3/4-perspective winding ribbon board, not a square grid: FIVE separate horizontal switchback lanes, connected with smooth U-turn bends alternately on right and left; the path starts at BOTTOM LEFT and ends at TOP RIGHT. Exactly SIX broad blank red-and-ivory alternating square/trapezoid tiles on each horizontal lane, FIVE lanes and THIRTY blank tiles in total. Topmost lane recedes slightly in perspective, bottommost lane is closest; pale stone curb edging, small vivid green grass gaps visible BETWEEN the lanes. Keep cells large, broad and clearly separated. IMPORTANT: leave ALL tile faces completely BLANK, with absolutely NO numbers, letters, symbols or question marks on them; the game will render the correct sequential numbers later. One small wood sign saying exactly \u0027START\u0027 outside the bottom-left entrance. Add two friendly bright green cartoon snakes with distinct single heads, yellow bellies and small red tongues connecting distant lanes, and two honey-gold wooden ladders diagonally bridging lanes, like a genuine playful snakes-and-ladders board. Place the snake/ladder artwork near connecting bends and keep the center of every straight tile as unobstructed as possible for later text. Snakes must have continuous anatomically coherent bodies, no extra heads or separate arrowhead tails. The route is the only composition: no trees, hut, buildings, people, titles, dice, books, loading bar or extra scenery. TIGHTLY frame the complete board inside a landscape 3:2 canvas with true transparent background and a very small safety margin; do not clip the START sign, snakes or curb. Warm cream, coral-red, light stone, green snakes and golden ladders, clean soft shadows only immediately under the board. No numbers anywhere.",
+                      "final_edit_prompt":  "EDIT this transparent winding board. Correct its structure: it currently has only FOUR horizontal lanes; the final board MUST have exactly FIVE horizontal lanes, with SIX BLANK red/cream tile faces in EACH lane (30 blank cells). Add one whole extra lane and its connecting U-turn, not extra columns. Count the FIVE horizontal rows from TOP to BOTTOM at approximately y=12%, 30%, 48%, 66%, 84% of the canvas. Keep a SINGLE continuous serpentine ribbon path starting at bottom-left and ending at top-right, with alternate right and left U-turns connecting adjacent rows. Make every lane a little shorter vertically to fit all FIVE rows within this same landscape canvas. Exactly 6 broad blank tiles across each row; no extra blank tile divisions on the U-turns. Preserve cheerful polished 2D cartoon treatment, alternating coral-red/cream faces, light stone curbs, green grassy gaps, TWO friendly green snakes with single coherent bodies and TWO golden wooden ladders. Keep centers of tiles unobscured for later numbers. Keep the small START sign outside bottom-left; no other text, numbers, icons or scenery. Output must have true TRANSPARENT alpha everywhere outside the board, grass gaps and sign, with no colored rectangle or dark matte; only a very short soft shadow immediately below stone edges. Tight composition, don\u0027t clip any board edge. The critical correction is FIVE ROWS, SIX CELLS PER ROW.",
+                      "review_note":  "First generation had four rows; the final edited asset has five rows / six cells per row. Tile numbers are drawn from 1 to 30 by the existing Explorers node\u0027s new splash_board_art.gd script."
+                  },
+                  {
+                      "path":  "res://assets/splash_ui/hero_board/tagline_plate.svg",
+                      "role":  "Code-native wooden/gold caption backing"
+                  },
+                  {
+                      "path":  "res://assets/splash_ui/hero_board/bar_track.svg",
+                      "role":  "Code-native gold/brown frame for the actual ProgressBar"
+                  }
+              ],
+    "font":  {
+                 "path":  "res://assets/fonts/BreeSerif-Regular.ttf",
+                 "license":  "res://assets/fonts/BreeSerif-OFL.txt",
+                 "note":  "Existing licensed project font reused for captions and decorative tile numbers."
+             },
+    "integration":  {
+                        "scene":  "res://splash_screen.tscn",
+                        "controller":  "res://splash_screen.gd",
+                        "board_lettering":  "res://splash_board_art.gd",
+                        "existing_nodes_preserved":  14,
+                        "minimum_intro_duration_seconds":  9,
+                        "progress":  "Existing threaded Main Menu resource load combined with elapsed presentation time; actual live ProgressBar, no baked loading percentage.",
+                        "navigation":  "Existing Main Menu opens once after resources and minimum intro duration are ready.",
+                        "music":  "Existing AudioManager startup playback and saved ON/OFF behavior retained.",
+                        "editor":  "Same existing scene and node names; the decorative numbering script uses @tool so numbers are also visible in the Editor. Previous discovery artwork is retained."
+                    },
+    "verification":  {
+                         "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
+                         "startup_layout_checks":  {
+                                                       "passed":  249,
+                                                       "failed":  0
+                                                   },
+                         "music_checks":  {
+                                              "passed":  154,
+                                              "failed":  0
+                                          },
+                         "viewports":  [
+                                           [
+                                               1024,
+                                               1536
+                                           ],
+                                           [
+                                               720,
+                                               1280
+                                           ],
+                                           [
+                                               1086,
+                                               1448
+                                           ],
+                                           [
+                                               1065,
+                                               1477
+                                           ],
+                                           [
+                                               1080,
+                                               1920
+                                           ],
+                                           [
+                                               1080,
+                                               2340
+                                           ],
+                                           [
+                                               1080,
+                                               2400
+                                           ]
+                                       ],
+                         "visual_review":  [
+                                               "actual Godot render at 1065x1477, same resolution as desired reference",
+                                               "actual Godot render at 720x1280"
+                                           ],
+                         "measured_intro_seconds":  9.531,
+                         "real_progress_and_settings_unchanged":  true,
+                         "physical_android_test":  false,
+                         "remaining_diagnostics":  "Existing external-text-editor configuration errors during headless Editor import; ObjectDB shutdown warnings remain in test logs. Final runtime suites reported no script/parse errors and no failed checks."
+                     },
+    "current_revision":  {
+                             "revision":  2,
+                             "date":  "2026-11-27",
+                             "reason":  "User rejected the flat equally spaced rows and requested the perspective winding path from the second reference image.",
+                             "board_asset":  "res://assets/splash_ui/hero_board/winding_board_perspective.png",
+                             "atlas_crop":  {
+                                                "x":  0,
+                                                "y":  165,
+                                                "width":  1536,
+                                                "height":  859
+                                            },
+                             "board_generation_prompt":  "Use case: precise-object-edit. Reference: the supplied full portrait HistoryRoll loading screen is the DESIRED design. Prepare a production TRANSPARENT PNG containing ONLY the winding snakes-and-ladders road board from the LOWER HALF of that reference. This is an extraction and faithful reconstruction, NOT a redesign. Preserve the EXACT flowing road silhouette and 3/4 ground-plane perspective of the reference: the narrower far end begins at the upper RIGHT near the gate; the road snakes down across five staggered gently sloping runs with big rounded alternating U-turns, ending in the wide near run across the bottom. Follow the curved painted lanes, their varying lengths and trapezoidal tiles: the top run is SHORTER and further RIGHT than the near run. Keep large grassy open gaps between the runs. It must look like a winding game path laid naturally on the ground, with a shallow visible stone curb, not a flat rectangular slab or five equally long parallel shelves. Copy the reference\u0027s friendly green snakes and honey-colored wooden ladders at the same locations and angles: one snake near upper-middle/right with its head near the far run, one snake lower-left leading toward the START; ladder lower-right climbing diagonally to the middle run, ladder mid-left climbing diagonally to a far run. Keep the small wooden START sign at the lower-left entrance. Remove ALL tile numbers and letters from tile faces, leaving blank red and ivory alternating tiles, because sequential text will be rendered in Godot. The START word stays. Preserve the clean bright 2D cartoon illustration, red/cream path, pale stone edge, coherent single-headed green snakes and golden ladders of the reference. Remove EVERYTHING else: no sky, grass background outside the board, hero portraits, header, captions, loading bar, buildings, flag, hourglass, dice, books, compass or corner decoration. Grassy gaps between the path runs should also be transparent. Use a tightly fitted LANDSCAPE 3:2 canvas with a 2 percent transparent margin; preserve the path perspective and silhouette while fitting, never stretch it into an even grid. True transparent alpha, no dark matte or colored backdrop. Critical: match the irregular flowing PERSPECTIVE BOARD in the provided reference, not the rejected flat equal-row version.",
+                             "board_cleanup_prompt":  "EDIT ONLY the following two items in this transparent winding-board asset. 1) REMOVE the stone gate BUILDING in the top-right corner completely, replacing all of its pixels with true transparent alpha; preserve the road ending immediately below it and do not add another landmark. 2) Remove the stray WHITE halo/patch behind the lower-left green snake\u0027s head, leaving only the clean green snake silhouette and transparency. Everything else is LOCKED: keep the exact road silhouette, width, perspective, tile divisions and red/cream colors; keep the FIVE flowing staggered runs with big curved U-turns; keep both snakes, their curved bodies and arrow tips; keep both ladders at their exact positions and angles; keep the START sign. Do NOT change the path into parallel rows or a rectangular grid. Do NOT add numbers or letters to the blank tile faces. Same 1536x1024 canvas, do not rescale or reframe the board, don\u0027t clip its borders, no colored backdrop or dark matte. Output transparent PNG. The only removed object is the detached gate above the far end; the actual path remains unchanged.",
+                             "integration_notes":  "The new board follows a continuous winding road with narrower distant runs, broader near curves, staggered bends and two snakes/two ladders in the reference arrangement. Existing artwork is retained as the prior revision. Captions use narrower/taller centered banners and a gold subject plate. Decorative 1–30 text uses the existing Lora italic font at weight 700. The same 14 nodes, startup timing, background music and Main Menu route are preserved.",
+                             "font_resource":  "res://assets/splash_ui/hero_board/tile_font.tres",
+                             "font_license":  "res://assets/fonts/Lora-OFL.txt",
+                             "verification":  {
+                                                  "startup_layout_passed":  249,
+                                                  "startup_layout_failed":  0,
+                                                  "music_passed":  154,
+                                                  "music_failed":  0,
+                                                  "measured_intro_seconds":  9.531,
+                                                  "viewports":  [
+                                                                    [
+                                                                        1024,
+                                                                        1536
+                                                                    ],
+                                                                    [
+                                                                        720,
+                                                                        1280
+                                                                    ],
+                                                                    [
+                                                                        1086,
+                                                                        1448
+                                                                    ],
+                                                                    [
+                                                                        1065,
+                                                                        1477
+                                                                    ],
+                                                                    [
+                                                                        1080,
+                                                                        1920
+                                                                    ],
+                                                                    [
+                                                                        1080,
+                                                                        2340
+                                                                    ],
+                                                                    [
+                                                                        1080,
+                                                                        2400
+                                                                    ]
+                                                                ],
+                                                  "visual_review":  [
+                                                                        "actual Godot render at 1065x1477, same resolution as desired reference",
+                                                                        "actual Godot render at 720x1280"
+                                                                    ],
+                                                  "real_save_and_settings_unchanged":  true,
+                                                  "nodes_preserved":  14,
+                                                  "physical_android_test":  false,
+                                                  "remaining_diagnostics":  "Existing external-editor configuration errors during Editor import and ObjectDB shutdown warnings in tests; final runtime test suites reported no failed checks or script/parse errors."
+                                              }
+                         }
 }
