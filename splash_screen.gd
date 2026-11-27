@@ -178,40 +178,45 @@ func _update_layout() -> void:
 		var device_safe := Rect2(DisplayServer.get_display_safe_area())
 		if screen_size.x > 0.0 and screen_size.y > 0.0 and device_safe.has_area():
 			safe = Rect2(device_safe.position / screen_size * size, device_safe.size / screen_size * size).grow(-12.0)
-	for control: Control in [logo, explorers, tagline, subject, loading_label, loading_bar, $Presentation/SubjectBanner, $Presentation/LoadingBanner]:
-		control.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	var scale_factor := safe.size.x / 1086.0
-	var logo_width := safe.size.x * 0.88
-	logo.size = Vector2(logo_width, logo_width / logo.texture.get_size().aspect())
-	logo.position = Vector2(safe.get_center().x - logo.size.x * 0.5, safe.position.y + safe.size.y * 0.008)
-	var gap := maxf(8.0, safe.size.y * 0.008)
-	tagline.position = Vector2(safe.position.x + safe.size.x * 0.09, logo.position.y + logo.size.y + gap)
-	tagline.size = Vector2(safe.size.x * 0.82, safe.size.y * 0.038)
-	_fit_caption(tagline, 48.0 * scale_factor)
 	var subject_banner := $Presentation/SubjectBanner as TextureRect
-	subject_banner.position = Vector2(safe.position.x + safe.size.x * 0.12, tagline.position.y + tagline.size.y + gap)
-	subject_banner.size = Vector2(safe.size.x * 0.76, safe.size.y * 0.052)
-	subject.position = subject_banner.position + Vector2(subject_banner.size.x * 0.035, 0.0)
-	subject.size = subject_banner.size * Vector2(0.93, 1.0)
-	_fit_caption(subject, 34.0 * scale_factor)
 	var loading_banner := $Presentation/LoadingBanner as TextureRect
-	loading_banner.size = Vector2(safe.size.x * 0.56, safe.size.y * 0.055)
-	loading_banner.position = Vector2(safe.get_center().x - loading_banner.size.x * 0.5, safe.end.y - safe.size.y * 0.09)
-	loading_label.position = loading_banner.position + Vector2(loading_banner.size.x * 0.04, 0.0)
-	loading_label.size = loading_banner.size * Vector2(0.92, 1.0)
-	_fit_caption(loading_label, 40.0 * scale_factor)
 	var bar_frame := $Presentation/LoadingBarFrame as TextureRect
-	bar_frame.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	bar_frame.size = Vector2(safe.size.x * 0.75, safe.size.y * 0.043)
-	bar_frame.position = Vector2(safe.get_center().x - bar_frame.size.x * 0.5, loading_banner.position.y - gap * 1.8 - bar_frame.size.y)
-	var inset := maxf(4.0, bar_frame.size.y * 0.16)
+	for control: Control in [logo, explorers, tagline, subject, loading_label, loading_bar, subject_banner, loading_banner, bar_frame]:
+		control.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	# Fit the complete reference composition, keeping the two PNGs proportional.
+	# Lower the old font minimum before assigning smaller portrait rectangles.
+	for caption: Label in [tagline, subject, loading_label]:
+		caption.add_theme_font_size_override("font_size", 12)
+	var design := Vector2(1065.0, 1580.0)
+	var factor := minf(safe.size.x / design.x, safe.size.y / design.y)
+	var origin := safe.get_center() - design * factor * 0.5
+	var logo_width := 980.0 * factor
+	logo.size = Vector2(logo_width, logo_width / logo.texture.get_size().aspect())
+	logo.position = origin + Vector2((design.x - 980.0) * 0.5, 10.0) * factor
+	tagline.position = origin + Vector2(200.0, 675.0) * factor
+	tagline.size = Vector2(665.0, 54.0) * factor
+	_fit_caption(tagline, 45.0 * factor)
+	subject_banner.position = origin + Vector2(53.0, 741.0) * factor
+	subject_banner.size = Vector2(959.0, 55.0) * factor
+	subject.position = subject_banner.position + Vector2(subject_banner.size.x * 0.03, 0.0)
+	subject.size = subject_banner.size * Vector2(0.94, 1.0)
+	_fit_caption(subject, 38.0 * factor)
+	# Keep this existing node name so scene/script references remain compatible.
+	# Its new texture is the decorative winding board, with live 1–30 lettering.
+	var board_width := design.x * factor
+	explorers.size = Vector2(board_width, board_width / explorers.texture.get_size().aspect())
+	explorers.position = origin + Vector2(0.0, 812.0) * factor
+	bar_frame.size = Vector2(830.0 * factor, maxf(32.0, 36.0 * factor))
+	bar_frame.position = Vector2(safe.get_center().x - bar_frame.size.x * 0.5, explorers.position.y + explorers.size.y + 12.0 * factor)
+	var inset := maxf(2.0, bar_frame.size.y * 0.17)
 	loading_bar.size = bar_frame.size - Vector2.ONE * inset * 2.0
 	loading_bar.position = bar_frame.position + Vector2.ONE * inset
-	var clear_top := subject_banner.position.y + subject_banner.size.y + gap * 1.5
-	var explorer_height := minf(safe.size.y * 0.395, bar_frame.position.y - clear_top - gap)
-	var explorer_width := explorer_height * explorers.texture.get_size().aspect()
-	explorers.size = Vector2(explorer_width, explorer_height)
-	explorers.position = Vector2(safe.position.x + safe.size.x * 0.035, bar_frame.position.y - gap - explorer_height)
+	# Error/retry feedback stays usable, while the normal loading caption is hidden.
+	loading_banner.size = Vector2(740.0, 68.0) * factor
+	loading_banner.position = origin + Vector2((design.x - 740.0) * 0.5, 1050.0) * factor
+	loading_label.position = loading_banner.position + Vector2(loading_banner.size.x * 0.04, 0.0)
+	loading_label.size = loading_banner.size * Vector2(0.92, 1.0)
+	_fit_caption(loading_label, 38.0 * factor)
 	_set_logo_pivot()
 
 

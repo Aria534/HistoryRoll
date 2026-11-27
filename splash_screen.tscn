@@ -1,24 +1,27 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://splash_screen.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/logo.png" id="2_logo"]
-[ext_resource type="FontFile" path="res://assets/fonts/TitanOne-Regular.ttf" id="3_title"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/hero_header.png" id="2_logo"]
+[ext_resource type="FontFile" path="res://assets/fonts/BreeSerif-Regular.ttf" id="3_title"]
 [ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="4_body"]
 
-[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/background.png" id="5_background"]
-[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/explorers.png" id="6_explorers"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/background.png" id="5_background"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/winding_board.png" id="6_explorers"]
 [ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/subject_banner.svg" id="7_subject"]
 [ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/loading_banner.svg" id="8_loading"]
-[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/bar_track.svg" id="9_track"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/bar_track.svg" id="9_track"]
 [ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/bar_fill.svg" id="10_fill"]
+
+[ext_resource type="Script" path="res://splash_board_art.gd" id="11_board"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/tagline_plate.svg" id="12_tagline"]
 
 [sub_resource type="AtlasTexture" id="IntroLogoAtlas"]
 atlas = ExtResource("2_logo")
-region = Rect2(0, 8, 1738, 861)
+region = Rect2(0, 0, 1536, 1024)
 
 [sub_resource type="AtlasTexture" id="IntroExplorersAtlas"]
 atlas = ExtResource("6_explorers")
-region = Rect2(0, 40, 1106, 1344)
+region = Rect2(0, 0, 1536, 1024)
 
 [sub_resource type="StyleBoxEmpty" id="LoadingTrack"]
 
@@ -28,6 +31,17 @@ texture_margin_left = 20.0
 texture_margin_top = 10.0
 texture_margin_right = 20.0
 texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="TaglinePlate"]
+texture = ExtResource("12_tagline")
+texture_margin_left = 32.0
+texture_margin_right = 32.0
+texture_margin_top = 8.0
+texture_margin_bottom = 8.0
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
 
 [node name="SplashScreen" type="Control"]
 texture_filter = 2
@@ -76,10 +90,10 @@ mouse_filter = 2
 [node name="Logo" type="TextureRect" parent="Presentation"]
 unique_name_in_owner = true
 layout_mode = 1
-anchor_left = 0.08
-anchor_top = 0.018
-anchor_right = 0.92
-anchor_bottom = 0.31
+anchor_left = 0.06
+anchor_top = 0.033
+anchor_right = 0.94
+anchor_bottom = 0.424
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -89,67 +103,69 @@ stretch_mode = 5
 
 [node name="Tagline" type="Label" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.08
-anchor_top = 0.325
-anchor_right = 0.92
-anchor_bottom = 0.37
+anchor_left = 0.2
+anchor_top = 0.43
+anchor_right = 0.8
+anchor_bottom = 0.464
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.95, 0.78, 1)
 theme_override_colors/font_outline_color = Color(0.27, 0.07, 0.015, 1)
-theme_override_constants/outline_size = 5
+theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("3_title")
 theme_override_font_sizes/font_size = 43
 text = "LEARN • PLAY • DISCOVER"
 horizontal_alignment = 1
+theme_override_styles/normal = SubResource("TaglinePlate")
 clip_text = true
 vertical_alignment = 1
 
 [node name="SubjectBanner" type="TextureRect" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.12
-anchor_top = 0.38
-anchor_right = 0.88
-anchor_bottom = 0.43
+anchor_left = 0.07
+anchor_top = 0.471
+anchor_right = 0.93
+anchor_bottom = 0.507
 mouse_filter = 2
 texture = ExtResource("7_subject")
 expand_mode = 1
 
 [node name="Subject" type="Label" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.12
-anchor_top = 0.38
-anchor_right = 0.88
-anchor_bottom = 0.43
+anchor_left = 0.09
+anchor_top = 0.471
+anchor_right = 0.91
+anchor_bottom = 0.507
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.26, 0.07, 0.02, 1)
 theme_override_fonts/font = ExtResource("3_title")
 theme_override_font_sizes/font_size = 30
-text = "DISCOVER HEROES. LEARN OUR HISTORY."
+text = "Discover Heroes. Learn Our History."
 horizontal_alignment = 1
 clip_text = true
 vertical_alignment = 1
 
 [node name="Explorers" type="TextureRect" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.05
-anchor_top = 0.48
-anchor_right = 0.51
-anchor_bottom = 0.84
+anchor_left = 0.022
+anchor_top = 0.513
+anchor_right = 0.978
+anchor_bottom = 0.938
 mouse_filter = 2
 texture = SubResource("IntroExplorersAtlas")
 expand_mode = 1
 stretch_mode = 5
+script = ExtResource("11_board")
 
 [node name="LoadingBarFrame" type="TextureRect" parent="Presentation"]
 layout_mode = 1
 anchor_left = 0.125
-anchor_top = 0.85
+anchor_top = 0.946
 anchor_right = 0.875
-anchor_bottom = 0.895
+anchor_bottom = 0.968
 mouse_filter = 2
 texture = ExtResource("9_track")
 expand_mode = 1
@@ -158,9 +174,9 @@ expand_mode = 1
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.125
-anchor_top = 0.85
+anchor_top = 0.946
 anchor_right = 0.875
-anchor_bottom = 0.895
+anchor_bottom = 0.968
 mouse_filter = 2
 theme_override_styles/background = SubResource("LoadingTrack")
 theme_override_styles/fill = SubResource("LoadingFill")
