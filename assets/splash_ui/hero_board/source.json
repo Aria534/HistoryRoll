@@ -15,11 +15,12 @@
                   },
                   {
                       "path":  "res://assets/splash_ui/hero_board/background.png",
-                      "role":  "Philippine-themed sky, nipa hut, stone gate, flag and garden scenery",
+                      "role":  "Philippine sky, hut and garden; gate/flag now belong to the connected foreground road asset.",
                       "width":  1024,
                       "height":  1536,
                       "prompt":  "Use case: ui-mockup. Asset type: background-only scenery for a colorful Filipino educational game\u0027s PORTRAIT loading screen, 2:3 portrait canvas. Match the attached generated header\u0027s polished 2D cartoon art treatment, clean dark brown outlines, bright blue and fresh green palette, soft warm gold shading. Draw a very bright cyan-blue sky with fluffy white clouds and a few rounded leafy tree canopies framing the upper left/right edges. A simple wooden nipa hut on stilts near the lower-left edge, a small Manila Intramuros/Fort Santiago-inspired stone gate near the lower-right with a Philippine flag (blue above red, white triangle, golden sun and three stars). Green bushes and a cheerful grassy garden foreground, distant soft hills; no modern buildings. IMPORTANT COMPOSITION: the central upper 55 percent is mostly open blue sky for a SEPARATE LARGE HERO LOGO overlay; center lower 45 percent is mostly simple clear green lawn for a SEPARATE winding board overlay, so keep landmarks and props at the outer sides, not the center. A small hourglass on a stone plinth at extreme lower-left, small scroll and compass along the bottom-left edge, one ivory die and two closed books at extreme bottom-right. Keep bottom-center 7 percent clear lawn for a real loading bar added later in Godot. A little colorful garden foliage and small pink flowers at corners are okay. No board, no road, no tiles, no text, no logos, no people or portraits, no banner, no progress bar or frame, no UI buttons. It is only the background layer; do not reproduce any part of the header reference.",
-                      "style_reference":  "Generated hero_header.png"
+                      "style_reference":  "Generated hero_header.png",
+                      "latest_edit_prompt":  "Use case: precise-object-edit. Edit target: this existing HistoryRoll loading background. Remove ONLY the stone castle gate, its connecting stone wall, and the Philippine flag/pole on the right around 40–68 percent of the image height. The board will now include its own connected gate as a separate foreground asset, so this background must have NO gate, arch, fort, flag or pole. Fill the removed area seamlessly with the existing cyan sky, distant blue-green hills, rounded green trees/bushes, and open green lawn consistent with the surrounding scene. Preserve the entire rest of the illustration, portrait composition and canvas size: tree canopies at top corners, clouds, left nipa hut, hourglass and plinth at bottom-left, scroll and compass, books and die at bottom-right, corner flowers and foliage. Keep central lawn and sky clear. Same clean bright 2D cartoon colors and outlines, no new landmarks, text, board, people or UI. Opaque background."
                   },
                   {
                       "path":  "res://assets/splash_ui/hero_board/winding_board.png",
@@ -58,7 +59,7 @@
     "verification":  {
                          "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
                          "startup_layout_checks":  {
-                                                       "passed":  249,
+                                                       "passed":  1139,
                                                        "failed":  0
                                                    },
                          "music_checks":  {
@@ -93,39 +94,54 @@
                                            [
                                                1080,
                                                2400
+                                           ],
+                                           [
+                                               390,
+                                               844
+                                           ],
+                                           [
+                                               442,
+                                               663
                                            ]
                                        ],
                          "visual_review":  [
-                                               "actual Godot render at 1065x1477, same resolution as desired reference",
-                                               "actual Godot render at 720x1280"
+                                               "actual native Godot render at 390x844",
+                                               "actual native Godot render at 442x663"
                                            ],
-                         "measured_intro_seconds":  9.531,
+                         "measured_intro_seconds":  9.614,
                          "real_progress_and_settings_unchanged":  true,
                          "physical_android_test":  false,
-                         "remaining_diagnostics":  "Existing external-text-editor configuration errors during headless Editor import; ObjectDB shutdown warnings remain in test logs. Final runtime suites reported no script/parse errors and no failed checks."
+                         "remaining_diagnostics":  "Existing external-text-editor configuration errors during headless Editor import; ObjectDB shutdown warnings remain in test logs. Final runtime suites reported no script/parse errors and no failed checks.",
+                         "music_checks_note":  "Previous revision music results retained; this change only edits board artwork and local number rendering. No audio code or music settings were modified.",
+                         "latest_runtime_note":  "No script/parse errors or failed checks in final runtime suite. Existing three ObjectDB shutdown warnings remain, along with the external-editor configuration errors during Editor import."
                      },
     "current_revision":  {
-                             "revision":  2,
+                             "revision":  5,
                              "date":  "2026-11-27",
-                             "reason":  "User rejected the flat equally spaced rows and requested the perspective winding path from the second reference image.",
+                             "reason":  "User requested a larger, clearer castle gate at the end of the loading-screen road.",
                              "board_asset":  "res://assets/splash_ui/hero_board/winding_board_perspective.png",
-                             "atlas_crop":  {
-                                                "x":  0,
-                                                "y":  165,
-                                                "width":  1536,
-                                                "height":  859
-                                            },
-                             "board_generation_prompt":  "Use case: precise-object-edit. Reference: the supplied full portrait HistoryRoll loading screen is the DESIRED design. Prepare a production TRANSPARENT PNG containing ONLY the winding snakes-and-ladders road board from the LOWER HALF of that reference. This is an extraction and faithful reconstruction, NOT a redesign. Preserve the EXACT flowing road silhouette and 3/4 ground-plane perspective of the reference: the narrower far end begins at the upper RIGHT near the gate; the road snakes down across five staggered gently sloping runs with big rounded alternating U-turns, ending in the wide near run across the bottom. Follow the curved painted lanes, their varying lengths and trapezoidal tiles: the top run is SHORTER and further RIGHT than the near run. Keep large grassy open gaps between the runs. It must look like a winding game path laid naturally on the ground, with a shallow visible stone curb, not a flat rectangular slab or five equally long parallel shelves. Copy the reference\u0027s friendly green snakes and honey-colored wooden ladders at the same locations and angles: one snake near upper-middle/right with its head near the far run, one snake lower-left leading toward the START; ladder lower-right climbing diagonally to the middle run, ladder mid-left climbing diagonally to a far run. Keep the small wooden START sign at the lower-left entrance. Remove ALL tile numbers and letters from tile faces, leaving blank red and ivory alternating tiles, because sequential text will be rendered in Godot. The START word stays. Preserve the clean bright 2D cartoon illustration, red/cream path, pale stone edge, coherent single-headed green snakes and golden ladders of the reference. Remove EVERYTHING else: no sky, grass background outside the board, hero portraits, header, captions, loading bar, buildings, flag, hourglass, dice, books, compass or corner decoration. Grassy gaps between the path runs should also be transparent. Use a tightly fitted LANDSCAPE 3:2 canvas with a 2 percent transparent margin; preserve the path perspective and silhouette while fitting, never stretch it into an even grid. True transparent alpha, no dark matte or colored backdrop. Critical: match the irregular flowing PERSPECTIVE BOARD in the provided reference, not the rejected flat equal-row version.",
-                             "board_cleanup_prompt":  "EDIT ONLY the following two items in this transparent winding-board asset. 1) REMOVE the stone gate BUILDING in the top-right corner completely, replacing all of its pixels with true transparent alpha; preserve the road ending immediately below it and do not add another landmark. 2) Remove the stray WHITE halo/patch behind the lower-left green snake\u0027s head, leaving only the clean green snake silhouette and transparency. Everything else is LOCKED: keep the exact road silhouette, width, perspective, tile divisions and red/cream colors; keep the FIVE flowing staggered runs with big curved U-turns; keep both snakes, their curved bodies and arrow tips; keep both ladders at their exact positions and angles; keep the START sign. Do NOT change the path into parallel rows or a rectangular grid. Do NOT add numbers or letters to the blank tile faces. Same 1536x1024 canvas, do not rescale or reframe the board, don\u0027t clip its borders, no colored backdrop or dark matte. Output transparent PNG. The only removed object is the detached gate above the far end; the actual path remains unchanged.",
-                             "integration_notes":  "The new board follows a continuous winding road with narrower distant runs, broader near curves, staggered bends and two snakes/two ladders in the reference arrangement. Existing artwork is retained as the prior revision. Captions use narrower/taller centered banners and a gold subject plate. Decorative 1–30 text uses the existing Lora italic font at weight 700. The same 14 nodes, startup timing, background music and Main Menu route are preserved.",
-                             "font_resource":  "res://assets/splash_ui/hero_board/tile_font.tres",
-                             "font_license":  "res://assets/fonts/Lora-OFL.txt",
+                             "generation_tool":  "image_gen (built-in mode)",
+                             "prompts":  [
+                                             {
+                                                 "stage":  "gate enlargement",
+                                                 "prompt":  "Use case: precise-object-edit. Edit target: this existing transparent HistoryRoll winding road asset. Change ONLY the small stone CASTLE GATE and Philippine flag at the UPPER-RIGHT FINISH. Make the gate noticeably larger and clearer for a phone screen, about 35 percent more prominent: a wider stone facade, thicker readable pillars, a larger open arch, bold clean warm-stone detailing and a clear Philippine flag. Keep the road\u0027s doorway floor connection fixed around x=1340,y=270 so the road still continues naturally INTO the open arch. Expand the upper facade mostly UP and LEFT into the unused transparent area, keep the far-right wall within x=1510 and the entire flag within the canvas; shorten the bare flagpole if needed to make room for the larger building. Keep lower-left pillar feet off the blank tile faces: its base at x\u003e=1230 so tile 30 stays unobstructed. Do not cover the broad road between x=1150..1240,y=230..305. The castle can be broader at the top, around x=1135..1505,y=75..210, narrowing at its left base beside the road. Preserve the same friendly illustrated Fort Santiago-style stone gate, crest and small shrubs. Keep the Philippine flag clearly correct with blue above red, white triangle at hoist, gold sun and three stars. Critical: EVERY other pixel/composition is locked: same 1536x1024 canvas; winding road edges, ALL thirty blank tile faces and divider seams, both green snakes with NATURAL tapered tails, the single existing RIGHT ladder, START sign, colors and positions stay unchanged. Do NOT add back a left ladder, numbers, sky, backdrop, people, captions or UI. True transparent background everywhere outside the board/gate and in road gaps, no colored rectangle. This is a local gate enlargement, NOT a board redesign."
+                                             },
+                                             {
+                                                 "stage":  "preserve doorway and final tile",
+                                                 "prompt":  "Precise compositing edit. IMAGE 1 is the MASTER board: preserve its exact road, all 30 blank tile faces and seams, snakes, right ladder, START sign and full 1536x1024 canvas. IMAGE 2 is ONLY the desired BIGGER GATE appearance. Replace only Image 1\u0027s small upper-right stone gate/flag with a larger gate similar to Image 2, visibly about 35 percent wider and more prominent. VERY IMPORTANT: keep Image 1\u0027s road entrance and open arch location at x=1340,y=270. Do not shift the arch left like Image 2. The open doorway must sit at x=1295..1400,y=200..290. Keep the original final cream tile surface EXACTLY visible and unobstructed in rectangle x=1155..1250,y=235..300: its number will be drawn there. All left-wing stonework must stay BEHIND the road, so the original road surface/curb naturally occludes the larger gate\u0027s lower-left wall where they overlap. Do not paint stone or dark doorway over that final tile. Widen the upper gate facade leftwards over empty space x=1100..1505,y=70..205, keep right wall within1510, small flag readable at the top and entirely in canvas. Preserve the original single continuous cream roadway that curves through the open arch, no ending at a wall. Same friendly warm stone gate/crest/Philippine flag; no extra buildings, ladder, numbers or new scenery. Preserve genuine alpha outside the artwork, no haze/matte. Only enlarge the gate; the MASTER road and its empty final tile are locked."
+                                             },
+                                             {
+                                                 "stage":  "widen final tile and transparency cleanup",
+                                                 "prompt":  "Precise final cleanup of this transparent game-board asset. KEEP the larger castle, flag, all road runs, snakes, right ladder and START sign as shown. Fix only the final cream tile entering the arch: the tiny triangular tile immediately before the doorway must be a BROAD readable cream tile. Keep its existing left divider at x=1150, but run its UPPER road edge horizontally near y=230 until x=1250, then curve it toward the doorway floor at x=1340,y=270. Keep its LOWER curb near y=310 until x=1250, then curve it into the doorway. This leaves an unobstructed full cream label area x=1170..1240,y=240..300 for the number 30 (do not actually draw the number). The road is in FRONT of the castle\u0027s lower-left wall and then goes INTO the open arch; do not paint stone over this cream label area. Only this final approach tile widens; do not change any earlier seam, other tile, or object. The castle remains the same larger size and location. IMPORTANT alpha cleanup: remove the broad dark shadow haze from ALL empty space outside the board/castle and gaps between runs. These empty areas must have alpha ZERO, including upper-left blank canvas and the area behind the upper snake. Retain only a tiny contact shadow within 3 pixels of the stone edges; no broad dark cloud. Output genuine transparent PNG, exact same 1536x1024 canvas. No backdrop, new numbers, extra ladders or other changes."
+                                             }
+                                         ],
+                             "final_generated_board":  "exec-3249a6af-fd31-4964-a9c1-b66821741057.png",
+                             "integration_notes":  "Enlarged the upper-right stone gate and flag within the existing 1536x1024 board canvas. Kept the approach flowing into the arch and widened its final cream face so number 30 remains readable. Updated only the final face outline in splash_board_art.gd to match the edited artwork; other tile coordinates, splash layout, hierarchy, timing, navigation and gameplay remain as before this revision.",
                              "verification":  {
-                                                  "startup_layout_passed":  249,
+                                                  "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
+                                                  "startup_layout_passed":  1139,
                                                   "startup_layout_failed":  0,
-                                                  "music_passed":  154,
-                                                  "music_failed":  0,
-                                                  "measured_intro_seconds":  9.531,
+                                                  "measured_intro_seconds":  9.446,
                                                   "viewports":  [
                                                                     [
                                                                         1024,
@@ -154,16 +170,267 @@
                                                                     [
                                                                         1080,
                                                                         2400
+                                                                    ],
+                                                                    [
+                                                                        390,
+                                                                        844
+                                                                    ],
+                                                                    [
+                                                                        442,
+                                                                        663
                                                                     ]
                                                                 ],
                                                   "visual_review":  [
-                                                                        "actual Godot render at 1065x1477, same resolution as desired reference",
+                                                                        "actual Godot render at 442x663",
                                                                         "actual Godot render at 720x1280"
                                                                     ],
-                                                  "real_save_and_settings_unchanged":  true,
-                                                  "nodes_preserved":  14,
+                                                  "dimensions":  [
+                                                                     1536,
+                                                                     1024
+                                                                 ],
+                                                  "saved_progress_and_settings_sha256_unchanged":  true,
                                                   "physical_android_test":  false,
-                                                  "remaining_diagnostics":  "Existing external-editor configuration errors during Editor import and ObjectDB shutdown warnings in tests; final runtime test suites reported no failed checks or script/parse errors."
+                                                  "remaining_diagnostics":  "No script/parse errors or failed checks in final runtime suite. Existing three ObjectDB shutdown warnings remain, along with the external-editor configuration errors during Editor import."
                                               }
-                         }
+                         },
+    "revision_history":  [
+                             {
+                                 "revision":  2,
+                                 "date":  "2026-11-27",
+                                 "reason":  "User rejected the flat equally spaced rows and requested the perspective winding path from the second reference image.",
+                                 "board_asset":  "res://assets/splash_ui/hero_board/winding_board_perspective.png",
+                                 "atlas_crop":  {
+                                                    "x":  0,
+                                                    "y":  165,
+                                                    "width":  1536,
+                                                    "height":  859
+                                                },
+                                 "board_generation_prompt":  "Use case: precise-object-edit. Reference: the supplied full portrait HistoryRoll loading screen is the DESIRED design. Prepare a production TRANSPARENT PNG containing ONLY the winding snakes-and-ladders road board from the LOWER HALF of that reference. This is an extraction and faithful reconstruction, NOT a redesign. Preserve the EXACT flowing road silhouette and 3/4 ground-plane perspective of the reference: the narrower far end begins at the upper RIGHT near the gate; the road snakes down across five staggered gently sloping runs with big rounded alternating U-turns, ending in the wide near run across the bottom. Follow the curved painted lanes, their varying lengths and trapezoidal tiles: the top run is SHORTER and further RIGHT than the near run. Keep large grassy open gaps between the runs. It must look like a winding game path laid naturally on the ground, with a shallow visible stone curb, not a flat rectangular slab or five equally long parallel shelves. Copy the reference\u0027s friendly green snakes and honey-colored wooden ladders at the same locations and angles: one snake near upper-middle/right with its head near the far run, one snake lower-left leading toward the START; ladder lower-right climbing diagonally to the middle run, ladder mid-left climbing diagonally to a far run. Keep the small wooden START sign at the lower-left entrance. Remove ALL tile numbers and letters from tile faces, leaving blank red and ivory alternating tiles, because sequential text will be rendered in Godot. The START word stays. Preserve the clean bright 2D cartoon illustration, red/cream path, pale stone edge, coherent single-headed green snakes and golden ladders of the reference. Remove EVERYTHING else: no sky, grass background outside the board, hero portraits, header, captions, loading bar, buildings, flag, hourglass, dice, books, compass or corner decoration. Grassy gaps between the path runs should also be transparent. Use a tightly fitted LANDSCAPE 3:2 canvas with a 2 percent transparent margin; preserve the path perspective and silhouette while fitting, never stretch it into an even grid. True transparent alpha, no dark matte or colored backdrop. Critical: match the irregular flowing PERSPECTIVE BOARD in the provided reference, not the rejected flat equal-row version.",
+                                 "board_cleanup_prompt":  "EDIT ONLY the following two items in this transparent winding-board asset. 1) REMOVE the stone gate BUILDING in the top-right corner completely, replacing all of its pixels with true transparent alpha; preserve the road ending immediately below it and do not add another landmark. 2) Remove the stray WHITE halo/patch behind the lower-left green snake\u0027s head, leaving only the clean green snake silhouette and transparency. Everything else is LOCKED: keep the exact road silhouette, width, perspective, tile divisions and red/cream colors; keep the FIVE flowing staggered runs with big curved U-turns; keep both snakes, their curved bodies and arrow tips; keep both ladders at their exact positions and angles; keep the START sign. Do NOT change the path into parallel rows or a rectangular grid. Do NOT add numbers or letters to the blank tile faces. Same 1536x1024 canvas, do not rescale or reframe the board, don\u0027t clip its borders, no colored backdrop or dark matte. Output transparent PNG. The only removed object is the detached gate above the far end; the actual path remains unchanged.",
+                                 "integration_notes":  "The new board follows a continuous winding road with narrower distant runs, broader near curves, staggered bends and two snakes/two ladders in the reference arrangement. Existing artwork is retained as the prior revision. Captions use narrower/taller centered banners and a gold subject plate. Decorative 1–30 text uses the existing Lora italic font at weight 700. The same 14 nodes, startup timing, background music and Main Menu route are preserved.",
+                                 "font_resource":  "res://assets/splash_ui/hero_board/tile_font.tres",
+                                 "font_license":  "res://assets/fonts/Lora-OFL.txt",
+                                 "verification":  {
+                                                      "startup_layout_passed":  249,
+                                                      "startup_layout_failed":  0,
+                                                      "music_passed":  154,
+                                                      "music_failed":  0,
+                                                      "measured_intro_seconds":  9.531,
+                                                      "viewports":  [
+                                                                        [
+                                                                            1024,
+                                                                            1536
+                                                                        ],
+                                                                        [
+                                                                            720,
+                                                                            1280
+                                                                        ],
+                                                                        [
+                                                                            1086,
+                                                                            1448
+                                                                        ],
+                                                                        [
+                                                                            1065,
+                                                                            1477
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            1920
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2340
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2400
+                                                                        ]
+                                                                    ],
+                                                      "visual_review":  [
+                                                                            "actual Godot render at 1065x1477, same resolution as desired reference",
+                                                                            "actual Godot render at 720x1280"
+                                                                        ],
+                                                      "real_save_and_settings_unchanged":  true,
+                                                      "nodes_preserved":  14,
+                                                      "physical_android_test":  false,
+                                                      "remaining_diagnostics":  "Existing external-editor configuration errors during Editor import and ObjectDB shutdown warnings in tests; final runtime test suites reported no failed checks or script/parse errors."
+                                                  }
+                             },
+                             {
+                                 "revision":  3,
+                                 "date":  "2026-11-27",
+                                 "reason":  "Improve small tile-number readability and remove arrowhead shapes from both snake tails.",
+                                 "board_asset":  "res://assets/splash_ui/hero_board/winding_board_perspective.png",
+                                 "image_tool":  "image_gen (built-in edit)",
+                                 "input_version":  "Previously committed perspective-board PNG; existing path and 1536x1024 canvas retained.",
+                                 "edit_prompt":  "Precisely edit the supplied transparent PNG board asset. CHANGE ONLY the two GREEN ARROWHEAD-SHAPED TAIL TIPS on the snakes. The upper-middle snake currently ends with a large triangular arrow near source pixel (840,540); replace that triangle with an ordinary smooth slim tapering snake tail, gradually narrowing from the same green/yellow body to a small natural pointed tip. The lower-left snake currently ends with a triangular arrow near source pixel (400,885); replace that triangle with an ordinary slim tapering snake tail as well. No arrow shapes, chevrons, barbs or broad triangular ends anywhere on either snake. Preserve their existing heads, expressions, tongues, colors, body curves, approximate endpoints and gentle cartoon style. EVERYTHING ELSE IS LOCKED: exact same five-run winding road silhouette, tile divisions, red and cream colors, stone curbs, both ladders and their positions, START sign and its letters, shadows, board perspective and scale. Keep every tile face blank; do not add numbers or labels. Do not add any scenery or new objects. Same 1536x1024 canvas, same framing and transparent background/transparent gaps; no rescaling, reframing or cropping. Preserve the existing alpha. The only visible changes must be the two arrow tips becoming natural snake tails.",
+                                 "art_changes":  "Only both broad arrowhead tips were replaced with slim, smooth, naturally tapering snake tails. Board geometry, stone border, tile colors, snakes\u0027 heads/bodies, ladders and START sign retained.",
+                                 "number_rendering":  {
+                                                          "font":  "Existing Lora Italic at weight 700, local variation_embolden 0.35",
+                                                          "style":  "Solid dark lettering without the pale outline; larger integer sizes (minimum 14px); baseline/origin snapped to whole local pixels.",
+                                                          "isolation":  "Each board owns a duplicate FontVariation and FontFile with subpixel positioning disabled and oversampling 2.0. Shared font imports and unrelated screens are untouched."
+                                                      },
+                                 "verification":  {
+                                                      "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
+                                                      "startup_layout_passed":  311,
+                                                      "startup_layout_failed":  0,
+                                                      "measured_intro_seconds":  9.614,
+                                                      "viewports":  [
+                                                                        [
+                                                                            1024,
+                                                                            1536
+                                                                        ],
+                                                                        [
+                                                                            720,
+                                                                            1280
+                                                                        ],
+                                                                        [
+                                                                            1086,
+                                                                            1448
+                                                                        ],
+                                                                        [
+                                                                            1065,
+                                                                            1477
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            1920
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2340
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2400
+                                                                        ],
+                                                                        [
+                                                                            390,
+                                                                            844
+                                                                        ],
+                                                                        [
+                                                                            442,
+                                                                            663
+                                                                        ]
+                                                                    ],
+                                                      "visual_review":  [
+                                                                            "actual native Godot render at 390x844",
+                                                                            "actual native Godot render at 442x663"
+                                                                        ],
+                                                      "image_dimensions":  [
+                                                                               1536,
+                                                                               1024
+                                                                           ],
+                                                      "corner_and_gap_alpha":  0,
+                                                      "board_layout_and_scene_hierarchy_changed":  false,
+                                                      "real_progress_and_settings_unchanged":  true,
+                                                      "physical_android_test":  false,
+                                                      "remaining_diagnostics":  "Existing external-editor configuration errors during Editor import and ObjectDB shutdown warnings remain; the final runtime suite had no failed checks or script/parse errors."
+                                                  }
+                             },
+                             {
+                                 "revision":  4,
+                                 "date":  "2026-11-27",
+                                 "reason":  "User requested numbers centered in their tiles and the winding road continuing inside the castle doorway.",
+                                 "board_asset":  "res://assets/splash_ui/hero_board/winding_board_perspective.png",
+                                 "background_asset":  "res://assets/splash_ui/hero_board/background.png",
+                                 "atlas_crop":  {
+                                                    "x":  0,
+                                                    "y":  0,
+                                                    "width":  1536,
+                                                    "height":  1024
+                                                },
+                                 "generation_tool":  "image_gen (built-in mode)",
+                                 "prompts":  [
+                                                 {
+                                                     "stage":  "splash_centered_gate_board_prompt",
+                                                     "prompt":  "Precise production edit. IMAGE 1 is the transparent winding board to edit. IMAGE 2 is ONLY a style reference for the castle entrance and Philippine flag, not a background to copy. Output ONE transparent 1536x1024 asset containing the winding board plus a small connected castle gate at its upper-right finish. Preserve the board\u0027s existing flowing five-run perspective silhouette, red/ivory palette, stone curbs, START sign, two golden ladders, and two friendly green snakes with NATURAL slim tapering tails (absolutely NO arrowheads). Keep all tile faces BLANK; Godot will render perfectly centered numbers. Important repair: the current artwork has too many divided tile faces. Make exactly THIRTY clear tile faces by merging these six adjacent pairs and removing the line between each pair, giving both halves the same ivory color: (1) the near bottom-left red entrance face and its adjacent ivory face; (2) the ivory/red pair on the second-from-bottom return run just left of the lower-right ladder, spanning approximately x=766..1092, y=680..765; (3) the ivory/red pair on the middle run just beneath the upper-left ladder, approximately x=210..515,y=510..602; (4) the ivory/red pair on the far return run around the upper-right bend, approximately x=1035..1420,y=360..475; (5) the red triangle at the far upper-left bend with the adjacent ivory top face, approximately x=200..520,y=210..305; (6) the far upper-right ivory face with the red end cap, approximately x=1135..1375,y=190..295. Do not add new dividers anywhere else. After these merges the near run/turn has 7 faces, next return run/turn 6, middle run/turn 7, far return run/turn 5, far top run 5: exactly 30. Keep the CENTER of EVERY resulting face free so a number can sit at its geometric center: move the upper snake\u0027s head onto the upper curb/boundary between far top tiles (near x=715,y=190), curve its body along tile boundaries, and end its natural tail on an edge rather than a face center. Keep the lower-left snake by the left turns but curve its body along tile edges, leaving face centers clear. Shift the upper-left ladder slightly right if needed so the newly merged wide middle tile center is unobstructed. Let ladder feet rest on tile borders rather than face centers. Castle: add a small warm stone arch gate at the UPPER RIGHT using Image 2\u0027s appearance, entirely within canvas; a small Philippine flag above it. The far end of the final ivory tile must visibly CONTINUE THROUGH THE OPEN ARCH into the dark doorway, connected with the same stone curbs and continuous floor. It must not stop at a wall, grass, or the outside of the building. The castle and roadway must be one aligned illustration, with the road partly occluded naturally by the doorway sides. Keep gate compact in the unused upper-right space; do not cover the numbered road faces. Everything outside the board, snakes, ladders, sign and gate stays genuinely TRANSPARENT, including gaps between road runs. No sky, hut, grass background, hero, logo, books, dice, captions or loading bar. No numbers or any new lettering; preserve START only."
+                                                 },
+                                                 {
+                                                     "stage":  "splash_gate_background_prompt",
+                                                     "prompt":  "Use case: precise-object-edit. Edit target: this existing HistoryRoll loading background. Remove ONLY the stone castle gate, its connecting stone wall, and the Philippine flag/pole on the right around 40–68 percent of the image height. The board will now include its own connected gate as a separate foreground asset, so this background must have NO gate, arch, fort, flag or pole. Fill the removed area seamlessly with the existing cyan sky, distant blue-green hills, rounded green trees/bushes, and open green lawn consistent with the surrounding scene. Preserve the entire rest of the illustration, portrait composition and canvas size: tree canopies at top corners, clouds, left nipa hut, hourglass and plinth at bottom-left, scroll and compass, books and die at bottom-right, corner flowers and foliage. Keep central lawn and sky clear. Same clean bright 2D cartoon colors and outlines, no new landmarks, text, board, people or UI. Opaque background."
+                                                 },
+                                                 {
+                                                     "stage":  "splash_gate_board_dividers_prompt",
+                                                     "prompt":  "Use case: precise-object-edit. Edit ONLY four missing tile-divider seams on this transparent board, preserving every other pixel/composition as closely as possible. Exactly four new narrow dark-brown seams matching existing seams: (1) On the second horizontal road from the bottom, separate the very wide cream area underneath/right of the lower-right ladder: add a seam from approximately (1103,692) to (1073,777). (2) Across the cream U-turn at the far RIGHT, separate the top half of the turn from the lower half: connect the inner curb around (1235,494) to the outer curb around (1440,505). (3) Across the cream U-turn at the far LEFT near the TOP, separate the top half from the lower half: connect the inner curb around (290,339) to the outer curb around (155,330). (4) Split the final very wide cream road before the castle into two tiles: add one seam from approximately (1165,229) to (1190,308). Keep all resulting faces their current red or cream fill, even when neighboring faces are both cream; a narrow clear seam is enough. Do NOT add any other new seam, recolor or change any existing tile. Keep every face blank: no numbers, no labels except existing START. Keep the road CONTINUING THROUGH the open castle doorway, both snakes with NATURAL tapered tails not arrows, ladders, flag and gate unchanged. Preserve same 1536x1024 canvas and EXACT road dimensions/placement. True transparent background everywhere outside this board/gate asset, including all gaps between runs; remove broad dark/milky shadow haze in the empty transparent areas, retaining only close contact shadows. Output PNG with genuine alpha."
+                                                 },
+                                                 {
+                                                     "stage":  "splash_gate_board_clear_centers_prompt",
+                                                     "prompt":  "Precise object edit for a game asset. Preserve this board/gate pixel layout, every one of its existing tile divisions, all curbs, every red/cream face, transparent canvas 1536x1024, castle, flag, START sign, upper snake and right ladder. Change ONLY two foreground objects so centered numbers can be readable: (1) shift the ENTIRE LEFT ladder about 170 pixels to the right without changing its length, angle or size: its top should now be around (535,380), bottom around (675,675), bridging the same road runs. This leaves the center of the wide cream MIDDLE tile at (425,570) unobstructed. Remove its old copy completely and restore the same road face/curb underneath. (2) Redraw/reposition ONLY the LOWER LEFT green snake: head near (150,600) beside the left bend, body curving along the LEFT OUTER CURB around (70,690), (135,755), with a short natural tapered tail ending near (175,800). Keep its full head recognizable and friendly; no arrowhead. Do not let its body cross the cream/red face centers at (240,733) or (315,908). Preserve upper snake exactly. The two object moves must leave clear blank central space in every tile for Godot number labels; do not add any text or numbers. No other compositional changes. True alpha transparency outside artwork and between roads, no dark or white background."
+                                                 },
+                                                 {
+                                                     "stage":  "splash_gate_board_final_positions_prompt",
+                                                     "prompt":  "Precise final positioning correction on this transparent game-board asset. Everything except two objects is LOCKED: preserve road, all THIRTY tile faces and seams, gate with road going into its arch, flag, upper snake, right ladder, START sign and canvas exactly. Move the ENTIRE LEFT ladder exactly 100 pixels LEFT from its current location, same angle and size; restore only its vacated road underneath. Its middle will run near x=550..635, y=550..600, leaving BOTH tile centers (425,570) and (740,570) blank. Reposition ONLY the lower-left snake to hug the INNER left curb: head centered near (230,640) in the GAP between road runs; body narrowly curves through (195,690), (180,748), and tapers to a thin natural tail near (230,810) in the gap. No snake pixels within these blank number rectangles: x=55..145,y=650..700 and x=200..285,y=710..755. Keep friendly single head, curved green body and yellow belly, NO ARROWHEAD. Remove its previous outer-left copy and restore the road faces under it. No other changes. Keep all tile centers free for text; do not write any numbers. Same 1536x1024 PNG, true transparent outside the board including run gaps."
+                                                 },
+                                                 {
+                                                     "stage":  "splash_gate_board_ladder_prompt",
+                                                     "prompt":  "Edit ONLY the LEFT wooden ladder, keeping all other artwork completely identical. Translate the whole left ladder 85 pixels to the RIGHT, keeping its current angle, length and width. Its two TOP rail tips should be at roughly (440,380) and (510,370). Its two BOTTOM rail tips should be at roughly (605,680) and (685,670). The ladder midsection must cross the middle cream/red seam around x=590 at y=570. Keep the face center at (425,570) entirely clear and the face center at (740,570) entirely clear. Remove the old ladder from its old location and restore the underlying cream/red tile faces and seams exactly. All road seams, stone curbs, snakes, natural thin tails, gate arch connected to road, flag, START sign, palette, size and transparent canvas are otherwise unchanged. No added text, numbers or other changes. Genuine transparent PNG 1536x1024."
+                                                 },
+                                                 {
+                                                     "stage":  "splash_gate_board_remove_ladder_prompt",
+                                                     "prompt":  "Precise object removal. Remove ONLY the LEFT wooden ladder (the one from approximately x=540,y=380 to x=780,y=680) from this transparent game-board image. Restore the exact cream/red road faces, existing dark divider lines, transparent gaps and stone curb edges behind that ladder. Do not remove or change the RIGHT wooden ladder. EVERYTHING ELSE IS LOCKED: all thirty tile faces and existing seams, road silhouette, both green snakes with thin natural tails, START sign, castle with road through doorway, flag, colors, shapes, size and positions stay identical. No new seams, no new objects, no text or numbers. The left ladder will be drawn separately by the game so it can be positioned accurately. True alpha transparency, same 1536x1024 PNG."
+                                                 }
+                                             ],
+                                 "final_generated_board":  "exec-7de98145-fc79-4f19-8e76-232c7459d02e.png",
+                                 "final_generated_background":  "exec-a1009a55-2b54-4c63-8356-a76964e05786.png",
+                                 "integration_notes":  "Road and open castle gate now share one transparent asset; the separate background gate/flag were removed to avoid duplication and aspect-ratio drift. Thirty traced face polygons supply interior centers, with clearance refinement on curved turns. Native dark digit ink is centered from TextServer glyph bounds, pixel aligned, and fitted to the face boundaries. One precisely positioned native wooden ladder complements the remaining illustrated ladder. Existing 14-node hierarchy, captions, nine-second intro, AudioManager, and Main Menu routing remain.",
+                                 "font_resource":  "res://assets/splash_ui/hero_board/tile_font.tres",
+                                 "font_license":  "res://assets/fonts/Lora-OFL.txt",
+                                 "verification":  {
+                                                      "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
+                                                      "startup_layout_passed":  1139,
+                                                      "startup_layout_failed":  0,
+                                                      "measured_intro_seconds":  9.211,
+                                                      "viewports":  [
+                                                                        [
+                                                                            1024,
+                                                                            1536
+                                                                        ],
+                                                                        [
+                                                                            720,
+                                                                            1280
+                                                                        ],
+                                                                        [
+                                                                            1086,
+                                                                            1448
+                                                                        ],
+                                                                        [
+                                                                            1065,
+                                                                            1477
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            1920
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2340
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2400
+                                                                        ],
+                                                                        [
+                                                                            390,
+                                                                            844
+                                                                        ],
+                                                                        [
+                                                                            442,
+                                                                            663
+                                                                        ]
+                                                                    ],
+                                                      "visual_review":  [
+                                                                            "actual Godot render 442x663",
+                                                                            "actual Godot render 720x1280",
+                                                                            "actual Godot render 1065x1477"
+                                                                        ],
+                                                      "assertions":  "Sequential 1–30 labels, visible glyph center within one screen pixel, every ink bounding-box corner inside its traced tile face, portrait bounds/spacing, loading progress, input guards, saved music preference and actual Main Menu transition.",
+                                                      "actual_player_progress_and_settings_sha256_unchanged":  true,
+                                                      "nodes_preserved":  14,
+                                                      "physical_android_test":  false,
+                                                      "music_suite_rerun":  false,
+                                                      "remaining_diagnostics":  "Final runtime suite has no script/parse errors or failed checks. Three ObjectDB shutdown warnings remain; Editor import also reports the existing external text-editor configuration errors."
+                                                  }
+                             }
+                         ]
 }
