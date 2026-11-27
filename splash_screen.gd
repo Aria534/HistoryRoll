@@ -187,27 +187,27 @@ func _update_layout() -> void:
 	# Lower the old font minimum before assigning smaller portrait rectangles.
 	for caption: Label in [tagline, subject, loading_label]:
 		caption.add_theme_font_size_override("font_size", 12)
-	var design := Vector2(1065.0, 1580.0)
+	var design := Vector2(1065.0, 1477.0)
 	var factor := minf(safe.size.x / design.x, safe.size.y / design.y)
 	var origin := safe.get_center() - design * factor * 0.5
-	var logo_width := 980.0 * factor
+	var logo_width := 900.0 * factor
 	logo.size = Vector2(logo_width, logo_width / logo.texture.get_size().aspect())
-	logo.position = origin + Vector2((design.x - 980.0) * 0.5, 10.0) * factor
-	tagline.position = origin + Vector2(200.0, 675.0) * factor
-	tagline.size = Vector2(665.0, 54.0) * factor
+	logo.position = origin + Vector2((design.x - 900.0) * 0.5, 10.0) * factor
+	tagline.position = origin + Vector2(242.5, 622.0) * factor
+	tagline.size = Vector2(580.0, 62.0) * factor
 	_fit_caption(tagline, 45.0 * factor)
-	subject_banner.position = origin + Vector2(53.0, 741.0) * factor
-	subject_banner.size = Vector2(959.0, 55.0) * factor
+	subject_banner.position = origin + Vector2(202.5, 698.0) * factor
+	subject_banner.size = Vector2(660.0, 62.0) * factor
 	subject.position = subject_banner.position + Vector2(subject_banner.size.x * 0.03, 0.0)
 	subject.size = subject_banner.size * Vector2(0.94, 1.0)
 	_fit_caption(subject, 38.0 * factor)
 	# Keep this existing node name so scene/script references remain compatible.
 	# Its new texture is the decorative winding board, with live 1–30 lettering.
-	var board_width := design.x * factor
+	var board_width := 950.0 * factor
 	explorers.size = Vector2(board_width, board_width / explorers.texture.get_size().aspect())
-	explorers.position = origin + Vector2(0.0, 812.0) * factor
-	bar_frame.size = Vector2(830.0 * factor, maxf(32.0, 36.0 * factor))
-	bar_frame.position = Vector2(safe.get_center().x - bar_frame.size.x * 0.5, explorers.position.y + explorers.size.y + 12.0 * factor)
+	explorers.position = origin + Vector2(80.0, 830.0) * factor
+	bar_frame.size = Vector2(730.0 * factor, maxf(32.0, 38.0 * factor))
+	bar_frame.position = Vector2(safe.get_center().x - bar_frame.size.x * 0.5, explorers.position.y + explorers.size.y + 44.0 * factor)
 	var inset := maxf(2.0, bar_frame.size.y * 0.17)
 	loading_bar.size = bar_frame.size - Vector2.ONE * inset * 2.0
 	loading_bar.position = bar_frame.position + Vector2.ONE * inset

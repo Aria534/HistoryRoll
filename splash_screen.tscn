@@ -6,8 +6,8 @@
 [ext_resource type="FontFile" path="res://assets/fonts/Roboto-Variable.ttf" id="4_body"]
 
 [ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/background.png" id="5_background"]
-[ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/winding_board.png" id="6_explorers"]
-[ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/subject_banner.svg" id="7_subject"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/winding_board_perspective.png" id="6_explorers"]
+[ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/subject_banner.svg" id="7_subject"]
 [ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/loading_banner.svg" id="8_loading"]
 [ext_resource type="Texture2D" path="res://assets/splash_ui/hero_board/bar_track.svg" id="9_track"]
 [ext_resource type="Texture2D" path="res://assets/splash_ui/discovery/bar_fill.svg" id="10_fill"]
@@ -21,7 +21,7 @@ region = Rect2(0, 0, 1536, 1024)
 
 [sub_resource type="AtlasTexture" id="IntroExplorersAtlas"]
 atlas = ExtResource("6_explorers")
-region = Rect2(0, 0, 1536, 1024)
+region = Rect2(0, 165, 1536, 859)
 
 [sub_resource type="StyleBoxEmpty" id="LoadingTrack"]
 
@@ -90,10 +90,10 @@ mouse_filter = 2
 [node name="Logo" type="TextureRect" parent="Presentation"]
 unique_name_in_owner = true
 layout_mode = 1
-anchor_left = 0.06
-anchor_top = 0.033
-anchor_right = 0.94
-anchor_bottom = 0.424
+anchor_left = 0.096
+anchor_top = 0.064
+anchor_right = 0.904
+anchor_bottom = 0.423
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -103,10 +103,10 @@ stretch_mode = 5
 
 [node name="Tagline" type="Label" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.2
+anchor_left = 0.24
 anchor_top = 0.43
-anchor_right = 0.8
-anchor_bottom = 0.464
+anchor_right = 0.76
+anchor_bottom = 0.467
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -123,20 +123,20 @@ vertical_alignment = 1
 
 [node name="SubjectBanner" type="TextureRect" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.07
-anchor_top = 0.471
-anchor_right = 0.93
-anchor_bottom = 0.507
+anchor_left = 0.204
+anchor_top = 0.476
+anchor_right = 0.796
+anchor_bottom = 0.513
 mouse_filter = 2
 texture = ExtResource("7_subject")
 expand_mode = 1
 
 [node name="Subject" type="Label" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.09
-anchor_top = 0.471
-anchor_right = 0.91
-anchor_bottom = 0.507
+anchor_left = 0.222
+anchor_top = 0.476
+anchor_right = 0.778
+anchor_bottom = 0.513
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -150,10 +150,10 @@ vertical_alignment = 1
 
 [node name="Explorers" type="TextureRect" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.022
-anchor_top = 0.513
-anchor_right = 0.978
-anchor_bottom = 0.938
+anchor_left = 0.094
+anchor_top = 0.555
+anchor_right = 0.946
+anchor_bottom = 0.873
 mouse_filter = 2
 texture = SubResource("IntroExplorersAtlas")
 expand_mode = 1
@@ -162,10 +162,10 @@ script = ExtResource("11_board")
 
 [node name="LoadingBarFrame" type="TextureRect" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.125
-anchor_top = 0.946
-anchor_right = 0.875
-anchor_bottom = 0.968
+anchor_left = 0.172
+anchor_top = 0.899
+anchor_right = 0.828
+anchor_bottom = 0.922
 mouse_filter = 2
 texture = ExtResource("9_track")
 expand_mode = 1
@@ -173,10 +173,10 @@ expand_mode = 1
 [node name="LoadingBar" type="ProgressBar" parent="Presentation"]
 unique_name_in_owner = true
 layout_mode = 1
-anchor_left = 0.125
-anchor_top = 0.946
-anchor_right = 0.875
-anchor_bottom = 0.968
+anchor_left = 0.172
+anchor_top = 0.899
+anchor_right = 0.828
+anchor_bottom = 0.922
 mouse_filter = 2
 theme_override_styles/background = SubResource("LoadingTrack")
 theme_override_styles/fill = SubResource("LoadingFill")
