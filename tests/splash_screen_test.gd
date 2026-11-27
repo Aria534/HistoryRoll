@@ -3,7 +3,7 @@ extends SceneTree
 const SplashScene = preload("res://splash_screen.tscn")
 const MAIN_MENU := "res://main_menu_tscn.tscn"
 const VIEWPORTS := [
-	Vector2i(1024, 1536), Vector2i(720, 1280), Vector2i(1086, 1448),
+	Vector2i(1024, 1536), Vector2i(720, 1280), Vector2i(1086, 1448), Vector2i(1065, 1477),
 	Vector2i(1080, 1920), Vector2i(1080, 2340), Vector2i(1080, 2400),
 ]
 
@@ -71,7 +71,7 @@ func _test_layout(viewport_size: Vector2i) -> void:
 	_check(await _wait_ready(splash), "%s Main Menu resource is ready" % viewport_size)
 	var label := "%dx%d" % [viewport_size.x, viewport_size.y]
 	_check(_texture_path(splash.logo.texture).ends_with("/splash_ui/hero_board/hero_header.png"), "%s uses the six-hero HistoryRoll header" % label)
-	_check(_texture_path(splash.explorers.texture).ends_with("/splash_ui/hero_board/winding_board.png"), "%s uses the separate winding board artwork" % label)
+	_check(_texture_path(splash.explorers.texture).ends_with("/splash_ui/hero_board/winding_board_perspective.png"), "%s uses the separate winding board artwork" % label)
 	_check(splash.get_node("Background").texture.resource_path.ends_with("/splash_ui/hero_board/background.png"), "%s uses the Philippine gate scenery" % label)
 	_check(not splash.get_node("GlowBottom").visible, "%s retired gradient decoration is hidden" % label)
 	_check(splash.loading_bar.value == 100.0 and not splash.loading_bar.show_percentage, "%s actual menu load fills the yellow bar without a percentage overlay" % label)
