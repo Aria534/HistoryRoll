@@ -205,7 +205,7 @@ func _update_layout() -> void:
 	# Its new texture is the decorative winding board, with live 1–30 lettering.
 	var board_width := 950.0 * factor
 	explorers.size = Vector2(board_width, board_width / explorers.texture.get_size().aspect())
-	explorers.position = origin + Vector2(80.0, 830.0) * factor
+	explorers.position = origin + Vector2(80.0, 727.95) * factor
 	bar_frame.size = Vector2(730.0 * factor, maxf(32.0, 38.0 * factor))
 	bar_frame.position = Vector2(safe.get_center().x - bar_frame.size.x * 0.5, explorers.position.y + explorers.size.y + 44.0 * factor)
 	var inset := maxf(2.0, bar_frame.size.y * 0.17)

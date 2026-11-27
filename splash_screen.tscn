@@ -21,7 +21,7 @@ region = Rect2(0, 0, 1536, 1024)
 
 [sub_resource type="AtlasTexture" id="IntroExplorersAtlas"]
 atlas = ExtResource("6_explorers")
-region = Rect2(0, 165, 1536, 859)
+region = Rect2(0, 0, 1536, 1024)
 
 [sub_resource type="StyleBoxEmpty" id="LoadingTrack"]
 
@@ -150,10 +150,10 @@ vertical_alignment = 1
 
 [node name="Explorers" type="TextureRect" parent="Presentation"]
 layout_mode = 1
-anchor_left = 0.094
-anchor_top = 0.555
-anchor_right = 0.946
-anchor_bottom = 0.873
+anchor_left = 0.075117
+anchor_top = 0.492854
+anchor_right = 0.967136
+anchor_bottom = 0.92165
 mouse_filter = 2
 texture = SubResource("IntroExplorersAtlas")
 expand_mode = 1
