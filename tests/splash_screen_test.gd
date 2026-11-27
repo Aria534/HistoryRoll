@@ -5,6 +5,7 @@ const MAIN_MENU := "res://main_menu_tscn.tscn"
 const VIEWPORTS := [
 	Vector2i(1024, 1536), Vector2i(720, 1280), Vector2i(1086, 1448), Vector2i(1065, 1477),
 	Vector2i(1080, 1920), Vector2i(1080, 2340), Vector2i(1080, 2400),
+	Vector2i(390, 844), Vector2i(442, 663),
 ]
 
 var passed := 0
@@ -70,6 +71,11 @@ func _test_layout(viewport_size: Vector2i) -> void:
 	var splash = fixture.splash
 	_check(await _wait_ready(splash), "%s Main Menu resource is ready" % viewport_size)
 	var label := "%dx%d" % [viewport_size.x, viewport_size.y]
+	var board_loaded: bool = splash.explorers.has_method("get_number_layout")
+	_check(board_loaded, "%s decorative board script loads" % label)
+	if not board_loaded:
+		await _dispose(fixture)
+		return
 	_check(_texture_path(splash.logo.texture).ends_with("/splash_ui/hero_board/hero_header.png"), "%s uses the six-hero HistoryRoll header" % label)
 	_check(_texture_path(splash.explorers.texture).ends_with("/splash_ui/hero_board/winding_board_perspective.png"), "%s uses the separate winding board artwork" % label)
 	_check(splash.get_node("Background").texture.resource_path.ends_with("/splash_ui/hero_board/background.png"), "%s uses the Philippine gate scenery" % label)
@@ -90,7 +96,9 @@ func _test_layout(viewport_size: Vector2i) -> void:
 	_check(is_equal_approx(splash.explorers.size.aspect(), splash.explorers.texture.get_size().aspect()), "%s winding board is not stretched or cropped" % label)
 	_check(splash.logo.get_global_rect().end.y < splash.tagline.position.y, "%s logo and tagline have clear spacing" % label)
 	_check(splash.tagline.get_global_rect().end.y < splash.subject.position.y, "%s tagline does not overlap the subject banner" % label)
-	_check(splash.subject.get_global_rect().end.y < splash.explorers.position.y, "%s winding board stays below the captions" % label)
+	var road_top: float = splash.explorers.position.y + splash.explorers.ROAD_TOP * splash.explorers.size.x / splash.explorers.ART_SIZE.x
+	_check(splash.subject.get_global_rect().end.y < road_top, "%s numbered road stays below the captions" % label)
+	_test_board_numbers(splash.explorers, label)
 	_check(splash.explorers.get_global_rect().end.y < splash.loading_bar.position.y, "%s winding board remains above the progress bar" % label)
 	_check(splash.loading_bar.is_visible_in_tree(), "%s progress bar remains visible without the caption banner" % label)
 	var frame := splash.get_node("Presentation/LoadingBarFrame") as TextureRect
@@ -100,6 +108,23 @@ func _test_layout(viewport_size: Vector2i) -> void:
 	_check(capture != null and not capture.is_empty() and capture.save_png("user://splash_hero_board_%s.png" % label) == OK, "%s actual Godot screenshot saved" % label)
 	await _dispose(fixture)
 
+
+func _test_board_numbers(board: TextureRect, label: String) -> void:
+	_check(board.TILE_CENTERS.size() == 30 and board.TILE_POLYGONS.size() == 30,
+		"%s has thirty numbered faces from START to the gate" % label)
+	var factor: float = minf(board.size.x / board.ART_SIZE.x, board.size.y / board.ART_SIZE.y)
+	var origin: Vector2 = (board.size - board.ART_SIZE * factor) * 0.5
+	for index: int in 30:
+		var layout: Dictionary = board.get_number_layout(index)
+		_check(layout.text == str(index + 1), "%s face %d has its sequential number" % [label, index + 1])
+		var bounds: Rect2 = layout.bounds
+		_check(bounds.get_center().distance_to(layout.center) <= 0.72,
+			"%s number %d visible ink is centered within one screen pixel" % [label, index + 1])
+		var fits := true
+		for corner: Vector2 in [bounds.position, Vector2(bounds.end.x, bounds.position.y),
+			bounds.end, Vector2(bounds.position.x, bounds.end.y)]:
+			fits = fits and Geometry2D.is_point_in_polygon((corner - origin) / factor, board.TILE_POLYGONS[index])
+		_check(fits, "%s number %d fits inside its face borders" % [label, index + 1])
 
 func _test_transition() -> void:
 	var fixture := await _fixture(Vector2i(720, 1280))
