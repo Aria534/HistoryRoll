@@ -5,3 +5,5 @@
 [resource]
 base_font = ExtResource("1_base")
 variation_opentype = {2003265652: 700.0}
+
+variation_embolden = 0.35
