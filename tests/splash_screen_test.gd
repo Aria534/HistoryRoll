@@ -70,13 +70,13 @@ func _test_layout(viewport_size: Vector2i) -> void:
 	var splash = fixture.splash
 	_check(await _wait_ready(splash), "%s Main Menu resource is ready" % viewport_size)
 	var label := "%dx%d" % [viewport_size.x, viewport_size.y]
-	_check(_texture_path(splash.logo.texture).ends_with("/splash_ui/discovery/logo.png"), "%s uses the reference-style educational logo" % label)
-	_check(_texture_path(splash.explorers.texture).ends_with("/splash_ui/discovery/explorers.png"), "%s uses the separate explorer duo" % label)
-	_check(splash.get_node("Background").texture.resource_path.ends_with("/splash_ui/discovery/background.png"), "%s uses the Philippine gate scenery" % label)
+	_check(_texture_path(splash.logo.texture).ends_with("/splash_ui/hero_board/hero_header.png"), "%s uses the six-hero HistoryRoll header" % label)
+	_check(_texture_path(splash.explorers.texture).ends_with("/splash_ui/hero_board/winding_board.png"), "%s uses the separate winding board artwork" % label)
+	_check(splash.get_node("Background").texture.resource_path.ends_with("/splash_ui/hero_board/background.png"), "%s uses the Philippine gate scenery" % label)
 	_check(not splash.get_node("GlowBottom").visible, "%s retired gradient decoration is hidden" % label)
 	_check(splash.loading_bar.value == 100.0 and not splash.loading_bar.show_percentage, "%s actual menu load fills the yellow bar without a percentage overlay" % label)
 	_check(splash.tagline.text == "LEARN • PLAY • DISCOVER", "%s tagline matches the reference" % label)
-	_check(splash.subject.text == "DISCOVER HEROES. LEARN OUR HISTORY.", "%s subject caption matches the reference" % label)
+	_check(splash.subject.text == "Discover Heroes. Learn Our History.", "%s subject caption matches the reference" % label)
 	_check(not splash.loading_label.visible and not splash.get_node("Presentation/LoadingBanner").visible, "%s normal loading omits the red caption banner" % label)
 	for control: Control in [splash.logo, splash.tagline, splash.subject, splash.explorers, splash.loading_bar]:
 		_check(_visible_inside(control, viewport_size), "%s %s remains visible and inside the portrait viewport" % [label, control.name])
@@ -87,17 +87,17 @@ func _test_layout(viewport_size: Vector2i) -> void:
 		var text_size := font.get_string_size(caption.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 		_check(text_size.x <= caption.size.x and font.get_height(font_size) <= caption.size.y, "%s %s text fits" % [label, caption.name])
 	_check(is_equal_approx(splash.logo.size.aspect(), splash.logo.texture.get_size().aspect()), "%s logo is not stretched" % label)
-	_check(is_equal_approx(splash.explorers.size.aspect(), splash.explorers.texture.get_size().aspect()), "%s explorers are not stretched or cropped" % label)
+	_check(is_equal_approx(splash.explorers.size.aspect(), splash.explorers.texture.get_size().aspect()), "%s winding board is not stretched or cropped" % label)
 	_check(splash.logo.get_global_rect().end.y < splash.tagline.position.y, "%s logo and tagline have clear spacing" % label)
 	_check(splash.tagline.get_global_rect().end.y < splash.subject.position.y, "%s tagline does not overlap the subject banner" % label)
-	_check(splash.subject.get_global_rect().end.y < splash.explorers.position.y, "%s explorers stay below the captions" % label)
-	_check(splash.explorers.get_global_rect().end.y < splash.loading_bar.position.y, "%s explorer feet remain above the progress bar" % label)
+	_check(splash.subject.get_global_rect().end.y < splash.explorers.position.y, "%s winding board stays below the captions" % label)
+	_check(splash.explorers.get_global_rect().end.y < splash.loading_bar.position.y, "%s winding board remains above the progress bar" % label)
 	_check(splash.loading_bar.is_visible_in_tree(), "%s progress bar remains visible without the caption banner" % label)
 	var frame := splash.get_node("Presentation/LoadingBarFrame") as TextureRect
 	_check(frame.get_global_rect().encloses(splash.loading_bar.get_global_rect()), "%s progress fill stays inside its white/brown frame" % label)
 	await RenderingServer.frame_post_draw
 	var capture: Image = fixture.viewport.get_texture().get_image()
-	_check(capture != null and not capture.is_empty() and capture.save_png("user://splash_discovery_%s.png" % label) == OK, "%s actual Godot screenshot saved" % label)
+	_check(capture != null and not capture.is_empty() and capture.save_png("user://splash_hero_board_%s.png" % label) == OK, "%s actual Godot screenshot saved" % label)
 	await _dispose(fixture)
 
 
@@ -225,7 +225,7 @@ func _test_nine_second_timing() -> void:
 	_check(requested.is_empty() and not splash._transitioning, "touch, mouse, and keyboard cannot shorten the nine-second intro")
 	await RenderingServer.frame_post_draw
 	var image: Image = viewport.get_texture().get_image()
-	_check(image != null and image.save_png("user://splash_discovery_1second_720x1280.png") == OK, "partially filled nine-second loading bar capture is saved")
+	_check(image != null and image.save_png("user://splash_hero_board_1second_720x1280.png") == OK, "partially filled nine-second loading bar capture is saved")
 	while splash._elapsed < 8.0:
 		await process_frame
 	_check(requested.is_empty(), "Main Menu is not opened before the nine-second interval")
