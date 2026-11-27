@@ -38,7 +38,7 @@ var TILE_POLYGONS: Array[PackedVector2Array] = [
 	PackedVector2Array([Vector2(669,229), Vector2(824,229), Vector2(837,314), Vector2(656,313)]),
 	PackedVector2Array([Vector2(824,229), Vector2(1005,229), Vector2(1024,312), Vector2(837,314)]),
 	PackedVector2Array([Vector2(1005,229), Vector2(1152,228), Vector2(1173,305), Vector2(1024,312)]),
-	PackedVector2Array([Vector2(1152,228), Vector2(1221,225), Vector2(1291,280), Vector2(1258,294), Vector2(1173,305)]),
+	PackedVector2Array([Vector2(1155,235), Vector2(1235,242), Vector2(1275,264), Vector2(1300,282), Vector2(1265,305), Vector2(1220,313), Vector2(1155,313)]),
 ]
 
 var TILE_CENTERS: Array[Vector2] = []
