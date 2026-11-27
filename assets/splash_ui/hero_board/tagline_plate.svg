@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="100" viewBox="0 0 1000 100">
+<defs><linearGradient id="wood" x2="0" y2="1"><stop stop-color="#B95409"/><stop offset=".5" stop-color="#84370C"/><stop offset="1" stop-color="#642408"/></linearGradient></defs>
+<rect x="3" y="7" width="994" height="87" rx="43" fill="#4D210A" stroke="#4D210A" stroke-width="5"/>
+<rect x="8" y="8" width="984" height="78" rx="39" fill="url(#wood)" stroke="#FFD465" stroke-width="7"/>
+<path d="M40 18H960" fill="none" stroke="#FFEDA0" stroke-width="3" opacity=".8"/>
+</svg>
