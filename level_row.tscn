@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://level_row.gd" id="1_row"]
-[ext_resource type="FontFile" path="res://assets/fonts/BreeSerif-Regular.ttf" id="2_font"]
+[ext_resource type="FontVariation" path="res://assets/fonts/Nunito-ExtraBold.tres" id="2_font"]
 [ext_resource type="Texture2D" path="res://assets/level_selection_pixel/parchment_forest/padlock.svg" id="3_lock"]
 [ext_resource type="Shader" path="res://assets/main_menu_pixel/forest_story/pixel_cutout.gdshader" id="4_cutout"]
 
@@ -9,10 +9,6 @@
 shader = ExtResource("4_cutout")
 
 [sub_resource type="StyleBoxEmpty" id="Style_empty"]
-
-[sub_resource type="FontVariation" id="Font_row_bold"]
-base_font = ExtResource("2_font")
-variation_embolden = 0.5
 
 [node name="LevelRow" type="Button"]
 custom_minimum_size = Vector2(0, 144)
@@ -25,6 +21,7 @@ theme_override_styles/disabled = SubResource("Style_empty")
 theme_override_styles/focus = SubResource("Style_empty")
 script = ExtResource("1_row")
 use_embedded_artwork = false
+name_font_size = 38
 
 [node name="Frame" type="TextureRect" parent="."]
 layout_mode = 1
@@ -64,11 +61,11 @@ offset_right = -116.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.28, 0.10, 0.025, 1)
-theme_override_colors/font_shadow_color = Color(1, 0.84, 0.51, 1)
-theme_override_constants/shadow_offset_y = 1
-theme_override_fonts/font = SubResource("Font_row_bold")
-theme_override_font_sizes/font_size = 44
+theme_override_colors/font_color = Color(0.275, 0.145, 0.059, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+theme_override_constants/shadow_offset_y = 0
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 38
 text = "LEVEL 1 - LAPU-LAPU"
 vertical_alignment = 1
 text_overrun_behavior = 3
