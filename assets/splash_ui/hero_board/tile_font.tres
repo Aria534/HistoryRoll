@@ -1,9 +1,10 @@
-[gd_resource type="FontVariation" load_steps=2 format=3]
+[gd_resource type="FontVariation" format=3 uid="uid://78mvwax42e74"]
 
-[ext_resource type="FontFile" path="res://assets/fonts/Lora-Italic.ttf" id="1_base"]
+[ext_resource type="FontFile" uid="uid://cppxprs2x6lh5" path="res://assets/fonts/Lora-Italic.ttf" id="1_base"]
 
 [resource]
 base_font = ExtResource("1_base")
-variation_opentype = {2003265652: 700.0}
-
+variation_opentype = {
+2003265652: 700.0
+}
 variation_embolden = 0.35
