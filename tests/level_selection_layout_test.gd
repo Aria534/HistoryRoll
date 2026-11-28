@@ -20,6 +20,8 @@ func _run() -> void:
 	await _test_viewport(Vector2i(1080, 1920), "level_selection_1080x1920.png")
 	await _test_viewport(Vector2i(1080, 2340), "level_selection_1080x2340.png")
 	await _test_viewport(Vector2i(1080, 2400), "level_selection_1080x2400.png")
+	await _test_viewport(Vector2i(390, 844), "level_selection_390x844.png")
+	await _test_viewport(Vector2i(442, 663), "level_selection_442x663.png")
 	_cleanup_save()
 	await _test_returning_player_capture()
 	_cleanup_save()
