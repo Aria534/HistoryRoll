@@ -6,6 +6,13 @@ extends TextureRect
 const ART_SIZE := Vector2(1536.0, 1024.0)
 const ROAD_TOP := 195.0
 const NUMBER_FONT := preload("res://assets/splash_ui/hero_board/tile_font.tres")
+const LADDER_TEXTURE := preload("res://assets/splash_ui/hero_board/natural_ladder.png")
+const LADDER_REGION := Rect2(48, 74, 628, 2031)
+# Both ends rest within numbered road faces, away from the centered lettering.
+const LADDER_PLACEMENTS := [
+	{"bottom": Vector2(725, 740), "top": Vector2(530, 411), "width": 86.0},
+	{"bottom": Vector2(985, 932), "top": Vector2(1060, 585), "width": 92.0},
+]
 # Clockwise face outlines traced from the artwork, in START-to-gate order.
 # Curved turns count as tiles too. Adjacent cream faces still have divider seams.
 var TILE_POLYGONS: Array[PackedVector2Array] = [
@@ -44,6 +51,7 @@ var TILE_POLYGONS: Array[PackedVector2Array] = [
 var TILE_CENTERS: Array[Vector2] = []
 var _number_font: FontVariation
 var _ink_cache: Dictionary = {}
+var _ladder_texture: AtlasTexture
 
 
 func _ready() -> void:
@@ -176,21 +184,29 @@ func _draw() -> void:
 
 
 func _draw_ladder(origin: Vector2, factor: float) -> void:
-	# Separate native ladder: exact placement between face centers, no bitmap drift.
-	var bottom := Vector2(685, 680)
-	var top := Vector2(515, 380)
-	var across := (top - bottom).normalized().orthogonal() * 32.0
-	for index: int in range(1, 10):
-		var center := bottom.lerp(top, float(index) / 10.0)
-		_draw_wood(origin + (center - across) * factor,
-			origin + (center + across) * factor, 13.0 * factor)
-	for side: float in [-1.0, 1.0]:
-		_draw_wood(origin + (bottom + across * side) * factor,
-			origin + (top + across * side) * factor, 16.0 * factor)
-
-
-func _draw_wood(from: Vector2, to: Vector2, width: float) -> void:
-	draw_line(from + Vector2(3, 4), to + Vector2(3, 4), Color("#6d3511"), width + 4.0, true)
-	draw_line(from, to, Color("#532808"), width + 3.0, true)
-	draw_line(from, to, Color("#e9a139"), width, true)
-	draw_line(from - Vector2(1, 1), to - Vector2(1, 1), Color("#ffdc7b"), width * 0.3, true)
+	if _ladder_texture == null:
+		_ladder_texture = AtlasTexture.new()
+		_ladder_texture.atlas = LADDER_TEXTURE
+		_ladder_texture.region = LADDER_REGION
+		_ladder_texture.filter_clip = true
+	for placement: Dictionary in LADDER_PLACEMENTS:
+		var bottom: Vector2 = placement.bottom
+		var top: Vector2 = placement.top
+		var width: float = placement.width
+		var direction := top - bottom
+		var angle := direction.angle() + PI * 0.5
+		var across := Vector2.RIGHT.rotated(angle)
+		# Small floor-contact shadows under each rail end anchor the wood to the tiles.
+		for end: Vector2 in [bottom, top]:
+			var spread := width * (0.38 if end == bottom else 0.32)
+			for side: float in [-1.0, 1.0]:
+				var foot := end + across * spread * side
+				draw_set_transform(origin + foot * factor, 0.0, Vector2(width * 0.13, 3.5) * factor)
+				draw_circle(Vector2.ZERO, 1.0, Color(0.22, 0.10, 0.03, 0.25))
+		var center := origin + (bottom + top) * 0.5 * factor
+		draw_set_transform(center, angle, Vector2.ONE * factor)
+		var sprite_rect := Rect2(Vector2(-width * 0.5, -direction.length() * 0.5),
+			Vector2(width, direction.length()))
+		draw_texture_rect(_ladder_texture, sprite_rect, false)
+	# Restore the board's coordinates before the number labels are drawn.
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
