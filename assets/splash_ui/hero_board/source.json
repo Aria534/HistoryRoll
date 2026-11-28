@@ -15,12 +15,12 @@
                   },
                   {
                       "path":  "res://assets/splash_ui/hero_board/background.png",
-                      "role":  "Philippine sky, hut and garden; gate/flag now belong to the connected foreground road asset.",
+                      "role":  "Philippine garden scenery with continuous raised lawn beneath the complete winding loading board; gate remains in the foreground board asset.",
                       "width":  1024,
                       "height":  1536,
                       "prompt":  "Use case: ui-mockup. Asset type: background-only scenery for a colorful Filipino educational game\u0027s PORTRAIT loading screen, 2:3 portrait canvas. Match the attached generated header\u0027s polished 2D cartoon art treatment, clean dark brown outlines, bright blue and fresh green palette, soft warm gold shading. Draw a very bright cyan-blue sky with fluffy white clouds and a few rounded leafy tree canopies framing the upper left/right edges. A simple wooden nipa hut on stilts near the lower-left edge, a small Manila Intramuros/Fort Santiago-inspired stone gate near the lower-right with a Philippine flag (blue above red, white triangle, golden sun and three stars). Green bushes and a cheerful grassy garden foreground, distant soft hills; no modern buildings. IMPORTANT COMPOSITION: the central upper 55 percent is mostly open blue sky for a SEPARATE LARGE HERO LOGO overlay; center lower 45 percent is mostly simple clear green lawn for a SEPARATE winding board overlay, so keep landmarks and props at the outer sides, not the center. A small hourglass on a stone plinth at extreme lower-left, small scroll and compass along the bottom-left edge, one ivory die and two closed books at extreme bottom-right. Keep bottom-center 7 percent clear lawn for a real loading bar added later in Godot. A little colorful garden foliage and small pink flowers at corners are okay. No board, no road, no tiles, no text, no logos, no people or portraits, no banner, no progress bar or frame, no UI buttons. It is only the background layer; do not reproduce any part of the header reference.",
                       "style_reference":  "Generated hero_header.png",
-                      "latest_edit_prompt":  "Use case: precise-object-edit. Edit target: this existing HistoryRoll loading background. Remove ONLY the stone castle gate, its connecting stone wall, and the Philippine flag/pole on the right around 40–68 percent of the image height. The board will now include its own connected gate as a separate foreground asset, so this background must have NO gate, arch, fort, flag or pole. Fill the removed area seamlessly with the existing cyan sky, distant blue-green hills, rounded green trees/bushes, and open green lawn consistent with the surrounding scene. Preserve the entire rest of the illustration, portrait composition and canvas size: tree canopies at top corners, clouds, left nipa hut, hourglass and plinth at bottom-left, scroll and compass, books and die at bottom-right, corner flowers and foliage. Keep central lawn and sky clear. Same clean bright 2D cartoon colors and outlines, no new landmarks, text, board, people or UI. Opaque background."
+                      "latest_edit_prompt":  "Make the GRASS FIELD MUCH LARGER in this image. The horizon must rise to just ABOVE THE PEAK OF THE NIPA HUT ROOF on the left. Extend a horizontal line from that roof peak across the image: everything BELOW that imaginary line, except the hut and foreground props themselves, must be GREEN GARDEN GROUND. The lawn begins behind the hut ROOF, not down at its stairs or floor. Replace the low blue mountains and lower clouds behind the hut with open green ground; put a thin distant hedge and tiny hill band just above the hut roof peak. Make the lower roughly TWO THIRDS of the composition mostly sunny green lawn, with upper open blue sky and tree canopies framing the top. Keep the hut, hourglass/plinth, scroll/compass, bottom-right books/die and edge flowers at their existing exact locations. Do not move them. Continuous slightly top-down grassy garden floor from BEHIND THE ROOF PEAK to the bottom center, no sky/clouds/mountains visible anywhere under the hut-roof height. No raised platform, island or rectangular mat. Same bright clean cartoon style,1024x1536 portrait canvas. No board, road, castle, people, logo, text or UI. The key visible change must be that the lawn starts HIGHER THAN THE HUT ROOF PEAK, leaving a large green field across the whole lower scene."
                   },
                   {
                       "path":  "res://assets/splash_ui/hero_board/winding_board.png",
@@ -38,6 +38,13 @@
                   {
                       "path":  "res://assets/splash_ui/hero_board/bar_track.svg",
                       "role":  "Code-native gold/brown frame for the actual ProgressBar"
+                  },
+                  {
+                      "path":  "res://assets/splash_ui/hero_board/natural_ladder.png",
+                      "role":  "Shared transparent illustrated wooden ladder sprite for both loading-board poses",
+                      "width":  724,
+                      "height":  2172,
+                      "prompt":  "Use case: background-extraction / precise-object-edit. Input image: existing HistoryRoll board, ONLY as source/style reference for its GOLDEN WOODEN LADDER on the RIGHT. Create a reusable transparent sprite of that wooden ladder by isolating it and orienting it perfectly UPRIGHT, front viewed with a subtle receding perspective: top 15 percent narrower than bottom. Exactly TWO straight solid wooden side rails with subtly rounded rail ends and TEN evenly spaced wooden rungs fitted BETWEEN the rails. Warm honey-gold wood with believable wood grain, warm orange-brown side faces, soft cream highlights from upper-left, clean dark brown illustrated outlines. Thick solid rails and rungs, hand-painted polished 2D cartoon look matching the source board, NOT photorealistic, NOT vector line art, NOT bamboo, no rope, no metal, no ornate ornaments. Side rails converge very slightly upward; rungs are rectangular wood with visible upper faces and tiny joint shadows, regular spacing. No bowed or warped rails; no diagonal cross braces, extra rail, missing rungs or detached pieces. Entire ladder straight, symmetric, upright, no tilt; the game will rotate it and fit it to its board endpoints. Portrait narrow 1:3 canvas 512x1536, tight transparent margin about 4 percent around the ladder, do not clip the tips or sides. GENUINE TRANSPARENT alpha background; no road, tiles, snake, gate, flag, numbers, scenery, ground, drop-shadow cloud, words or other objects. Keep all space outside the ladder transparent; only a subtle close-contact shading on the wood itself."
                   }
               ],
     "font":  {
@@ -113,35 +120,36 @@
                          "physical_android_test":  false,
                          "remaining_diagnostics":  "Existing external-text-editor configuration errors during headless Editor import; ObjectDB shutdown warnings remain in test logs. Final runtime suites reported no script/parse errors and no failed checks.",
                          "music_checks_note":  "Previous revision music results retained; this change only edits board artwork and local number rendering. No audio code or music settings were modified.",
-                         "latest_runtime_note":  "No script/parse errors or failed checks in final runtime suite. Existing three ObjectDB shutdown warnings remain, along with the external-editor configuration errors during Editor import."
+                         "latest_runtime_note":  "Final runtime suite has no script/parse errors or failed checks. Two existing ObjectDB shutdown warnings remain."
                      },
     "current_revision":  {
-                             "revision":  5,
-                             "date":  "2026-11-27",
-                             "reason":  "User requested a larger, clearer castle gate at the end of the loading-screen road.",
-                             "board_asset":  "res://assets/splash_ui/hero_board/winding_board_perspective.png",
+                             "revision":  8,
+                             "date":  "2026-11-28",
+                             "reason":  "User requested the entire winding loading-board path to sit on the ground.",
+                             "background_asset":  "res://assets/splash_ui/hero_board/background.png",
                              "generation_tool":  "image_gen (built-in mode)",
                              "prompts":  [
                                              {
-                                                 "stage":  "gate enlargement",
-                                                 "prompt":  "Use case: precise-object-edit. Edit target: this existing transparent HistoryRoll winding road asset. Change ONLY the small stone CASTLE GATE and Philippine flag at the UPPER-RIGHT FINISH. Make the gate noticeably larger and clearer for a phone screen, about 35 percent more prominent: a wider stone facade, thicker readable pillars, a larger open arch, bold clean warm-stone detailing and a clear Philippine flag. Keep the road\u0027s doorway floor connection fixed around x=1340,y=270 so the road still continues naturally INTO the open arch. Expand the upper facade mostly UP and LEFT into the unused transparent area, keep the far-right wall within x=1510 and the entire flag within the canvas; shorten the bare flagpole if needed to make room for the larger building. Keep lower-left pillar feet off the blank tile faces: its base at x\u003e=1230 so tile 30 stays unobstructed. Do not cover the broad road between x=1150..1240,y=230..305. The castle can be broader at the top, around x=1135..1505,y=75..210, narrowing at its left base beside the road. Preserve the same friendly illustrated Fort Santiago-style stone gate, crest and small shrubs. Keep the Philippine flag clearly correct with blue above red, white triangle at hoist, gold sun and three stars. Critical: EVERY other pixel/composition is locked: same 1536x1024 canvas; winding road edges, ALL thirty blank tile faces and divider seams, both green snakes with NATURAL tapered tails, the single existing RIGHT ladder, START sign, colors and positions stay unchanged. Do NOT add back a left ladder, numbers, sky, backdrop, people, captions or UI. True transparent background everywhere outside the board/gate and in road gaps, no colored rectangle. This is a local gate enlargement, NOT a board redesign."
+                                                 "stage":  "extend lawn under the full board",
+                                                 "prompt":  "Use case: precise-object-edit. Edit this existing HistoryRoll BACKGROUND ONLY. The game places a separate winding board over the LOWER HALF, but the board currently appears to float because the lawn horizon is too low. RAISE THE CONTINUOUS GROUND PLANE so there is a gently receding flat grassy garden underneath the WHOLE board. Exact composition: keep ALL pixels/objects above y=750 as close to identical as possible. Near y=780..820 create a soft distant edge of low shrubs/trees and distant hills; by y=830 the CENTRAL AREA must be continuous bright GREEN LAWN, extending uninterrupted to the bottom of the image. No sky, white clouds or tall shrubs in the central ground area below y=830. This is a natural large garden lawn seen slightly from above, enough open grassy floor for a separate winding road board across y=835..1350. Ground should have soft yellow-green sunlit patches, a few subtle grass blades and gentle earth tones, with coherent perspective; NOT a floating island, raised slab, rectangular mat, cliff, rocky pedestal or opaque UI panel. Keep the LEFT NIPA HUT, TOP TREE CANOPIES, blue upper sky and upper clouds, hourglass on stone plinth at lower-left, scroll/compass, bottom-right books and die, edge plants/flowers all in their existing positions and sizes. The hut must naturally stand on this expanded lawn. Preserve the exact 1024x1536 portrait canvas and cheerful clean outlined 2D cartoon style and palette. No board, road, numbers, extra castle/flag, characters, captions, logo, loading bar or new props in this background. The ONLY substantive change is extending the existing ground upward from its old low horizon to around y=800, so a foreground board will sit on continuous garden ground while the upper logo area stays open blue sky. Opaque background image."
                                              },
                                              {
-                                                 "stage":  "preserve doorway and final tile",
-                                                 "prompt":  "Precise compositing edit. IMAGE 1 is the MASTER board: preserve its exact road, all 30 blank tile faces and seams, snakes, right ladder, START sign and full 1536x1024 canvas. IMAGE 2 is ONLY the desired BIGGER GATE appearance. Replace only Image 1\u0027s small upper-right stone gate/flag with a larger gate similar to Image 2, visibly about 35 percent wider and more prominent. VERY IMPORTANT: keep Image 1\u0027s road entrance and open arch location at x=1340,y=270. Do not shift the arch left like Image 2. The open doorway must sit at x=1295..1400,y=200..290. Keep the original final cream tile surface EXACTLY visible and unobstructed in rectangle x=1155..1250,y=235..300: its number will be drawn there. All left-wing stonework must stay BEHIND the road, so the original road surface/curb naturally occludes the larger gate\u0027s lower-left wall where they overlap. Do not paint stone or dark doorway over that final tile. Widen the upper gate facade leftwards over empty space x=1100..1505,y=70..205, keep right wall within1510, small flag readable at the top and entirely in canvas. Preserve the original single continuous cream roadway that curves through the open arch, no ending at a wall. Same friendly warm stone gate/crest/Philippine flag; no extra buildings, ladder, numbers or new scenery. Preserve genuine alpha outside the artwork, no haze/matte. Only enlarge the gate; the MASTER road and its empty final tile are locked."
+                                                 "stage":  "raise the horizon",
+                                                 "prompt":  "Correct the GROUND HEIGHT in this existing background. The current green lawn still starts too low. FINAL COMPOSITION MUST HAVE THE ENTIRE LOWER HALF AS GREEN GROUND. Put the lawn horizon at HALF THE IMAGE HEIGHT, around y=760 of the 1024x1536 canvas, NOT near y=1000. From y=800 down to the bottom, the CENTER x=280..880 must be uninterrupted sunny green lawn seen slightly from above. There must be NO sky, white clouds, or blue mountains in that center area below y=800. Move the distant mountain silhouettes and low shrub horizon band UP to around y=700..760, with green lawn beginning immediately below them at y=770. This is a very large open garden floor occupying the LOWER FIFTY PERCENT of the portrait image. Keep the nipa hut and all edge props at their current coordinates, so the expanded lawn appears behind and around the hut, not moving it. Preserve upper blue sky and top tree canopies above the halfway horizon; upper logo area stays clear. Preserve hourglass, stone plinth, compass/scroll, die/books, edge flowers, palette and clean cartoon style. No board, road, tiles, people, text, logo, castle, banner or UI. Same1024x1536 opaque background. This is a strong upward extension of the grass, roughly 220 pixels higher than it is now. Do NOT keep the current low horizon; the main correction is that GREEN LAWN covers the ENTIRE LOWER HALF."
                                              },
                                              {
-                                                 "stage":  "widen final tile and transparency cleanup",
-                                                 "prompt":  "Precise final cleanup of this transparent game-board asset. KEEP the larger castle, flag, all road runs, snakes, right ladder and START sign as shown. Fix only the final cream tile entering the arch: the tiny triangular tile immediately before the doorway must be a BROAD readable cream tile. Keep its existing left divider at x=1150, but run its UPPER road edge horizontally near y=230 until x=1250, then curve it toward the doorway floor at x=1340,y=270. Keep its LOWER curb near y=310 until x=1250, then curve it into the doorway. This leaves an unobstructed full cream label area x=1170..1240,y=240..300 for the number 30 (do not actually draw the number). The road is in FRONT of the castle\u0027s lower-left wall and then goes INTO the open arch; do not paint stone over this cream label area. Only this final approach tile widens; do not change any earlier seam, other tile, or object. The castle remains the same larger size and location. IMPORTANT alpha cleanup: remove the broad dark shadow haze from ALL empty space outside the board/castle and gaps between runs. These empty areas must have alpha ZERO, including upper-left blank canvas and the area behind the upper snake. Retain only a tiny contact shadow within 3 pixels of the stone edges; no broad dark cloud. Output genuine transparent PNG, exact same 1536x1024 canvas. No backdrop, new numbers, extra ladders or other changes."
+                                                 "stage":  "align ground above the nipa-hut roof height",
+                                                 "prompt":  "Make the GRASS FIELD MUCH LARGER in this image. The horizon must rise to just ABOVE THE PEAK OF THE NIPA HUT ROOF on the left. Extend a horizontal line from that roof peak across the image: everything BELOW that imaginary line, except the hut and foreground props themselves, must be GREEN GARDEN GROUND. The lawn begins behind the hut ROOF, not down at its stairs or floor. Replace the low blue mountains and lower clouds behind the hut with open green ground; put a thin distant hedge and tiny hill band just above the hut roof peak. Make the lower roughly TWO THIRDS of the composition mostly sunny green lawn, with upper open blue sky and tree canopies framing the top. Keep the hut, hourglass/plinth, scroll/compass, bottom-right books/die and edge flowers at their existing exact locations. Do not move them. Continuous slightly top-down grassy garden floor from BEHIND THE ROOF PEAK to the bottom center, no sky/clouds/mountains visible anywhere under the hut-roof height. No raised platform, island or rectangular mat. Same bright clean cartoon style,1024x1536 portrait canvas. No board, road, castle, people, logo, text or UI. The key visible change must be that the lawn starts HIGHER THAN THE HUT ROOF PEAK, leaving a large green field across the whole lower scene."
                                              }
                                          ],
-                             "final_generated_board":  "exec-3249a6af-fd31-4964-a9c1-b66821741057.png",
-                             "integration_notes":  "Enlarged the upper-right stone gate and flag within the existing 1536x1024 board canvas. Kept the approach flowing into the arch and widened its final cream face so number 30 remains readable. Updated only the final face outline in splash_board_art.gd to match the edited artwork; other tile coordinates, splash layout, hierarchy, timing, navigation and gameplay remain as before this revision.",
+                             "final_generated_background":  "exec-e623b2d6-c7d5-46ee-9500-2910215c6c67.png",
+                             "root_cause":  "The scenery lawn started too low, so distant road rows and some transparent gaps were composited over sky/clouds, giving the full board a floating appearance.",
+                             "integration_notes":  "Raised the scenery ground plane to around the nipa-hut roof height, extending a continuous slightly receding garden lawn behind all five road runs and their transparent gaps. Retained the upper blue-sky/header area and edge props. The winding-board PNG, castle footing, ladder sprites, numbering, scripts, scene layout, startup timing and navigation were not changed by this revision.",
                              "verification":  {
                                                   "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
                                                   "startup_layout_passed":  1139,
                                                   "startup_layout_failed":  0,
-                                                  "measured_intro_seconds":  9.446,
+                                                  "measured_intro_seconds":  9.453,
                                                   "viewports":  [
                                                                     [
                                                                         1024,
@@ -181,16 +189,25 @@
                                                                     ]
                                                                 ],
                                                   "visual_review":  [
-                                                                        "actual Godot render at 442x663",
-                                                                        "actual Godot render at 720x1280"
+                                                                        "actual final Godot render 442x663",
+                                                                        "actual final Godot render 720x1280",
+                                                                        "actual final Godot render 390x844"
                                                                     ],
-                                                  "dimensions":  [
-                                                                     1536,
-                                                                     1024
-                                                                 ],
+                                                  "background_dimensions":  [
+                                                                                1024,
+                                                                                1536
+                                                                            ],
+                                                  "ground_coverage":  {
+                                                                          "green_samples":  45,
+                                                                          "total_samples":  45,
+                                                                          "portrait_sizes":  9,
+                                                                          "method":  "Read-only background pixel sampling beneath the central area of all five board runs, using the production layout and KEEP_ASPECT_COVERED mapping for each tested portrait size."
+                                                                      },
+                                                  "board_castle_ladder_scripts_and_scene_sha256_unchanged":  true,
+                                                  "existing_user_font_edit_sha256_preserved":  true,
                                                   "saved_progress_and_settings_sha256_unchanged":  true,
                                                   "physical_android_test":  false,
-                                                  "remaining_diagnostics":  "No script/parse errors or failed checks in final runtime suite. Existing three ObjectDB shutdown warnings remain, along with the external-editor configuration errors during Editor import."
+                                                  "remaining_diagnostics":  "Final runtime suite has no script/parse errors or failed checks. Two existing ObjectDB shutdown warnings remain."
                                               }
                          },
     "revision_history":  [
@@ -430,6 +447,286 @@
                                                       "physical_android_test":  false,
                                                       "music_suite_rerun":  false,
                                                       "remaining_diagnostics":  "Final runtime suite has no script/parse errors or failed checks. Three ObjectDB shutdown warnings remain; Editor import also reports the existing external text-editor configuration errors."
+                                                  }
+                             },
+                             {
+                                 "revision":  5,
+                                 "date":  "2026-11-27",
+                                 "reason":  "User requested a larger, clearer castle gate at the end of the loading-screen road.",
+                                 "board_asset":  "res://assets/splash_ui/hero_board/winding_board_perspective.png",
+                                 "generation_tool":  "image_gen (built-in mode)",
+                                 "prompts":  [
+                                                 {
+                                                     "stage":  "gate enlargement",
+                                                     "prompt":  "Use case: precise-object-edit. Edit target: this existing transparent HistoryRoll winding road asset. Change ONLY the small stone CASTLE GATE and Philippine flag at the UPPER-RIGHT FINISH. Make the gate noticeably larger and clearer for a phone screen, about 35 percent more prominent: a wider stone facade, thicker readable pillars, a larger open arch, bold clean warm-stone detailing and a clear Philippine flag. Keep the road\u0027s doorway floor connection fixed around x=1340,y=270 so the road still continues naturally INTO the open arch. Expand the upper facade mostly UP and LEFT into the unused transparent area, keep the far-right wall within x=1510 and the entire flag within the canvas; shorten the bare flagpole if needed to make room for the larger building. Keep lower-left pillar feet off the blank tile faces: its base at x\u003e=1230 so tile 30 stays unobstructed. Do not cover the broad road between x=1150..1240,y=230..305. The castle can be broader at the top, around x=1135..1505,y=75..210, narrowing at its left base beside the road. Preserve the same friendly illustrated Fort Santiago-style stone gate, crest and small shrubs. Keep the Philippine flag clearly correct with blue above red, white triangle at hoist, gold sun and three stars. Critical: EVERY other pixel/composition is locked: same 1536x1024 canvas; winding road edges, ALL thirty blank tile faces and divider seams, both green snakes with NATURAL tapered tails, the single existing RIGHT ladder, START sign, colors and positions stay unchanged. Do NOT add back a left ladder, numbers, sky, backdrop, people, captions or UI. True transparent background everywhere outside the board/gate and in road gaps, no colored rectangle. This is a local gate enlargement, NOT a board redesign."
+                                                 },
+                                                 {
+                                                     "stage":  "preserve doorway and final tile",
+                                                     "prompt":  "Precise compositing edit. IMAGE 1 is the MASTER board: preserve its exact road, all 30 blank tile faces and seams, snakes, right ladder, START sign and full 1536x1024 canvas. IMAGE 2 is ONLY the desired BIGGER GATE appearance. Replace only Image 1\u0027s small upper-right stone gate/flag with a larger gate similar to Image 2, visibly about 35 percent wider and more prominent. VERY IMPORTANT: keep Image 1\u0027s road entrance and open arch location at x=1340,y=270. Do not shift the arch left like Image 2. The open doorway must sit at x=1295..1400,y=200..290. Keep the original final cream tile surface EXACTLY visible and unobstructed in rectangle x=1155..1250,y=235..300: its number will be drawn there. All left-wing stonework must stay BEHIND the road, so the original road surface/curb naturally occludes the larger gate\u0027s lower-left wall where they overlap. Do not paint stone or dark doorway over that final tile. Widen the upper gate facade leftwards over empty space x=1100..1505,y=70..205, keep right wall within1510, small flag readable at the top and entirely in canvas. Preserve the original single continuous cream roadway that curves through the open arch, no ending at a wall. Same friendly warm stone gate/crest/Philippine flag; no extra buildings, ladder, numbers or new scenery. Preserve genuine alpha outside the artwork, no haze/matte. Only enlarge the gate; the MASTER road and its empty final tile are locked."
+                                                 },
+                                                 {
+                                                     "stage":  "widen final tile and transparency cleanup",
+                                                     "prompt":  "Precise final cleanup of this transparent game-board asset. KEEP the larger castle, flag, all road runs, snakes, right ladder and START sign as shown. Fix only the final cream tile entering the arch: the tiny triangular tile immediately before the doorway must be a BROAD readable cream tile. Keep its existing left divider at x=1150, but run its UPPER road edge horizontally near y=230 until x=1250, then curve it toward the doorway floor at x=1340,y=270. Keep its LOWER curb near y=310 until x=1250, then curve it into the doorway. This leaves an unobstructed full cream label area x=1170..1240,y=240..300 for the number 30 (do not actually draw the number). The road is in FRONT of the castle\u0027s lower-left wall and then goes INTO the open arch; do not paint stone over this cream label area. Only this final approach tile widens; do not change any earlier seam, other tile, or object. The castle remains the same larger size and location. IMPORTANT alpha cleanup: remove the broad dark shadow haze from ALL empty space outside the board/castle and gaps between runs. These empty areas must have alpha ZERO, including upper-left blank canvas and the area behind the upper snake. Retain only a tiny contact shadow within 3 pixels of the stone edges; no broad dark cloud. Output genuine transparent PNG, exact same 1536x1024 canvas. No backdrop, new numbers, extra ladders or other changes."
+                                                 }
+                                             ],
+                                 "final_generated_board":  "exec-3249a6af-fd31-4964-a9c1-b66821741057.png",
+                                 "integration_notes":  "Enlarged the upper-right stone gate and flag within the existing 1536x1024 board canvas. Kept the approach flowing into the arch and widened its final cream face so number 30 remains readable. Updated only the final face outline in splash_board_art.gd to match the edited artwork; other tile coordinates, splash layout, hierarchy, timing, navigation and gameplay remain as before this revision.",
+                                 "verification":  {
+                                                      "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
+                                                      "startup_layout_passed":  1139,
+                                                      "startup_layout_failed":  0,
+                                                      "measured_intro_seconds":  9.446,
+                                                      "viewports":  [
+                                                                        [
+                                                                            1024,
+                                                                            1536
+                                                                        ],
+                                                                        [
+                                                                            720,
+                                                                            1280
+                                                                        ],
+                                                                        [
+                                                                            1086,
+                                                                            1448
+                                                                        ],
+                                                                        [
+                                                                            1065,
+                                                                            1477
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            1920
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2340
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2400
+                                                                        ],
+                                                                        [
+                                                                            390,
+                                                                            844
+                                                                        ],
+                                                                        [
+                                                                            442,
+                                                                            663
+                                                                        ]
+                                                                    ],
+                                                      "visual_review":  [
+                                                                            "actual Godot render at 442x663",
+                                                                            "actual Godot render at 720x1280"
+                                                                        ],
+                                                      "dimensions":  [
+                                                                         1536,
+                                                                         1024
+                                                                     ],
+                                                      "saved_progress_and_settings_sha256_unchanged":  true,
+                                                      "physical_android_test":  false,
+                                                      "remaining_diagnostics":  "No script/parse errors or failed checks in final runtime suite. Existing three ObjectDB shutdown warnings remain, along with the external-editor configuration errors during Editor import."
+                                                  }
+                             },
+                             {
+                                 "revision":  6,
+                                 "date":  "2026-11-28",
+                                 "reason":  "User requested natural-looking ladders on the existing loading-screen winding board.",
+                                 "generation_tool":  "image_gen (built-in mode)",
+                                 "board_asset":  "res://assets/splash_ui/hero_board/winding_board_perspective.png",
+                                 "ladder_asset":  "res://assets/splash_ui/hero_board/natural_ladder.png",
+                                 "prompts":  [
+                                                 {
+                                                     "stage":  "reusable illustrated wooden ladder",
+                                                     "prompt":  "Use case: background-extraction / precise-object-edit. Input image: existing HistoryRoll board, ONLY as source/style reference for its GOLDEN WOODEN LADDER on the RIGHT. Create a reusable transparent sprite of that wooden ladder by isolating it and orienting it perfectly UPRIGHT, front viewed with a subtle receding perspective: top 15 percent narrower than bottom. Exactly TWO straight solid wooden side rails with subtly rounded rail ends and TEN evenly spaced wooden rungs fitted BETWEEN the rails. Warm honey-gold wood with believable wood grain, warm orange-brown side faces, soft cream highlights from upper-left, clean dark brown illustrated outlines. Thick solid rails and rungs, hand-painted polished 2D cartoon look matching the source board, NOT photorealistic, NOT vector line art, NOT bamboo, no rope, no metal, no ornate ornaments. Side rails converge very slightly upward; rungs are rectangular wood with visible upper faces and tiny joint shadows, regular spacing. No bowed or warped rails; no diagonal cross braces, extra rail, missing rungs or detached pieces. Entire ladder straight, symmetric, upright, no tilt; the game will rotate it and fit it to its board endpoints. Portrait narrow 1:3 canvas 512x1536, tight transparent margin about 4 percent around the ladder, do not clip the tips or sides. GENUINE TRANSPARENT alpha background; no road, tiles, snake, gate, flag, numbers, scenery, ground, drop-shadow cloud, words or other objects. Keep all space outside the ladder transparent; only a subtle close-contact shading on the wood itself."
+                                                 },
+                                                 {
+                                                     "stage":  "remove baked right ladder",
+                                                     "prompt":  "Precise object removal on this existing transparent HistoryRoll board asset. Remove ONLY the remaining GOLDEN WOODEN LADDER on the RIGHT, spanning approximately x=880..1100,y=585..900. Restore exactly the original cream and red tile faces, the existing black tile-divider seams, the stone curbs and transparent gaps that were behind that ladder. Every other object is LOCKED: preserve the exact board silhouette, all thirty tile faces and seams, the larger upper-right castle and Philippine flag, its open arch and broad final cream tile, both green snakes with natural tapered tails, and the START sign, all at the exact same positions and sizes. Keep the same 1536x1024 canvas. Do NOT add any ladder anywhere: the game will render TWO separate ladder sprites later. Do NOT change any road division, color, texture, lighting, snake, sign, gate or composition. No numbers, new objects, background or text. True transparent alpha everywhere outside the board and in its gaps; no broad dark haze, white patch or colored matte. The only visible change must be removal of the right ladder and seamless restoration of the surface below it."
+                                                 },
+                                                 {
+                                                     "stage":  "restore the single broad cream face",
+                                                     "prompt":  "LOCAL COLOR/SEAM REPAIR ONLY on this image. In the SECOND ROAD RUN FROM THE BOTTOM, there is a small RED patch at approximately x=940..1070,y=692..775. Paint ONLY that small red patch CREAM to match the cream immediately beside it. Erase ONLY the extra diagonal dark seam at its left edge x=943,y=692 to x=926,y=775. This patch is part of the SAME broad cream face spanning x=715..1124. Keep the real boundary at x=1124,y=692 to x=1101,y=775. HARD LOCK ALL OTHER PIXELS: especially keep the RED rectangles on the MIDDLE road around x=645..837,y=532..615 and x=1030..1290,y=532..615 exactly RED, with their same black seams. Do not merge any other faces or recolor any other tile. Do not alter the snakes, their tails, castle/flag, curbs, START sign, canvas or palette. No ladders or numbers. Same 1536x1024 transparent PNG. The sole change is the small erroneous red patch in the second-from-bottom run becoming cream and losing its extra left seam."
+                                                 }
+                                             ],
+                                 "final_generated_board":  "exec-23e976d9-d653-4618-b108-deef23635017.png",
+                                 "final_generated_ladder":  "exec-76524ced-8073-415e-a759-5e729c2e9194.png",
+                                 "root_cause":  "The left ladder used thin code-drawn wood lines while the right ladder was painted into the board PNG. Their rendering styles differed, and the old left rail ends sat at road edges rather than inside the faces.",
+                                 "integration_notes":  "Both ladders now share one transparent illustrated wooden sprite, with grain, rounded ends, tapered perspective and joint shading. The baked right ladder was removed and its underlying road restored. The existing _draw_ladder function rotates/scales the two sprites between inspected road endpoints and adds small rail-end contact shadows. The canvas transform is restored before lettering. No scene hierarchy, splash layout, timing, navigation, gameplay or font settings were changed.",
+                                 "ladder_source_dimensions":  [
+                                                                  724,
+                                                                  2172
+                                                              ],
+                                 "atlas_region":  {
+                                                      "x":  48,
+                                                      "y":  74,
+                                                      "width":  628,
+                                                      "height":  2031
+                                                  },
+                                 "placements":  [
+                                                    {
+                                                        "bottom":  [
+                                                                       725,
+                                                                       740
+                                                                   ],
+                                                        "top":  [
+                                                                    530,
+                                                                    411
+                                                                ],
+                                                        "width":  86
+                                                    },
+                                                    {
+                                                        "bottom":  [
+                                                                       985,
+                                                                       932
+                                                                   ],
+                                                        "top":  [
+                                                                    1060,
+                                                                    585
+                                                                ],
+                                                        "width":  92
+                                                    }
+                                                ],
+                                 "verification":  {
+                                                      "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
+                                                      "startup_layout_passed":  1139,
+                                                      "startup_layout_failed":  0,
+                                                      "measured_intro_seconds":  9.583,
+                                                      "viewports":  [
+                                                                        [
+                                                                            1024,
+                                                                            1536
+                                                                        ],
+                                                                        [
+                                                                            720,
+                                                                            1280
+                                                                        ],
+                                                                        [
+                                                                            1086,
+                                                                            1448
+                                                                        ],
+                                                                        [
+                                                                            1065,
+                                                                            1477
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            1920
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2340
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2400
+                                                                        ],
+                                                                        [
+                                                                            390,
+                                                                            844
+                                                                        ],
+                                                                        [
+                                                                            442,
+                                                                            663
+                                                                        ]
+                                                                    ],
+                                                      "visual_review":  [
+                                                                            "actual final Godot render at 442x663",
+                                                                            "actual final Godot render at 720x1280",
+                                                                            "actual Godot render at 1065x1477 before the final 25-pixel source-space foot adjustment"
+                                                                        ],
+                                                      "ladder_rail_ends_on_tile_faces":  8,
+                                                      "ladder_rail_ends_checked":  8,
+                                                      "opaque_ladder_overlap_with_inset_number_bounds":  [
+
+                                                                                                         ],
+                                                      "temporary_geometry_check":  "Headless Godot: checked all 8 rail-end contacts against traced tile polygons and sampled sprite alpha within all 30 number bounds for both ladder poses; zero opaque-wood intersections after final adjustment.",
+                                                      "existing_user_font_edit_sha256_preserved":  true,
+                                                      "saved_progress_and_settings_sha256_unchanged":  true,
+                                                      "physical_android_test":  false,
+                                                      "remaining_diagnostics":  "No script/parse errors or failed checks in final runtime suite. Existing three ObjectDB shutdown warnings remain; Editor import also reports the existing external text-editor configuration errors."
+                                                  }
+                             },
+                             {
+                                 "revision":  7,
+                                 "date":  "2026-11-28",
+                                 "reason":  "User requested the castle at the finish to stand visibly on the ground.",
+                                 "board_asset":  "res://assets/splash_ui/hero_board/winding_board_perspective.png",
+                                 "generation_tool":  "image_gen (built-in mode)",
+                                 "prompts":  [
+                                                 {
+                                                     "stage":  "add ground while preserving the road and finish tiles",
+                                                     "prompt":  "LOCAL GROUND ADDITION ONLY. Edit this MASTER HistoryRoll board PNG, preserving the castle and every road face exactly. Add a natural grassy SOIL BANK and small contact shadows UNDER the UPPER-RIGHT CASTLE so its existing vertical walls visibly stand on garden ground. The gate itself, flag, arch, size, position and current occlusion by the foreground road must NOT change. Add a short stone footing ONLY under the existing RIGHT pillar around x=1355..1480,y=305..330, with a small shadow and grass immediately touching it. The LEFT footing stays mostly hidden BEHIND the original foreground road, which is correct perspective; do not reveal it by removing or painting over road. Ground may be visible below the road near x=1050..1300,y=335..355 and outside/right of the bend near x=1430..1535,y=320..470, as a gently sloped bank blending into the existing green garden. No cutaway dirt cliff, floating island, detached platform or circular sticker. HARD LOCK THE FINAL TWO CREAM TILES: every original pixel in x=1005..1300,y=229..313 stays the same cream road with its original black divider; no stone or grass there. Keep the existing final road curve continuing INTO the arch, no dead end or rerouting. All other artwork remains IDENTICAL: exact1536x1024 canvas, all30 blank red/cream faces and seams, stone curbs, two green snakes and their tails, START sign; NO ladders in this PNG. No numbers, new buildings, captions, sky or background. Same bright illustrated 2D style. True transparent alpha outside the board/gate/new ground bank. The only change is a grassy grounded base under the existing gate; do NOT reconstruct, move or redraw the gate or roadway."
+                                                 },
+                                                 {
+                                                     "stage":  "remove stray haze from transparent areas",
+                                                     "prompt":  "Use case: background-extraction. This is an existing transparent sprite asset. REMOVE ONLY THE UNWANTED DARK SMOKE / SHADOW HAZE from empty background areas. Especially the open area ABOVE the road, LEFT of the snake and castle: x=0..1050,y=0..210 must be COMPLETELY TRANSPARENT wherever there is no actual snake body, board curb, flag or building. Also remove broad gray/black haze from the gaps between road runs and outside the outer road edges. These areas must have alpha 0, not a dark color with partial opacity. Preserve every actual object and edge exactly: castle, grass/soil bank beneath it on the right, stone footing, Philippine flag, all30 blank tiles and seams, stone curbs, two green snakes and natural tails, START sign. Keep the grassy bank x=1250..1536,y=310..470; it is intentional ground. Do not redraw, move, resize, repaint or recolor any object. No ladders, numbers or new objects. Same1536x1024 canvas. Keep only the small shadows ON the grass and ON the wood/stone themselves; remove ALL detached cast shadows on empty canvas. This is transparent background cleanup only. NO black/gray/brown cloud, no vignette, no opaque matte, no checkerboard pixels. Genuine alpha PNG cutout with perfectly clear empty sky areas."
+                                                 }
+                                             ],
+                                 "final_generated_board":  "exec-daedfb44-3bf7-4672-9ecd-01c8a92a8576.png",
+                                 "root_cause":  "The upright gate lacked a readable ground plane and foundation contact, leaving its visible pillar base isolated against the transparent background.",
+                                 "integration_notes":  "Added a stone footing/contact shadow under the visible right pillar and a gently sloping grassy bank that connects to the garden around the upper bend. The road remains in front of the partly occluded left foundation and continues into the arch. Retained the broad cream finish tiles, existing gate/flag placement, two sprite ladders, tile numbering, scene hierarchy, layout and startup logic. Cleaned unintended dark haze out of the empty transparent canvas.",
+                                 "verification":  {
+                                                      "godot":  "4.7.1 stable, desktop Compatibility renderer, Dummy audio",
+                                                      "startup_layout_passed":  1139,
+                                                      "startup_layout_failed":  0,
+                                                      "measured_intro_seconds":  9.479,
+                                                      "viewports":  [
+                                                                        [
+                                                                            1024,
+                                                                            1536
+                                                                        ],
+                                                                        [
+                                                                            720,
+                                                                            1280
+                                                                        ],
+                                                                        [
+                                                                            1086,
+                                                                            1448
+                                                                        ],
+                                                                        [
+                                                                            1065,
+                                                                            1477
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            1920
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2340
+                                                                        ],
+                                                                        [
+                                                                            1080,
+                                                                            2400
+                                                                        ],
+                                                                        [
+                                                                            390,
+                                                                            844
+                                                                        ],
+                                                                        [
+                                                                            442,
+                                                                            663
+                                                                        ]
+                                                                    ],
+                                                      "visual_review":  [
+                                                                            "actual final Godot render 442x663",
+                                                                            "actual final Godot render 720x1280"
+                                                                        ],
+                                                      "image_dimensions":  [
+                                                                               1536,
+                                                                               1024
+                                                                           ],
+                                                      "alpha_samples":  {
+                                                                            "corner":  0,
+                                                                            "empty_above_road_left":  0,
+                                                                            "empty_above_road_middle":  0,
+                                                                            "empty_above_road_right":  0
+                                                                        },
+                                                      "scripts_scene_and_ladder_asset_sha256_unchanged":  true,
+                                                      "existing_user_font_edit_sha256_preserved":  true,
+                                                      "saved_progress_and_settings_sha256_unchanged":  true,
+                                                      "physical_android_test":  false,
+                                                      "remaining_diagnostics":  "Final runtime suite has no script/parse errors or failed checks. Two existing ObjectDB shutdown warnings remain."
                                                   }
                              }
                          ]
